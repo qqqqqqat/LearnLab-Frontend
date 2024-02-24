@@ -1,0 +1,30 @@
+name: Build Project
+on:
+  pull_request:
+    branches: ["main"]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "lts/Iron"
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build project
+        run: pnpm run build
+      - name: Check if build is successful
+        run: |
+          # Replace the following command with the appropriate check for build success
+          if [ $? -eq 0 ]; then
+            echo "Build successful"
+          else
+            echo "Build failed"
+            exit 1
+          fi
