@@ -5,9 +5,15 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@fontsource/noto-sans-thai':
+    specifier: ^5.0.12
+    version: 5.0.12
   '@preline/collapse':
     specifier: ^2.0.2
     version: 2.0.2
+  material-icons:
+    specifier: ^1.13.12
+    version: 1.13.12
   nuxt:
     specifier: ^3.10.3
     version: 3.10.3(vite@5.1.4)
@@ -765,6 +771,10 @@ packages:
   /@fastify/busboy@2.1.0:
     resolution: {integrity: sha512-+KpH+QxZU7O4675t3mnkQKcZZg56u+K/Ct2K+N2AZYNVK8kyeo/bI18tI8aPm3tvNNRyTWfj6s5tnGNlcbQRsA==}
     engines: {node: '>=14'}
+
+  /@fontsource/noto-sans-thai@5.0.12:
+    resolution: {integrity: sha512-/z46pCR05gFTkhaZSUDae+eSWklUsP1kZ7bZ3MNTOnPAQXlH7GD9O2cbKxZvi1KndXeDHTEuao9vMNOEZuR7Kw==}
+    dev: false
 
   /@ioredis/commands@1.2.0:
     resolution: {integrity: sha512-Sx1pU8EM64o2BrqNpEO1CNLtKQwyhuXuqyfH7oGKCk+1a33d2r5saW8zNwm3j6BTExtjrv2BxTgzzkMwts6vGg==}
@@ -3701,6 +3711,10 @@ packages:
       ssri: 10.0.5
     transitivePeerDependencies:
       - supports-color
+
+  /material-icons@1.13.12:
+    resolution: {integrity: sha512-/2YoaB79IjUK2B2JB+vIXXYGtBfHb/XG66LvoKVM5ykHW7yfrV5SP6d7KLX6iijY6/G9GqwgtPQ/sbhFnOURVA==}
+    dev: false
 
   /mdn-data@2.0.28:
     resolution: {integrity: sha512-aylIc7Z9y4yzHYAJNuESG3hfhC+0Ibp/MAMiaOZgNv4pmEdFyfZhhhny4MNiAfWdBQ1RQ2mfDWmM1x8SvGyp8g==}

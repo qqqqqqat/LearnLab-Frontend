@@ -1,5 +1,10 @@
+<script setup lang="ts">
+import '@fontsource/noto-sans-thai';
+</script>
 <template>
   <div>
-    <NuxtPage />
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
   </div>
 </template>

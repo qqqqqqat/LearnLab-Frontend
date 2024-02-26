@@ -10,7 +10,9 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@fontsource/noto-sans-thai": "^5.0.12",
     "@preline/collapse": "^2.0.2",
+    "material-icons": "^1.13.12",
     "nuxt": "^3.10.3",
     "preline": "^2.0.3",
     "vue": "^3.4.19",
