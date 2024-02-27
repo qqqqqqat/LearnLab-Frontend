@@ -129,4 +129,6 @@ const route = useRoute()
     </nav>
   </header>
   <slot />
+  <Footer/>
+
 </template>

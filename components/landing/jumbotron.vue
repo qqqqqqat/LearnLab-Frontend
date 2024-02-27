@@ -4,7 +4,7 @@ const emit = defineEmits(['scrollToContent'])
 </script>
 
 <template>
-  <main class="flex items-center w-full fixed h-screen relative">
+  <main class="flex items-center w-full h-screen relative">
     <img
       class="object-cover object-[65%_50%] h-full w-full -z-20 fixed"
       src="~assets/images/landing/LiftOff.png"
