@@ -1,0 +1,216 @@
+<script setup lang="ts">
+interface Course {
+  c_id: number;
+  c_name: string;
+  c_code: string;
+  c_hashed_password: null | string; // Optional string, can be null
+  c_description: string;
+  c_logo: string | null; // Optional string, can be null
+  c_banner: string | null; // Optional string, can be null
+  c_created_at: string;
+  c_updated_at: string;
+  c_privacy: "PUBLIC" | "PRIVATE";
+}
+
+interface CourseListing {
+  page: number;
+  limit: number;
+  total_page: number;
+  data: Course[];
+}
+
+const search = ref<string>("");
+const currentPage = ref<number>(0);
+const totalPages = ref<number>(0);
+const {
+  data: courses,
+  refresh,
+  error,
+  pending,
+} = await useFetch<CourseListing>("http://localhost:8000/api/courses");
+
+if (pending) {
+  currentPage.value = courses.value?.page || 1;
+  totalPages.value = courses.value?.total_page || 1;
+  console.log(courses.value);
+}
+
+async function updateQuery(searchQuery: string) {
+  await $fetch<CourseListing>("http://localhost:8000/api/courses", {
+    query: {
+      search: searchQuery,
+      page: currentPage.value,
+    },
+  }).then((res) => {
+    courses.value = res;
+    totalPages.value = res.total_page;
+  });
+}
+
+watch(search, (newSearch) => {
+  currentPage.value = 1;
+  updateQuery(newSearch);
+});
+
+watch(currentPage, () => {
+  if (currentPage.value > totalPages.value) {
+    currentPage.value = totalPages.value;
+  } else if (currentPage.value < 1) {
+    currentPage.value = 1;
+  }
+  updateQuery(search.value);
+});
+</script>
+<template>
+  <div class="max-w-screen-2xl mx-auto mb-8">
+    <div class="flex flex-col items-center w-full h-full">
+      <h1 class="text-5xl mt-24 font-bold mb-4">คอร์สเรียน</h1>
+      <div class="flex xl:flex-row flex-col gap-4">
+        <div
+          class="flex flex-col justify-center items-center border border-1 rounded-lg shadow-sm p-8 h-fit"
+        >
+          <h4 class="text-lg mb-2 text-left w-full">กรองข้อมูล</h4>
+          <label for="hs-trailing-button-add-on-with-icon" class="sr-only"
+            >Label</label
+          >
+          <div class="flex flex-col">
+            <div class="flex rounded-lg shadow-sm">
+              <input
+                v-model="search"
+                type="text"
+                id="hs-trailing-button-add-on-with-icon"
+                name="hs-trailing-button-add-on-with-icon"
+                class="py-3 px-4 block w-full border border-1 border-gray-200 shadow-sm rounded-s-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+              />
+              <button
+                type="button"
+                class="w-[2.875rem] h-[2.875rem] flex-shrink-0 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-e-md border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+              >
+                <svg
+                  class="flex-shrink-0 size-4"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="11" cy="11" r="8" />
+                  <path d="m21 21-4.3-4.3" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="grid lg:grid-cols-3 md:grid-cols-2 grid-flow-cols-1 justify-center gap-8 xl:min-w-[1024px] rounded-lg" :class="(!courses?.data.length) ? 'border border-1' : ''"
+        >
+          <div
+            v-for="crs in courses?.data"
+            class="flex flex-col bg-white border shadow-sm rounded-xl w-80"
+          >
+            <img
+              class="w-full h-full object-cover rounded-t-xl"
+              src="https://images.unsplash.com/photo-1680868543815-b8666dba60f7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2532&q=80"
+              alt="Image Description"
+            />
+            <div class="p-4 md:p-5">
+              <h3 class="text-lg font-bold text-gray-800">{{ crs.c_name }}</h3>
+              <p class="mt-1 text-gray-500">
+                {{ crs.c_description }}
+              </p>
+              <a
+                class="mt-2 py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                href="#"
+              >
+                ดูคอร์ส
+              </a>
+            </div>
+          </div>
+          <div class="flex justify-center item-center col-span-3 pt-16 pb-96" v-if="!courses?.data.length">
+            <h1 class="text-xl">ไม่พบคำค้นหานั้น</h1>
+          </div>
+        </div>
+      </div>
+      <!-- Pagination -->
+      <nav class="flex items-center gap-x-1 mt-8">
+        <button
+          type="button"
+          @click="
+            () => {
+              if (currentPage > 1) {
+                currentPage--;
+              }
+            }
+          "
+          :disabled="currentPage === 1"
+          class="min-h-[38px] min-w-[38px] py-2 px-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
+        >
+          <svg
+            class="flex-shrink-0 size-3.5"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+          <span aria-hidden="true" class="sr-only">Previous</span>
+        </button>
+        <div class="flex items-center gap-x-1">
+          <input
+            v-model="currentPage"
+            type="number"
+            :oninput="`this.value = (this.value >= ${totalPages}) ? ${totalPages} : Math.abs(this.value)`"
+            class="min-h-[38px] min-w-[38px] w-16 text-center flex justify-center items-center border border-gray-200 text-gray-800 py-2 px-3 text-sm rounded-lg focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+          />
+          <span
+            class="min-h-[38px] flex justify-center items-center text-gray-500 py-2 px-1.5 text-sm"
+            >จาก</span
+          >
+          <span
+            class="min-h-[38px] flex justify-center items-center text-gray-500 py-2 px-1.5 text-sm"
+            >{{ totalPages }}</span
+          >
+        </div>
+        <button
+          type="button"
+          @click="
+            () => {
+              if (currentPage < totalPages) {
+                currentPage++;
+              }
+            }
+          "
+          :disabled="currentPage === totalPages"
+          class="min-h-[38px] min-w-[38px] py-2 px-2.5 inline-flex justify-center items-center gap-x-2 text-sm rounded-lg text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
+        >
+          <span aria-hidden="true" class="sr-only">Next</span>
+          <svg
+            class="flex-shrink-0 size-3.5"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="m9 18 6-6-6-6" />
+          </svg>
+        </button>
+      </nav>
+      <!-- End Pagination -->
+    </div>
+  </div>
+</template>
