@@ -3,6 +3,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ["@nuxtjs/tailwindcss"],
   plugins: ["~/plugins/preline.client.ts"],
+  ssr: false,
   app: {
     head: {
         charset: 'utf-8',

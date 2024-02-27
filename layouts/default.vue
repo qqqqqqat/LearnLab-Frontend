@@ -1,19 +1,25 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+const route = useRoute()
+
+// watch(() => route.path, (newRoute) => {
+//   console.log(newRoute)
+// })
+</script>
 <template>
   <header
-    class="flex fixed top-0 flex-wrap sm:justify-start sm:flex-nowrap z-50 w-full bg-white text-sm py-4 border border-1"
+    class="flex fixed top-0 flex-wrap sm:justify-start sm:flex-nowrap z-50 w-full bg-white text-sm py-4 border border-1 select-none"
   >
     <nav
       class="max-w-screen-2xl w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between"
       aria-label="Global"
     >
       <div class="flex items-center justify-between">
-        <a class="flex-none text-xl text-blue-600 font-bold" href="#">LearnLab</a>
+        <NuxtLink class="flex-none text-xl text-blue-600 font-bold" to="/">LearnLab</NuxtLink>
         <div class="sm:hidden">
           <button
             type="button"
             class="hs-collapse-toggle p-2 inline-flex justify-center items-center gap-x-2 rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50  disabled:opacity-50 disabled:pointer-events-none"
-            dat a-hs-collapse="#navbar-collapse-with-animation"
+            data-hs-collapse="#navbar-collapse-with-animation"
             aria-controls="navbar-collapse-with-animation"
             aria-label="Toggle navigation"
           >
@@ -58,14 +64,14 @@
         <div
           class="flex flex-col gap-5 mt-5 sm:flex-row sm:items-center sm:justify-end sm:mt-0 sm:ps-5"
         >
-          <a class="font-medium text-blue-600" href="#" aria-current="page"
-            >หน้าหลัก</a
+          <NuxtLink to="/" class="transition-color duration-200 ease-in-out font-medium" :class="route.path === '/' ? 'text-blue-600 hover:text-blue-400' : 'hover:text-gray-400'" aria-current="page"
+            >หน้าหลัก</NuxtLink
           >
-          <a class="font-medium hover:text-gray-400" href="#" aria-label="Read more our courses offering"
+          <NuxtLink class="transition-color duration-200 ease-in-out font-medium" :class="route.path === '/courses' ? 'text-blue-600 hover:text-blue-400' : 'hover:text-gray-400'" to="/courses" aria-label="Read more our courses offering"
             >
             หลักสูตร
             <span class="inline-flex items-center gap-x-1.5 py-1 px-2 rounded-full text-xs font-medium bg-blue-100 text-blue-800">ใหม่</span>
-            </a
+            </NuxtLink
           >
           <a class="font-medium hover:text-gray-400" href="#" aria-label="Search up our courses offering"
             ><svg
