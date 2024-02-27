@@ -4,7 +4,7 @@
     class="flex fixed top-0 flex-wrap sm:justify-start sm:flex-nowrap z-50 w-full bg-white text-sm py-4 border border-1"
   >
     <nav
-      class="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between"
+      class="max-w-screen-2xl w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between"
       aria-label="Global"
     >
       <div class="flex items-center justify-between">
@@ -58,16 +58,16 @@
         <div
           class="flex flex-col gap-5 mt-5 sm:flex-row sm:items-center sm:justify-end sm:mt-0 sm:ps-5"
         >
-          <a class="font-medium text-blue-500" href="#" aria-current="page"
+          <a class="font-medium text-blue-600" href="#" aria-current="page"
             >หน้าหลัก</a
           >
-          <a class="font-medium hover:text-gray-400" href="#"
+          <a class="font-medium hover:text-gray-400" href="#" aria-label="Read more our courses offering"
             >
             หลักสูตร
             <span class="inline-flex items-center gap-x-1.5 py-1 px-2 rounded-full text-xs font-medium bg-blue-100 text-blue-800">ใหม่</span>
             </a
           >
-          <a class="font-medium hover:text-gray-400" href="#"
+          <a class="font-medium hover:text-gray-400" href="#" aria-label="Search up our courses offering"
             ><svg
               width="20"
               height="20"
@@ -91,7 +91,7 @@
           </a>
           <button
             type="button"
-            class="py-2 px-3 inline-flex items-center gap-x-2 font-bold rounded-lg transition-colors duration-200 ease-in-out  border border-gray-200 hover:border-blue-600 hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none"
+            class="py-2 px-3 inline-flex items-center gap-x-2 font-bold rounded-lg transition-colors duration-200 ease-in-out border border-gray-200 hover:border-blue-600 hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none"
           >
             <div class="flex justify-center items-center gap-2">
               <svg

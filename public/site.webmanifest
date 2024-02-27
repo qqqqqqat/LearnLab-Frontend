@@ -1,0 +1,34 @@
+{
+    "name": "LearnLab",
+    "short_name": "LearnLab",
+    "start_url": "/",
+    "icons": [
+        {
+            "src": "/favicon-16x16.png",
+            "sizes": "16x16",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/favicon-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "/android-chrome-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "/android-chrome-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ],
+    "theme_color": "#3662e3",
+    "background_color": "#3662e3",
+    "display": "standalone"
+}
