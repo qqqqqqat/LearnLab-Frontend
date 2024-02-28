@@ -12,8 +12,8 @@
   "dependencies": {
     "@fontsource/noto-sans-thai": "^5.0.12",
     "@preline/collapse": "^2.0.2",
+    "@preline/dropdown": "^2.0.2",
     "@preline/overlay": "^2.0.2",
-    "@preline/tabs": "^2.0.2",
     "material-icons": "^1.13.12",
     "preline": "^2.0.3",
     "vue": "^3.4.19",

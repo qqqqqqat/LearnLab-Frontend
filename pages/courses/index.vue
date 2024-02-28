@@ -33,11 +33,17 @@ const {
   },
 });
 
-if (pending) {
-  currentPage.value = courses.value?.page || 1;
-  totalPages.value = courses.value?.total_page || 1;
-  console.log(courses.value);
-}
+const once = ref(true)
+
+watch(courses, () => {
+  if (once.value) {
+    currentPage.value = courses.value?.page || 1;
+    totalPages.value = courses.value?.total_page || 1;
+    console.log(courses.value);
+    once.value = false
+  }
+})
+
 
 async function updateQuery(searchQuery: string) {
   pending.value = true;
