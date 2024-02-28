@@ -27,7 +27,11 @@ const {
   refresh,
   error,
   pending,
-} = await useFetch<CourseListing>("http://localhost:8000/api/courses");
+} = await useLazyFetch<CourseListing>("http://localhost:8000/api/courses", {
+  query: {
+    limit: 9,
+  },
+});
 
 if (pending) {
   currentPage.value = courses.value?.page || 1;
@@ -36,21 +40,19 @@ if (pending) {
 }
 
 async function updateQuery(searchQuery: string) {
+  pending.value = true;
   await $fetch<CourseListing>("http://localhost:8000/api/courses", {
     query: {
       search: searchQuery,
       page: currentPage.value,
+      limit: 9,
     },
   }).then((res) => {
+    pending.value = false;
     courses.value = res;
     totalPages.value = res.total_page;
   });
 }
-
-watch(search, (newSearch) => {
-  currentPage.value = 1;
-  updateQuery(newSearch);
-});
 
 watch(currentPage, () => {
   if (currentPage.value > totalPages.value) {
@@ -83,6 +85,12 @@ watch(currentPage, () => {
                 class="py-3 px-4 block w-full border border-1 border-gray-200 shadow-sm rounded-s-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
               />
               <button
+                @click="
+                  () => {
+                    currentPage = 1;
+                    updateQuery(search);
+                  }
+                "
                 type="button"
                 class="w-[2.875rem] h-[2.875rem] flex-shrink-0 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-e-md border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
               >
@@ -106,15 +114,30 @@ watch(currentPage, () => {
           </div>
         </div>
         <div
-          class="grid lg:grid-cols-3 md:grid-cols-2 grid-flow-cols-1 justify-center gap-8 xl:min-w-[1024px] rounded-lg" :class="(!courses?.data.length) ? 'border border-1' : ''"
+          class="grid relative lg:grid-cols-3 md:grid-cols-2 grid-flow-cols-1 justify-center gap-8 xl:min-w-[1024px] rounded-lg"
+          :class="!courses?.data.length ? 'border border-1' : ''"
         >
+          <Transition name="fade">
+            <div
+              v-if="pending"
+              class="absolute flex justify-center bg-gray-700/60 rounded-xl w-full h-full pt-16"
+            >
+              <div
+                class="animate-spin inline-block size-8 border-[3px] border-current border-t-transparent text-blue-700 rounded-full"
+                role="status"
+                aria-label="loading"
+              >
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
+          </Transition>
           <div
             v-for="crs in courses?.data"
             class="flex flex-col bg-white border shadow-sm rounded-xl w-80"
           >
             <img
               class="w-full h-full object-cover rounded-t-xl"
-              src="https://images.unsplash.com/photo-1680868543815-b8666dba60f7?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2532&q=80"
+              :src="crs.c_banner || '/images/CourseBannerDefault.svg'"
               alt="Image Description"
             />
             <div class="p-4 md:p-5">
@@ -130,7 +153,10 @@ watch(currentPage, () => {
               </a>
             </div>
           </div>
-          <div class="flex justify-center item-center col-span-3 pt-16 pb-96" v-if="!courses?.data.length">
+          <div
+            class="flex justify-center item-center col-span-3 pt-16 pb-96"
+            v-if="!courses?.data.length && !pending"
+          >
             <h1 class="text-xl">ไม่พบคำค้นหานั้น</h1>
           </div>
         </div>
@@ -214,3 +240,14 @@ watch(currentPage, () => {
     </div>
   </div>
 </template>
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

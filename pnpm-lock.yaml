@@ -11,6 +11,12 @@ dependencies:
   '@preline/collapse':
     specifier: ^2.0.2
     version: 2.0.2
+  '@preline/overlay':
+    specifier: ^2.0.2
+    version: 2.0.2
+  '@preline/tabs':
+    specifier: ^2.0.2
+    version: 2.0.2
   material-icons:
     specifier: ^1.13.12
     version: 1.13.12
@@ -28,6 +34,9 @@ devDependencies:
   '@nuxtjs/tailwindcss':
     specifier: ^6.11.4
     version: 6.11.4
+  '@tailwindcss/forms':
+    specifier: ^0.5.7
+    version: 0.5.7(tailwindcss@3.4.1)
   '@vueuse/core':
     specifier: ^10.8.0
     version: 10.8.0(vue@3.4.20)
@@ -1492,6 +1501,14 @@ packages:
     resolution: {integrity: sha512-EEHv8tg0zXxLYYjNYc3x7IZzSVx1f49zZwCVosT6+2lY5LkJHWqu5zTbzswqBoeWolIZ0jDfoHv35NIyTPtWKQ==}
     dev: false
 
+  /@preline/overlay@2.0.2:
+    resolution: {integrity: sha512-X3Lw6zRsgxqEnjAqHUYnJD/88NAb2+Q3OlXmvepNmADfUPnWb+rxem2k/M56qiWfP767sZuhDvNeXTlQnGZciA==}
+    dev: false
+
+  /@preline/tabs@2.0.2:
+    resolution: {integrity: sha512-co7kNWSZdh3a9P8YEv77KpW1pfrI2Vom4t32TDvDvuyophl24ax6R9z70Mfk76f/NuJberEy0ckCLHGfeNr1vg==}
+    dev: false
+
   /@rollup/plugin-alias@5.1.0(rollup@4.12.0):
     resolution: {integrity: sha512-lpA3RZ9PdIG7qqhEfv79tBffNaoDuukFDrmhLqg9ifv99u/ehn+lOg30x2zmhf8AQqQUZaMk/B9fZraQ6/acDQ==}
     engines: {node: '>=14.0.0'}
@@ -1789,6 +1806,15 @@ packages:
   /@sindresorhus/merge-streams@2.3.0:
     resolution: {integrity: sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==}
     engines: {node: '>=18'}
+    dev: true
+
+  /@tailwindcss/forms@0.5.7(tailwindcss@3.4.1):
+    resolution: {integrity: sha512-QE7X69iQI+ZXwldE+rzasvbJiyV/ju1FGHH0Qn2W3FKbuYtqp8LKcy6iSw79fVUT5/Vvf+0XgLCeYVG+UV6hOw==}
+    peerDependencies:
+      tailwindcss: '>=3.0.0 || >= 3.0.0-alpha.1'
+    dependencies:
+      mini-svg-data-uri: 1.4.4
+      tailwindcss: 3.4.1
     dev: true
 
   /@trysound/sax@0.2.0:
@@ -4233,6 +4259,11 @@ packages:
   /mimic-fn@4.0.0:
     resolution: {integrity: sha512-vqiC06CuhBTUdZH+RYl8sFrL096vA45Ok5ISO6sE/Mr1jRbGH4Csnhi8f3wKVl7x8mO4Au7Ir9D3Oyv1VYMFJw==}
     engines: {node: '>=12'}
+    dev: true
+
+  /mini-svg-data-uri@1.4.4:
+    resolution: {integrity: sha512-r9deDe9p5FJUPZAk3A59wGH7Ii9YrjjWw0jmw/liSbHl2CHiyXj6FcDXDu2K3TjVAXqiJdaw3xxwlZZr9E6nHg==}
+    hasBin: true
     dev: true
 
   /minimatch@3.1.2:

@@ -12,6 +12,8 @@
   "dependencies": {
     "@fontsource/noto-sans-thai": "^5.0.12",
     "@preline/collapse": "^2.0.2",
+    "@preline/overlay": "^2.0.2",
+    "@preline/tabs": "^2.0.2",
     "material-icons": "^1.13.12",
     "preline": "^2.0.3",
     "vue": "^3.4.19",
@@ -19,6 +21,7 @@
   },
   "devDependencies": {
     "@nuxtjs/tailwindcss": "^6.11.4",
+    "@tailwindcss/forms": "^0.5.7",
     "@vueuse/core": "^10.8.0",
     "@vueuse/nuxt": "^10.8.0",
     "nuxt": "^3.10.3"

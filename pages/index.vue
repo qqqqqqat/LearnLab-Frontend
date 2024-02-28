@@ -11,6 +11,7 @@ function scrollTo() {
 <template>
   <LandingJumbotron @scroll-to-content="scrollTo" />
   <LandingFeatures ref="featureRef" />
+  
   <LandingPromozone/>
   <LandingJoinnow/>
 </template>
