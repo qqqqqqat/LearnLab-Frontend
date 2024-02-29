@@ -3,7 +3,7 @@ interface Course {
   c_id: number;
   c_name: string;
   c_code: string;
-  c_hashed_password: null | string; // Optional string, can be null
+  c_hashed_password: boolean; // Optional string, can be null
   c_description: string;
   c_logo: string | null; // Optional string, can be null
   c_banner: string | null; // Optional string, can be null
@@ -22,6 +22,7 @@ interface CourseListing {
 const search = ref<string>("");
 const currentPage = ref<number>(0);
 const totalPages = ref<number>(0);
+const isLocked = ref({ title: "ทั้งหมด", value: "false" });
 const {
   data: courses,
   refresh,
@@ -33,17 +34,16 @@ const {
   },
 });
 
-const once = ref(true)
+const once = ref(true);
 
 watch(courses, () => {
   if (once.value) {
     currentPage.value = courses.value?.page || 1;
     totalPages.value = courses.value?.total_page || 1;
     console.log(courses.value);
-    once.value = false
+    once.value = false;
   }
-})
-
+});
 
 async function updateQuery(searchQuery: string) {
   pending.value = true;
@@ -52,6 +52,7 @@ async function updateQuery(searchQuery: string) {
       search: searchQuery,
       page: currentPage.value,
       limit: 9,
+      locked: isLocked.value.value,
     },
   }).then((res) => {
     pending.value = false;
@@ -68,6 +69,21 @@ watch(currentPage, () => {
   }
   updateQuery(search.value);
 });
+
+watch(isLocked, () => {
+  updateQuery(search.value);
+});
+
+async function goToCourse(c_id: number, is_locked: boolean) {
+  if (!is_locked) {
+    await navigateTo({
+      path: "/courses/view",
+      query: {
+        id: c_id,
+      },
+    });
+  }
+}
 </script>
 <template>
   <div class="max-w-screen-2xl mx-auto mb-8">
@@ -82,40 +98,92 @@ watch(currentPage, () => {
             >Label</label
           >
           <div class="flex flex-col">
-            <div class="flex rounded-lg shadow-sm">
-              <input
-                v-model="search"
-                type="text"
-                id="hs-trailing-button-add-on-with-icon"
-                name="hs-trailing-button-add-on-with-icon"
-                class="py-3 px-4 block w-full border border-1 border-gray-200 shadow-sm rounded-s-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-              />
-              <button
-                @click="
-                  () => {
-                    currentPage = 1;
-                    updateQuery(search);
-                  }
-                "
-                type="button"
-                class="w-[2.875rem] h-[2.875rem] flex-shrink-0 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-e-md border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-              >
-                <svg
-                  class="flex-shrink-0 size-4"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="24"
-                  height="24"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+            <div class="flex flex-col gap-4 rounded-lg shadow-sm">
+              <div class="flex">
+                <input
+                  v-model="search"
+                  type="text"
+                  id="hs-trailing-button-add-on-with-icon"
+                  name="hs-trailing-button-add-on-with-icon"
+                  class="py-3 px-4 block w-full border border-1 border-gray-200 shadow-sm rounded-s-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                />
+                <button
+                  @click="
+                    () => {
+                      currentPage = 1;
+                      updateQuery(search);
+                    }
+                  "
+                  type="button"
+                  class="w-[2.875rem] h-[2.875rem] flex-shrink-0 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-e-md border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
                 >
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="m21 21-4.3-4.3" />
-                </svg>
-              </button>
+                  <svg
+                    class="flex-shrink-0 size-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.3-4.3" />
+                  </svg>
+                </button>
+              </div>
+              <span class="text-lg text-left w-full">การแสดงผล</span>
+              <div
+                class="hs-dropdown relative inline-flex [--placement:bottom-right]"
+              >
+                <button
+                  id="hs-dropdown"
+                  type="button"
+                  class="hs-dropdown-toggle py-3 px-4 inline-flex justify-between w-full items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+                >
+                  {{ isLocked.title }}
+                  <svg
+                    class="hs-dropdown-open:rotate-180 size-4"
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  >
+                    <path d="m6 9 6 6 6-6" />
+                  </svg>
+                </button>
+
+                <div
+                  class="hs-dropdown-menu w-72 transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden z-10 bg-white shadow-md rounded-lg p-2"
+                  aria-labelledby="hs-dropdown"
+                >
+                  <a
+                    class="flex items-center cursor-pointer gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                    @click="isLocked = { title: 'ทั้งหมด', value: 'false' }"
+                  >
+                    ทั้งหมด
+                  </a>
+                  <a
+                    class="flex items-center cursor-pointer gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                    @click="isLocked = { title: 'ไม่มีรหัส', value: 'free' }"
+                  >
+                    ไม่มีรหัส
+                  </a>
+                  <a
+                    class="flex items-center cursor-pointer gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                    @click="isLocked = { title: 'มีรหัส', value: 'true' }"
+                  >
+                    มีรหัส
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -151,12 +219,21 @@ watch(currentPage, () => {
               <p class="mt-1 text-gray-500">
                 {{ crs.c_description }}
               </p>
-              <a
-                class="mt-2 py-2 px-3 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                href="#"
-              >
-                ดูคอร์ส
-              </a>
+              <div class="flex flex-row justify-between items-end">
+                <button
+                  class="mt-2 py-2 px-3 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                  href="#"
+                  @click="goToCourse(crs.c_id, crs.c_hashed_password)"
+                >
+                  ดูคอร์ส
+                </button>
+                <div v-if="crs.c_hashed_password">
+                  <span
+                    class="material-icons-outlined text-gray-500 select-none"
+                    >lock</span
+                  >
+                </div>
+              </div>
             </div>
           </div>
           <div
