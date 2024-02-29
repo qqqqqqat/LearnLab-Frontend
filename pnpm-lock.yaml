@@ -17,6 +17,9 @@ dependencies:
   '@preline/overlay':
     specifier: ^2.0.2
     version: 2.0.2
+  '@steveyuowo/vue-hot-toast':
+    specifier: ^1.2.1
+    version: 1.2.1
   material-icons:
     specifier: ^1.13.12
     version: 1.13.12
@@ -1807,6 +1810,14 @@ packages:
     resolution: {integrity: sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==}
     engines: {node: '>=18'}
     dev: true
+
+  /@steveyuowo/vue-hot-toast@1.2.1:
+    resolution: {integrity: sha512-loV0P5VR4T8NA7Em3pO+y9S/tLCe5X7RvHuBjloLPrgZAKob0DZexjPDueXzhVtdJI4JK4x6Fq6jUruKPRdmNA==}
+    dependencies:
+      vue: 3.4.20
+    transitivePeerDependencies:
+      - typescript
+    dev: false
 
   /@tailwindcss/forms@0.5.7(tailwindcss@3.4.1):
     resolution: {integrity: sha512-QE7X69iQI+ZXwldE+rzasvbJiyV/ju1FGHH0Qn2W3FKbuYtqp8LKcy6iSw79fVUT5/Vvf+0XgLCeYVG+UV6hOw==}

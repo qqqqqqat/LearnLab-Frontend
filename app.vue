@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { Toaster } from "@steveyuowo/vue-hot-toast";
 import '@fontsource/noto-sans-thai';
+import "@steveyuowo/vue-hot-toast/vue-hot-toast.css";
 useSeoMeta({
         title: 'LearnLab',
         ogTitle: 'LearnLab',
@@ -11,14 +13,18 @@ useSeoMeta({
 </script>
 <template>
   <div>
+  <Toaster />
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
   </div>
 </template>
 
-<style scoped>
+<style>
 body {
   scroll-behavior: smooth !important;
 }
+.VueHotToast__toast-container {
+        @apply !text-black font-sans;
+    }
 </style>

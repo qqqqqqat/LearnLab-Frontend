@@ -49,7 +49,7 @@ const regis_passw_conf = ref<string>("")
           </button>
         </div>
         <div class="flex flex-col overflow-y-auto">
-          <div class="border-b border-gray-200 dark:border-gray-700">
+          <div class="border-b border-gray-200">
             <nav
               class="-mb-0.5 flex justify-center space-x-6"
             >
@@ -57,11 +57,11 @@ const regis_passw_conf = ref<string>("")
                 type="button"
                 :class="
                   activeTab === 0
-                    ? 'font-semibold text-blue-600 border-blue-600'
-                    : 'text-gray-500'
+                    ? 'font-semibold text-blue-600 border-b-2 border-blue-600'
+                    : 'text-gray-500 border-transparent '
                 "
                 @click="activeTab = 0"
-                class="py-4 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap hover:text-blue-600 focus:outline-none focus:text-blue-600 disabled:opacity-50 disabled:pointer-events-none active"
+                class="py-4 px-1 inline-flex items-center gap-x-2 text-sm whitespace-nowrap hover:text-blue-600 focus:outline-none focus:text-blue-600 disabled:opacity-50 disabled:pointer-events-none active"
               >
                 เข้าสู่ระบบ
               </button>
@@ -69,11 +69,11 @@ const regis_passw_conf = ref<string>("")
                 type="button"
                 :class="
                   activeTab === 1
-                    ? 'font-semibold text-blue-600 border-blue-600'
-                    : 'text-gray-500'
+                    ? 'font-semibold text-blue-600 border-b-2 border-blue-600'
+                    : 'text-gray-500 border-transparent '
                 "
                 @click="activeTab = 1"
-                class="py-4 px-1 inline-flex items-center gap-x-2 border-b-2 border-transparent text-sm whitespace-nowrap hover:text-blue-600 focus:outline-none focus:text-blue-600 disabled:opacity-50 disabled:pointer-events-none"
+                class="py-4 px-1 inline-flex items-center gap-x-2 text-sm whitespace-nowrap hover:text-blue-600 focus:outline-none focus:text-blue-600 disabled:opacity-50 disabled:pointer-events-none"
               >
                 ลงทะเบียน
               </button>

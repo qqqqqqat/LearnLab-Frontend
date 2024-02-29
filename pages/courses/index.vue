@@ -40,7 +40,6 @@ watch(courses, () => {
   if (once.value) {
     currentPage.value = courses.value?.page || 1;
     totalPages.value = courses.value?.total_page || 1;
-    console.log(courses.value);
     once.value = false;
   }
 });
@@ -75,6 +74,7 @@ watch(isLocked, () => {
 });
 
 async function goToCourse(c_id: number, is_locked: boolean) {
+  console.log(c_id)
   if (!is_locked) {
     await navigateTo({
       path: "/courses/view",
