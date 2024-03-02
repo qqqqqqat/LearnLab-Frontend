@@ -3,6 +3,8 @@ import { toast } from "@steveyuowo/vue-hot-toast";
 import HSOverlay from "@preline/overlay"
 
 const userState = useUserState();
+const avatarState = useAvatarState()
+
 const activeTab = ref(0);
 const email = ref<string>("");
 const password = ref<string>("");
@@ -47,8 +49,13 @@ async function loginUser() {
     }
   }).then(async res => {
     toast.update(loginToast, {type: 'loading' , message: res.message})
-    await $fetch<User>('/api/auth').then(res => {
+    await $fetch<User>('/api/auth').then(async res => {
          userState.value = res
+         await $fetch<Avatar>('/api/auth/?image=').then(res => {
+                    avatarState.value = res
+                }).catch(err => {
+                    toast.error('โหลดรูปล้มเหลว')
+                })
       toast.update(loginToast, {type: 'success' , message: 'เข้าสู่ระบบสำเร็จ'})
       closeModal()
     })
