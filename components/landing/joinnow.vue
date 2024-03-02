@@ -12,7 +12,7 @@ import 'material-icons/iconfont/outlined.css';
           มาเป็นส่วนหนึ่งกับเราได้แล้ววันนี้
         </h1>
         <div
-          class="flex sm:flex-row flex-col md:justify-start justify-center item-center gap-x-8 gap-y-4"
+          class="flex sm:flex-row flex-col md:justify-start justify-center items-center gap-x-8 gap-y-4"
         >
           <div class="flex justify-center">
             <button

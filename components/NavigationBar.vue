@@ -25,6 +25,7 @@ import { toast } from "@steveyuowo/vue-hot-toast";
             .then(async (res) => {
                 userState.value = null
                 toast.update(signoutToast, {type: 'success', message: 'ออกจากระบบสำเร็จ'})
+                await navigateTo('/', {replace: true})
             })
             .catch((err) => {
               toast.update(signoutToast, {type: 'error', message: 'ออกจากระบบล้มเหลว'})
@@ -92,7 +93,23 @@ import { toast } from "@steveyuowo/vue-hot-toast";
                         to="/courses"
                         aria-label="Read more our courses offering">
                         หลักสูตร
-                        <span class="inline-flex items-center gap-x-1.5 py-1 px-2 rounded-full text-xs font-medium bg-blue-100 text-blue-800">ใหม่</span>
+                        <span v-if="!userState" class="inline-flex items-center gap-x-1.5 py-1 px-2 rounded-full text-xs font-medium bg-blue-100 text-blue-800">ใหม่</span>
+                    </NuxtLink>
+                    <NuxtLink
+                        v-if="userState"
+                        class="transition-color duration-200 ease-in-out font-medium"
+                        :class="route.path === '/mycourse' ? 'text-blue-600 hover:text-blue-400' : 'hover:text-gray-400'"
+                        to="/mycourse"
+                        aria-label="Read more our courses offering">
+                        คอร์สเรียนของฉัน
+                    </NuxtLink>
+                    <NuxtLink
+                    v-if="userState"
+                        class="transition-color duration-200 ease-in-out font-medium"
+                        :class="route.path === '/message' ? 'text-blue-600 hover:text-blue-400' : 'hover:text-gray-400'"
+                        to="/message"
+                        aria-label="Read more our courses offering">
+                        กล่องข้อความ
                     </NuxtLink>
                     <TransitionGroup name="fade">
                         <button

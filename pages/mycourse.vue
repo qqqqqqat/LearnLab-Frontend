@@ -20,7 +20,7 @@
 
     async function updateQuery(searchQuery: string) {
         pending.value = true
-        await $fetch<CourseListing>('/api/courses/', {
+        await $fetch<CourseListing>('/api/courses/me/', {
             query: {
                 search: searchQuery,
                 page: currentPage.value,
@@ -65,7 +65,7 @@
 <template>
     <div class="max-w-screen-2xl mx-auto mb-8">
         <div class="flex flex-col items-center w-full h-full">
-            <h1 class="text-5xl mt-24 font-bold mb-4">คอร์สเรียน</h1>
+            <h1 class="text-5xl mt-24 font-bold mb-4">คอร์สเรียนของฉัน</h1>
             <div class="flex xl:flex-row flex-col gap-4">
                 <div class="flex flex-col justify-center items-center border border-1 rounded-lg shadow-sm p-8 h-fit">
                     <div class="flex flex-col">
@@ -194,7 +194,17 @@
                     </div>
                     </TransitionGroup>
 
-                    <div class="flex justify-center items-center col-span-3 pt-16 pb-96" v-if="!courses?.data.length && !pending">
+                    <div class="flex flex-col justify-center items-center col-span-3 pt-16 pb-96" v-if="!courses?.data.length && !pending && !search">
+                        <h1 class="text-xl">คุณไม่ได้เป็นสมาชิกของคอร์สใด ๆ</h1>
+                        <button
+                                        class="mt-2 py-2 px-3 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                                        href="#"
+                                        @click="navigateTo('/courses')"
+                                        >
+                                        ไปดูคอร์ส
+                                    </button>
+                    </div>
+                    <div class="flex justify-center items-center col-span-3 pt-16 pb-96" v-if="!courses?.data.length && !pending && search">
                         <h1 class="text-xl">ไม่พบคำค้นหานั้น</h1>
                     </div>
                 </div>
