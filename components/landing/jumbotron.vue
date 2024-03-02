@@ -7,7 +7,7 @@ const emit = defineEmits(['scrollToContent'])
   <main class="flex items-center w-full h-screen relative">
     <img
       class="object-cover object-[65%_50%] h-full w-full -z-20 fixed"
-      src="~assets/images/landing/LiftOff.png"
+      src="~assets/images/landing/LiftOff.webp"
       alt="Rocker Lift off image"
     />
     <div class="px-8 mx-auto flex flex-col sm:justify-center h-fit gap-y-4 w-full max-w-screen-2xl pt-12 overflow-auto select-none">
