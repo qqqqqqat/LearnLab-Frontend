@@ -1,7 +1,12 @@
 <script setup lang="ts">
+import { toast } from "@steveyuowo/vue-hot-toast";
+import HSOverlay from "@preline/overlay"
+
+const userState = useUserState();
 const activeTab = ref(0);
 const email = ref<string>("");
 const password = ref<string>("");
+const phone = ref<string>("");
 
 const position = ref({ title: "ตำแหน่ง", role: "" });
 const gender = ref({ title: "เพศ", role: "" });
@@ -10,9 +15,75 @@ const surname = ref<string>("");
 const regis_email = ref<string>("");
 const regis_passw = ref<string>("");
 const regis_passw_conf = ref<string>("");
+
+const modalElem = ref()
+function closeModal() {
+  const { element } = HSOverlay.getInstance(modalElem.value, true)
+  element.close()
+}
+
+function openModal() {
+  const { element } = HSOverlay.getInstance(modalElem.value, true)
+  element.open()
+}
+
+function validateEmail(s_email: string) {
+  return s_email
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+};
+
+
+async function loginUser() {
+  const loginToast = toast.loading('กำลังเข้าสู่ระบบ')
+  const fd = new FormData();
+  await $fetch<AuthPOSTAPIResponse>('/api/auth', {
+    method: 'POST',
+    body: {
+      u_email: email.value,
+      u_password: password.value
+    }
+  }).then(async res => {
+    toast.update(loginToast, {type: 'loading' , message: res.message})
+    await $fetch<User>('/api/auth').then(res => {
+         userState.value = res
+      toast.update(loginToast, {type: 'success' , message: 'เข้าสู่ระบบสำเร็จ'})
+      closeModal()
+    })
+  }).catch(err => {
+    toast.update(loginToast, {type: 'error' , message: err.data.message})
+  })
+}
+
+
+async function registerUser() {
+  const loginToast = toast.loading('กำลังสมัครสมาชิก')
+  await $fetch<AuthPOSTAPIResponse>('/api/auth', {
+    method: 'PUT',
+    body: {
+      u_firstname: name.value,
+      u_lastname: surname.value,
+      u_tel: phone.value,
+      u_gender: gender.value.role,
+      u_role: position.value.role,
+      u_email: regis_email.value,
+      u_password: regis_passw.value
+    }
+  }).then(async res => {
+    toast.update(loginToast, {type: 'success' , message: 'สมัครสมาชิกสำเร็จ'})
+    closeModal()
+  }).catch(err => {
+    toast.update(loginToast, {type: 'error' , message: err.data.message})
+  })
+}
+
+
 </script>
 <template>
   <div
+  ref="modalElem"
     id="hs-slide-down-animation-modal"
     class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none"
   >
@@ -23,7 +94,7 @@ const regis_passw_conf = ref<string>("");
         class="flex flex-col bg-white border shadow-sm rounded-md pointer-events-auto"
       >
         <div class="flex justify-between items-center py-3 px-4">
-          <h3 class="font-bold text-gray-800">ยินดีตอนรับ</h3>
+          <h3 class="font-bold text-gray-800">ยินดีต้อนรับ</h3>
           <button
             type="button"
             class="flex justify-center items-center size-7 text-sm font-semibold rounded-full border border-transparent text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
@@ -80,16 +151,16 @@ const regis_passw_conf = ref<string>("");
             <img src="~/assets/images/login.svg" class="w-48">
             <div class="grow w-full">
               <TransitionGroup name="fade">
-                <div
-                v-show="activeTab === 0"
+              <form v-show="activeTab === 0"
                 class="flex flex-col gap-y-8 p-8"
-                key="login1"
-              >
+                key="login1" @submit.prevent="">
                 <div class="relative">
                   <input
                     type="email"
                     class="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                     placeholder="อีเมล์"
+                    name="email"
+                    v-model="email"
                   />
                   <div
                     class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 peer-disabled:opacity-50 peer-disabled:pointer-events-none"
@@ -116,6 +187,7 @@ const regis_passw_conf = ref<string>("");
                     type="password"
                     class="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                     placeholder="รหัสผ่าน"
+                    name="password"
                     v-model="password"
                   />
                   <div
@@ -140,15 +212,24 @@ const regis_passw_conf = ref<string>("");
                     </svg>
                   </div>
                 </div>
-                <div class="flex justify-center items-center gap-x-2 py-3 px-4">
+                <div class="flex md:justify-end justify-center items-center gap-x-2 py-3 px-4">
                   <button
                     type="button"
-                    class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                    @click="() => {
+                      if (validateEmail(email) && password.length > 4) {
+                        loginUser()
+                      } else if (!validateEmail(regis_email)) {
+                        toast.error('อีเมล์ผิดรูปแบบ')
+                      } else {
+                        toast.error('กรุณากรอกข้อมูลให้ครบ')
+                      }
+                    }"
+                    class="transition-color duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
                   >
                     เข้าสู่ระบบ
                   </button>
                 </div>
-              </div>
+              </form>
               <div
                 v-show="activeTab === 1"
                 class="flex flex-col gap-y-8 p-8"
@@ -322,6 +403,33 @@ const regis_passw_conf = ref<string>("");
                 </div>
                 <div class="relative">
                   <input
+                    type="tel"
+                    class="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                    placeholder="หมายเลขโทรศัพท์"
+                    v-model="phone"
+                  />
+                  <div
+                    class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 peer-disabled:opacity-50 peer-disabled:pointer-events-none"
+                  >
+                    <svg
+                      class="flex-shrink-0 size-4 text-gray-500"
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="relative">
+                  <input
                     type="password"
                     class="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                     placeholder="รหัสผ่าน"
@@ -378,10 +486,25 @@ const regis_passw_conf = ref<string>("");
                     </svg>
                   </div>
                 </div>
-                <div class="flex justify-center items-center gap-x-2 py-3 px-4">
+                <div class="flex md:justify-end justify-center items-center gap-x-2 py-3 px-4">
                   <button
                     type="button"
-                    class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                    @click="() => {
+                      if (validateEmail(regis_email) && regis_passw === regis_passw_conf && phone.length === 10 && name && surname && regis_passw.length > 4) {
+                        registerUser()
+                      } else if (regis_passw !== regis_passw_conf) {
+                        toast.error('รหัสและยืนยันรหัสผ่านไม่ตรงกัน')
+                      } else if (!(phone.length === 10)) {
+                        toast.error('เบอร์โทรศัพท์ไม่ถูกต้อง')
+                      } else if (!(name && surname)) {
+                        toast.error('กรุณาใส่ชื่อและนามสกุล')
+                      } else if (!validateEmail(regis_email)) {
+                        toast.error('อีเมล์ผิดรูปแบบ')
+                      } else {
+                        toast.error('กรุณากรอกข้อมูลให้ครบ')
+                      }
+                    }"
+                    class="transition-color duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
                   >
                     ลงทะเบียน
                   </button>
@@ -390,7 +513,6 @@ const regis_passw_conf = ref<string>("");
             </TransitionGroup>
           </div>
         </div>
-
         </div>
       </div>
     </div>
