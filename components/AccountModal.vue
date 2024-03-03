@@ -95,7 +95,7 @@
         }
 
         await $fetch<AuthPOSTAPIResponse>('/api/auth', {
-            method: 'POST',
+            method: 'PUT',
             body: formData,
         })
             .then(async (res) => {
@@ -439,7 +439,7 @@
                                     </div>
                                     <div>
                                     <div class="pb-2">รูปโปรไฟล์</div>
-                                    <label for="small-file-input" class="sr-only">Choose file</label>
+                                    <label for="small-file-input" class="sr-only">เลือกไฟล์</label>
                                     <input
                                         type="file"
                                         @change="onFileChangedAvatar($event)"

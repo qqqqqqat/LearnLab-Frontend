@@ -118,7 +118,7 @@ import { toast } from "@steveyuowo/vue-hot-toast";
                             type="button"
                             data-hs-overlay="#hs-slide-down-animation-modal"
                             class="py-2 px-3 md:inline-flex items-center gap-x-2 font-bold rounded-lg transition-colors duration-200 ease-in-out border border-gray-200 hover:border-blue-600 hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none">
-                            <div class="flex justify-center items-center gap-2">
+                            <div class="flex justify-center items-center gap-2 w-20 overflow-hidden">
                                 <span class="material-icons-outlined" style="font-size: 18px;">login</span>
                                 เข้าสู่ระบบ
                             </div>
@@ -132,9 +132,9 @@ import { toast } from "@steveyuowo/vue-hot-toast";
                             </div>
                         </div>
                         <Transition key="stateLoggedInName" name="fade">
-                            <div v-show="userMenu" class="absolute md:top-16 top-48 flex flex-col border border-1 w-48 rounded-b-lg shadow-md">
+                            <div v-show="userMenu" class="absolute md:top-16 -bottom-[115px] flex flex-col border border-1 w-48 rounded-b-lg shadow-md">
                                 <div class="flex flex-col rounded-b-lg">
-                                    <div class="flex items-center p-4 gap-x-2 cursor-pointer hover:bg-gray-200 bg-white">
+                                    <div @click="() => {navigateTo('/settings'); userMenu = false;}" :class="route.path === '/settings' ? 'bg-blue-600 text-white hover:bg-blue-400' : 'hover:text-gray-400 bg-white'" class="flex items-center p-4 gap-x-2 cursor-pointer hover:bg-gray-200 ">
                                         <span class="material-icons-outlined">settings</span>
                                         ตั้งค่าผู้ใช้
                                     </div>
