@@ -125,7 +125,7 @@ import { toast } from "@steveyuowo/vue-hot-toast";
                         </button>
                         <div key="stateLoggedIn" v-if="userState" @click="userMenu = !userMenu" class="md:px-3 flex flex-row cursor-pointer items-center gap-x-2 font-bold rounded-lg transition-colors duration-200 ease-in-out">
                             <div class="rounded-md w-8 h-8 bg-slate-200 flex flex-col justify-center items-center text-lg" v-if="!avatarState?.u_avatar">{{ `${userState?.u_firstname.slice(0, 1)}${userState?.u_lastname.slice(0, 1)}` }}</div>
-                            <div class="rounded-md w-8 h-8" v-else><img :src="`data:${avatarState?.u_avatar_mime_type};base64,${avatarState?.u_avatar}`" /></div>
+                            <div class="rounded-md w-8 h-8" v-else><img class="rounded-md" :src="`data:${avatarState?.u_avatar_mime_type};base64,${avatarState?.u_avatar}`" /></div>
                             <div class="flex items-center">
                                 <span>{{ userState?.u_firstname }} {{ userState?.u_lastname }}</span>
                                 <span class="material-icons-outlined">arrow_drop_down</span>
