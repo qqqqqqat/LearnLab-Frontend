@@ -7,6 +7,7 @@ import { toast } from "@steveyuowo/vue-hot-toast";
     const userMenu = ref(false)
 
     async function fetchUser() {
+        if (userState.value && avatarState.value) return; // Do not fetch if state is already set 
         await $fetch<User>('/api/auth/')
             .then(async (res) => {
                 userState.value = res
