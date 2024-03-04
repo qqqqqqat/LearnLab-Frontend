@@ -178,10 +178,10 @@
                         </div>
                         <div v-else v-for="crs in courses?.data" class="flex justify-center items-center rounded-xl">
                             <div class="flex flex-col bg-white border shadow-sm rounded-xl w-80">
-                                <img class="w-full h-full object-cover aspect-[17/9] rounded-t-xl" :src="crs.c_banner || '/images/CourseBannerDefault.svg'" alt="Image Description" />
+                                <img class="w-full h-full object-cover aspect-[17/9] rounded-t-xl" loading="lazy" :src="crs.c_banner ? `/api/courses/banner/?c_id=${crs.c_id}` : '/images/CourseBannerDefault.svg'" alt="Image Description" />
                                 <div class="p-4 md:p-5">
-                                    <h3 class="text-lg font-bold text-gray-800">{{ crs.c_name }}</h3>
-                                    <p class="mt-1 text-gray-500">
+                                    <h3 class="text-lg font-bold text-gray-800 line-clamp-2">{{ crs.c_name }}</h3>
+                                    <p class="mt-1 text-gray-500 h-12 overflow-auto">
                                         {{ crs.c_description }}
                                     </p>
                                     <div class="flex flex-row justify-between items-end">

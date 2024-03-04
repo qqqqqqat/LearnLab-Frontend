@@ -1,7 +1,6 @@
 <script setup lang="ts">
     import { toast } from '@steveyuowo/vue-hot-toast'
 
-    const toastID = toast.loading('กำลังโหลดข้อมูลคอร์ส')
     const route = useRoute()
 
     let crs_info = ref()
@@ -42,7 +41,7 @@
                 crs_pending.value = false
             })
             .catch((err) => {
-                toast.update(toastID, { type: 'error', message: err.data.message })
+                toast.error(err.data.message)
                 navigateTo('/mycourse', { replace: true })
             })
     }
@@ -51,11 +50,6 @@
       fetchCourse(route.query.id)
     }
 
-    watch(crs_pending, (state) => {
-        if (!state) {
-            toast.update(toastID, { type: 'success', message: 'โหลดสำเร็จ' })
-        }
-    })
 </script>
 <template>
     <NavigationBar />
@@ -80,11 +74,11 @@
             <div class="flex relative">
                 <img
                     class="w-full h-full max-h-96 object-cover object-[0%_50%] rounded-xl"
-                    :src="crs_info?.c_banner ? crs_info?.c_banner : '/images/CourseBannerDefault.svg'"
+                    loading="lazy" :src="crs_info?.c_banner ? `/api/courses/banner/?c_id=${crs_info?.c_id}` : '/images/CourseBannerDefault.svg'"
                     alt="Image Description" />
                 <div class="absolute w-full h-full rounded-xl bg-gradient-to-b from-slate-50/0 from-70% to-zinc-900"></div>
                 <div v-if="!crs_pending" class="absolute flex flex-col gap-2 left-5 bottom-5">
-                    <span class="text-4xl font-bold text-white line-clamp-2">{{ crs_info?.c_name }}</span>
+                    <span class="text-4xl font-bold text-white line-clamp-1">{{ crs_info?.c_name }}</span>
                     <span class="bottom-0 text-sm font-light text-white h-auto max-h-10 overflow-auto">
                         {{ crs_info?.c_description }}
                     </span>
@@ -134,11 +128,11 @@
                         <span class="material-icons-outlined">edit_note</span>
                         งานมอบหมาย
                     </div>
-                    <div class="nav-menu">PHPSESSIONID: {{ sessionInfo }}</div>
+                    <!-- <div class="nav-menu">PHPSESSIONID: {{ sessionInfo }}</div>
                     <div class="nav-menu" @click="fetchSessionID()">Fetch</div>
-                    <div class="nav-menu" @click="destroySession()">Destroy</div>
+                    <div class="nav-menu" @click="destroySession()">Destroy</div> -->
                 </nav>
-                <main class="flex flex-col gap-y-4">
+                <main class="flex flex-col gap-y-4 w-full">
                     <slot />
                 </main>
             </div>

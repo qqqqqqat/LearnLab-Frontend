@@ -21,10 +21,8 @@ declare global {
         c_hashed_password: boolean // Optional string, can be null
         c_description: string
         c_logo: string | null // Optional string, can be null
-        c_banner: string | null // Optional string, can be null
-        c_created_at: string
+        c_banner: boolean // Optional string, can be null
         c_updated_at: string
-        c_privacy: 'PUBLIC' | 'PRIVATE'
     }
 
     interface CourseListing {
@@ -45,6 +43,27 @@ declare global {
     }
 
     type EnrolledCourse = number[];
+
+    interface PostGETAPIResponse {
+      page: number;
+      limit: number;
+      total_page: number;
+      data: {
+        p_id: number;
+        p_created_at: string;
+        p_updated_at: string;
+        p_title: string;
+        p_content: string;
+        p_item_list: string;
+        p_type: string;
+        u_id: number;
+        u_role: 'TA' | 'INSTRUCTOR';
+        u_firstname: string;
+        u_lastname: string;
+        u_avatar: boolean;
+      }[];
+    }
+    
     
 }
 
