@@ -1,12 +1,10 @@
 <script setup lang="ts">
-
-
     const search = ref<string>('')
     const currentPage = ref<number>(0)
     const totalPages = ref<number>(0)
     const isLocked = ref({ title: 'ทั้งหมด', value: 'false' })
     const courses = ref<CourseListing | null>()
-    const pending = ref();
+    const pending = ref()
 
     const once = ref(true)
 
@@ -69,81 +67,85 @@
             <div class="flex xl:flex-row flex-col gap-4">
                 <div class="flex flex-col justify-center items-center border border-1 rounded-lg shadow-sm p-8 h-fit">
                     <div class="flex flex-col">
-                        <div class="flex flex-col gap-2 rounded-lg shadow-sm">
-                            <h4 class="text-lg text-left w-full">กรองข้อมูล</h4>
-                            <label for="hs-trailing-button-add-on-with-icon" class="sr-only">Label</label>
-                            <div class="flex">
-                                <input
-                                    v-model="search"
-                                    type="text"
-                                    id="hs-trailing-button-add-on-with-icon"
-                                    name="hs-trailing-button-add-on-with-icon"
-                                    class="py-3 px-4 block w-full border border-1 border-gray-200 shadow-sm rounded-s-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" />
-                                <button
-                                    @click="
-                                        () => {
-                                            currentPage = 1
-                                            updateQuery(search)
-                                        }
-                                    "
-                                    type="button"
-                                    class="w-[2.875rem] h-[2.875rem] flex-shrink-0 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-e-md border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-                                    <svg
-                                        class="flex-shrink-0 size-4"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <circle cx="11" cy="11" r="8" />
-                                        <path d="m21 21-4.3-4.3" />
-                                    </svg>
-                                </button>
+                        <div class="flex xl:flex-col md:flex-row flex-col gap-x-8 gap-2 rounded-lg">
+                            <div class="flex flex-col">
+                                <h4 class="text-lg text-left w-full">กรองข้อมูล</h4>
+                                <label for="hs-trailing-button-add-on-with-icon" class="sr-only">Label</label>
+                                <div class="flex">
+                                    <input
+                                        v-model="search"
+                                        type="text"
+                                        id="hs-trailing-button-add-on-with-icon"
+                                        name="hs-trailing-button-add-on-with-icon"
+                                        class="py-3 px-4 block w-full border border-1 border-gray-200 shadow-sm rounded-s-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" />
+                                    <button
+                                        @click="
+                                            () => {
+                                                currentPage = 1
+                                                updateQuery(search)
+                                            }
+                                        "
+                                        type="button"
+                                        class="w-[2.875rem] h-[2.875rem] flex-shrink-0 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-e-md border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                                        <svg
+                                            class="flex-shrink-0 size-4"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <circle cx="11" cy="11" r="8" />
+                                            <path d="m21 21-4.3-4.3" />
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
-                            <span class="text-lg text-left w-full">การแสดงผล</span>
-                            <div class="hs-dropdown relative inline-flex [--placement:bottom-right]">
-                                <button
-                                    id="hs-dropdown"
-                                    type="button"
-                                    class="hs-dropdown-toggle py-3 px-4 inline-flex justify-between w-full items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none">
-                                    {{ isLocked.title }}
-                                    <svg
-                                        class="hs-dropdown-open:rotate-180 size-4"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        stroke-width="2"
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round">
-                                        <path d="m6 9 6 6 6-6" />
-                                    </svg>
-                                </button>
+                            <div class="flex flex-col">
+                                <span class="text-lg text-left w-full">การแสดงผล</span>
+                                <div class="hs-dropdown w-64 relative inline-flex [--placement:bottom-right]">
+                                    <button
+                                        id="hs-dropdown"
+                                        type="button"
+                                        class="hs-dropdown-toggle py-3 px-4 inline-flex justify-between w-full items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none">
+                                        {{ isLocked.title }}
+                                        <svg
+                                            class="hs-dropdown-open:rotate-180 size-4"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            width="24"
+                                            height="24"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round">
+                                            <path d="m6 9 6 6 6-6" />
+                                        </svg>
+                                    </button>
 
-                                <div
-                                    class="hs-dropdown-menu w-72 transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden z-10 bg-white shadow-md rounded-lg p-2"
-                                    aria-labelledby="hs-dropdown">
-                                    <a
-                                        class="flex items-center cursor-pointer gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                        @click="isLocked = { title: 'ทั้งหมด', value: 'false' }">
-                                        ทั้งหมด
-                                    </a>
-                                    <a
-                                        class="flex items-center cursor-pointer gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                        @click="isLocked = { title: 'ไม่มีรหัส', value: 'free' }">
-                                        ไม่มีรหัส
-                                    </a>
-                                    <a
-                                        class="flex items-center cursor-pointer gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                        @click="isLocked = { title: 'มีรหัส', value: 'true' }">
-                                        มีรหัส
-                                    </a>
+                                    <div
+                                        class="hs-dropdown-menu w-72 transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden z-10 bg-white shadow-md rounded-lg p-2"
+                                        aria-labelledby="hs-dropdown">
+                                        <a
+                                            class="flex items-center cursor-pointer gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                            @click="isLocked = { title: 'ทั้งหมด', value: 'false' }">
+                                            ทั้งหมด
+                                        </a>
+                                        <a
+                                            class="flex items-center cursor-pointer gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                            @click="isLocked = { title: 'ไม่มีรหัส', value: 'free' }">
+                                            ไม่มีรหัส
+                                        </a>
+                                        <a
+                                            class="flex items-center cursor-pointer gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
+                                            @click="isLocked = { title: 'มีรหัส', value: 'true' }">
+                                            มีรหัส
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -151,58 +153,61 @@
                 </div>
                 <div class="grid relative lg:grid-cols-3 md:grid-cols-2 grid-flow-cols-1 justify-center gap-8 xl:min-w-[1024px] rounded-lg" :class="!courses?.data.length ? 'border border-1' : ''">
                     <TransitionGroup name="fade">
-                        <div v-if="pending" v-for="crs in 9" :key="`crs${crs}`" class="flex flex-col bg-white border shadow-sm rounded-xl w-80">
-                            <div class="max-w-96 max-h-96 animate-pulse bg-gray-200 object-cover w-full aspect-[17/9] rounded-t-xl"></div>
-                            <div class="p-4 md:p-5">
-                                <h3 class="text-lg font-bold text-gray-800">
-                                    <span class="size-6 w-full block bg-gray-200 rounded-full"></span>
-                                </h3>
-                                <p class="text-gray-500 mt-2">
-                                    <span class="size-3 w-full block bg-gray-200 rounded-full mb-2"></span>
-                                    <span class="size-3 w-full block bg-gray-200 rounded-full mb-2"></span>
-                                </p>
-                                <div class="flex flex-row justify-between items-end">
-                                    <button
-                                        class="mt-2 py-2 px-3 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                                        href="#"
-                                        disabled>
-                                        ดูคอร์ส
-                                    </button>
-                                    <div></div>
+                        <div v-if="pending" v-for="crs in 9" :key="`crs${crs}`" class="flex justify-center items-center rounded-xl">
+                            <div class="flex flex-col bg-white border shadow-sm rounded-xl w-80">
+                                <div class="max-w-96 max-h-96 animate-pulse bg-gray-200 object-cover w-full aspect-[17/9] rounded-t-xl"></div>
+                                <div class="p-4 md:p-5">
+                                    <h3 class="text-lg font-bold text-gray-800">
+                                        <span class="size-6 w-full block bg-gray-200 rounded-full"></span>
+                                    </h3>
+                                    <p class="text-gray-500 mt-2">
+                                        <span class="size-3 w-full block bg-gray-200 rounded-full mb-2"></span>
+                                        <span class="size-3 w-full block bg-gray-200 rounded-full mb-2"></span>
+                                    </p>
+                                    <div class="flex flex-row justify-between items-end">
+                                        <button
+                                            class="mt-2 py-2 px-3 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                                            href="#"
+                                            disabled>
+                                            ดูคอร์ส
+                                        </button>
+                                        <div></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div v-else v-for="crs in courses?.data" class="flex flex-col bg-white border shadow-sm rounded-xl w-80">
-                        <img class="w-full h-full object-cover aspect-[17/9] rounded-t-xl" :src="crs.c_banner || '/images/CourseBannerDefault.svg'" alt="Image Description" />
-                        <div class="p-4 md:p-5">
-                            <h3 class="text-lg font-bold text-gray-800">{{ crs.c_name }}</h3>
-                            <p class="mt-1 text-gray-500">
-                                {{ crs.c_description }}
-                            </p>
-                            <div class="flex flex-row justify-between items-end">
-                                <button
-                                    class="mt-2 py-2 px-3 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                                    href="#"
-                                    @click="goToCourse(crs.c_id, crs.c_hashed_password)">
-                                    ดูคอร์ส
-                                </button>
-                                <div v-if="crs.c_hashed_password" class="hs-tooltip">
-                                    <span class="material-icons-outlined text-gray-500 select-none">lock</span>
+                        <div v-else v-for="crs in courses?.data" class="flex justify-center items-center rounded-xl">
+                            <div class="flex flex-col bg-white border shadow-sm rounded-xl w-80">
+                                <img class="w-full h-full object-cover aspect-[17/9] rounded-t-xl" :src="crs.c_banner || '/images/CourseBannerDefault.svg'" alt="Image Description" />
+                                <div class="p-4 md:p-5">
+                                    <h3 class="text-lg font-bold text-gray-800">{{ crs.c_name }}</h3>
+                                    <p class="mt-1 text-gray-500">
+                                        {{ crs.c_description }}
+                                    </p>
+                                    <div class="flex flex-row justify-between items-end">
+                                        <button
+                                            class="mt-2 py-2 px-3 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                                            href="#"
+                                            @click="goToCourse(crs.c_id, crs.c_hashed_password)">
+                                            ดูคอร์ส
+                                        </button>
+                                        <div v-if="crs.c_hashed_password" class="hs-tooltip">
+                                            <span class="material-icons-outlined text-gray-500 select-none">lock</span>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
                     </TransitionGroup>
 
                     <div class="flex flex-col justify-center items-center col-span-3 pt-16 pb-96" v-if="!courses?.data.length && !pending && !search">
                         <h1 class="text-xl">คุณไม่ได้เป็นสมาชิกของคอร์สใด ๆ</h1>
                         <button
-                                        class="mt-2 py-2 px-3 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-                                        href="#"
-                                        @click="navigateTo('/courses')"
-                                        >
-                                        ไปดูคอร์ส
-                                    </button>
+                            class="mt-2 py-2 px-3 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                            href="#"
+                            @click="navigateTo('/courses')">
+                            ไปดูคอร์ส
+                        </button>
                     </div>
                     <div class="flex justify-center items-center col-span-3 pt-16 pb-96" v-if="!courses?.data.length && !pending && search">
                         <h1 class="text-xl">ไม่พบคำค้นหานั้น</h1>

@@ -147,7 +147,7 @@
                     <div class="flex md:flex-row flex-col justify-center items-center w-full gap-4 md:pl-8 md:pt-0 pt-8">
                         <img src="~/assets/images/login.svg" class="w-48" />
                         <div class="grow w-full h-fit">
-                            <TransitionGroup name="fade" mode="out-in">
+                            <TransitionGroup name="fade">
                                 <form v-show="activeTab === 0" class="flex flex-col gap-y-8 p-8" key="login1" @submit.prevent="">
                                     <div class="relative">
                                         <input
@@ -219,7 +219,7 @@
                                 <form v-show="activeTab === 1" class="flex flex-col gap-y-8 p-8" key="regis1" @submit.prevent="">
                                     <div class="hs-dropdown relative">
                                         <button
-                                            id="hs-dropdown-default"
+                                            id="hs-dropdown-position"
                                             type="button"
                                             class="hs-dropdown-toggle py-3 px-4 inline-flex justify-between w-full items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none">
                                             {{ position.title }}
@@ -240,7 +240,7 @@
 
                                         <div
                                             class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden w-64 z-[100] bg-white shadow-md rounded-lg p-2 mt-2 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
-                                            aria-labelledby="hs-dropdown-default">
+                                            aria-labelledby="hs-dropdown-position">
                                             <a
                                                 class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                 @click="position = { title: 'ผู้เรียน', role: 'STUDENT' }">
@@ -255,7 +255,7 @@
                                     </div>
                                     <div class="hs-dropdown relative">
                                         <button
-                                            id="hs-dropdown-default"
+                                            id="hs-dropdown-gender"
                                             type="button"
                                             class="hs-dropdown-toggle py-3 px-4 inline-flex justify-between w-full items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none">
                                             {{ gender.title }}
@@ -276,7 +276,7 @@
 
                                         <div
                                             class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden w-64 z-[100] bg-white shadow-md rounded-lg p-2 mt-2 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
-                                            aria-labelledby="hs-dropdown-default">
+                                            aria-labelledby="hs-dropdown-gender">
                                             <a
                                                 class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                                 @click="gender = { title: 'ชาย', role: 'MALE' }">

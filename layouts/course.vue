@@ -60,7 +60,7 @@ watch(crs_pending, (state) => {
     <div class="flex flex-col gap-4 pb-16 px-4">
       <div class="flex gap-x-4 relative">
         <button
-          @click="navigateTo('/courses')"
+          @click="navigateTo('/mycourse')"
           class="transition-all duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:bg-blue-100 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none"
         >
           <span class="material-icons-outlined">home</span>กลับหน้าคอร์ส
