@@ -73,15 +73,6 @@
     async function registerUser() {
         const loginToast = toast.loading('กำลังสมัครสมาชิก')
         const formData = new FormData()
-        const data = {
-            u_firstname: name.value,
-            u_lastname: surname.value,
-            u_tel: phone.value,
-            u_gender: gender.value.role,
-            u_role: position.value.role,
-            u_email: regis_email.value,
-            u_password: regis_passw.value,
-        }
         formData.append('u_firstname', name.value)
         formData.append('u_lastname', surname.value)
         formData.append('u_tel', phone.value)
@@ -95,7 +86,7 @@
         }
 
         await $fetch<AuthPOSTAPIResponse>('/api/auth', {
-            method: 'PUT',
+            method: 'POST',
             body: formData,
         })
             .then(async (res) => {
