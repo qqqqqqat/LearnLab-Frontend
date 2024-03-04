@@ -309,7 +309,7 @@
                             <img class="w-full h-full object-cover aspect-[17/9] rounded-t-xl" :src="crs.c_banner || '/images/CourseBannerDefault.svg'" alt="Image Description" />
                             <div class="p-4 md:p-5">
                                 <h3 class="text-lg font-bold text-gray-800">{{ crs.c_name }}</h3>
-                                <p class="mt-1 text-gray-500">
+                                <p class="mt-1 text-gray-500 h-12 overflow-auto">
                                     {{ crs.c_description }}
                                 </p>
                                 <div class="flex flex-row justify-between items-end">
@@ -418,4 +418,22 @@
     .fade-leave-to {
         opacity: 0;
     }
+    ::-webkit-scrollbar {
+  width: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #d6dee1;
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #a8bbbf;
+}
 </style>

@@ -42,7 +42,7 @@ export default defineNuxtConfig({
   },
   nitro: {
     routeRules: {
-        '/api/**': {proxy: 'http://localhost:8000/api/**'}, // For dev
+        '/api/**': {proxy: process.env.BACKEND_URL ? `http://${process.env.BACKEND_URL}/api/**` : 'http://localhost:8000/api/**'}, // For dev
     },
 },
 })

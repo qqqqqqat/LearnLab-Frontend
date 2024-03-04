@@ -146,8 +146,8 @@
                     </div>
                     <div class="flex md:flex-row flex-col justify-center items-center w-full gap-4 md:pl-8 md:pt-0 pt-8">
                         <img src="~/assets/images/login.svg" class="w-48" />
-                        <div class="grow w-full">
-                            <TransitionGroup name="fade">
+                        <div class="grow w-full h-fit">
+                            <TransitionGroup name="fade" mode="out-in">
                                 <form v-show="activeTab === 0" class="flex flex-col gap-y-8 p-8" key="login1" @submit.prevent="">
                                     <div class="relative">
                                         <input
@@ -216,7 +216,7 @@
                                         </button>
                                     </div>
                                 </form>
-                                <div v-show="activeTab === 1" class="flex flex-col gap-y-8 p-8" key="regis1">
+                                <form v-show="activeTab === 1" class="flex flex-col gap-y-8 p-8" key="regis1" @submit.prevent="">
                                     <div class="hs-dropdown relative">
                                         <button
                                             id="hs-dropdown-default"
@@ -464,7 +464,7 @@
                                             ลงทะเบียน
                                         </button>
                                     </div>
-                                </div>
+                                </form>
                             </TransitionGroup>
                         </div>
                     </div>
@@ -475,8 +475,11 @@
 </template>
 
 <style scoped>
+
+
     .fade-enter-active,
     .fade-leave-active {
+        height: inherit;
         transition: opacity 0.25s ease;
     }
 
