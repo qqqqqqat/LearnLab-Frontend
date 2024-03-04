@@ -24,7 +24,7 @@
         const { element } = HSOverlay.getInstance(modalElem.value, true)
         element.close()
     }
-
+    
     function openModal() {
         const { element } = HSOverlay.getInstance(modalElem.value, true)
         element.open()

@@ -39,6 +39,10 @@ declare global {
       message:  "Authentication success" | "Authentication failed";
     }
     
+    interface JoinCoursePOSTAPIResponse {
+      status: 200 | 400;
+      message:  "รหัสคอร์สผิด กรุณาลองใหม่" | "กรุณาใส่รหัส" | "Invalid input" | 'เข้าร่วมคอร์สล้มเหลว' | 'เข้าร่วมคอร์สสำเร็จ';
+    }
     
 }
 
