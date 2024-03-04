@@ -27,6 +27,8 @@
         }
     })
 
+    const { data: enrolled } = await useLazyFetch<EnrolledCourse>('/api/courses/me/?mycourse');
+
     async function updateQuery(searchQuery: string) {
         pending.value = true
         await $fetch<CourseListing>('/api/courses/', {
@@ -107,6 +109,8 @@
             crscode.value = crscode.value.slice(0, 8)
         }
     })
+
+    
 </script>
 <template>
     <div
@@ -253,7 +257,7 @@
                                     </button>
 
                                     <div
-                                        class="hs-dropdown-menu w-72 transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden z-10 bg-white shadow-md rounded-lg p-2"
+                                        class="hs-dropdown-menu max-w-72 transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden z-10 bg-white shadow-md rounded-lg p-2"
                                         aria-labelledby="hs-dropdown">
                                         <a
                                             class="flex items-center cursor-pointer gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
@@ -326,7 +330,7 @@
                             <div class="flex flex-col bg-white border shadow-sm rounded-xl w-80">
                                 <img class="w-full h-full object-cover aspect-[17/9] rounded-t-xl" :src="crs.c_banner || '/images/CourseBannerDefault.svg'" alt="Image Description" />
                                 <div class="p-4 md:p-5">
-                                    <h3 class="text-lg font-bold text-gray-800">{{ crs.c_name }}</h3>
+                                    <h3 class="text-lg font-bold text-gray-800 line-clamp-2">{{ crs.c_name }}</h3>
                                     <p class="mt-1 text-gray-500 h-12 overflow-auto">
                                         {{ crs.c_description }}
                                     </p>
@@ -334,16 +338,20 @@
                                         <button
                                             class="mt-2 py-2 px-3 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
                                             href="#"
+                                            :disabled="enrolled?.includes(crs.c_id)"
                                             @click="
                                                 () => {
-                                                    if (userState) {
+                                                    if (userState && !enrolled?.includes(crs.c_id)) {
                                                         goToCourse(crs.c_id, crs.c_name, crs.c_hashed_password)
                                                     } else {
                                                         toast.error('กรุณาลงชื่อเข้าใช้ก่อน')
                                                     }
                                                 }
                                             ">
-                                            {{ crs.c_hashed_password ? 'ใส่รหัสเพื่อเข้า' : 'เข้าร่วมคอร์ส' }}
+                                            <span class="material-icons-outlined" style="font-size: 17px;">
+                                                {{ enrolled?.includes(crs.c_id) ? 'check' : crs.c_hashed_password ? 'key' : 'login' }}
+                                            </span>
+                                            {{ enrolled?.includes(crs.c_id) ? 'เข้าร่วมแล้ว' : crs.c_hashed_password ? 'ใส่รหัสเพื่อเข้า' : 'เข้าร่วมคอร์ส' }}
                                         </button>
                                         <div v-if="crs.c_hashed_password" class="hs-tooltip">
                                             <span class="material-icons-outlined text-gray-500 select-none">lock</span>

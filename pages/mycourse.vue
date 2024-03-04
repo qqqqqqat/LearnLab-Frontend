@@ -106,7 +106,7 @@
                             </div>
                             <div class="flex flex-col">
                                 <span class="text-lg text-left w-full">การแสดงผล</span>
-                                <div class="hs-dropdown w-64 relative inline-flex [--placement:bottom-right]">
+                                <div class="hs-dropdown max-w-64 relative inline-flex [--placement:bottom-right]">
                                     <button
                                         id="hs-dropdown"
                                         type="button"

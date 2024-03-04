@@ -42,7 +42,7 @@
     }
 
     async function loginUser() {
-        const loginToast = toast.loading('กำลังเข้าสู่ระบบ')
+        const loginToast1 = toast.loading('กำลังเข้าสู่ระบบ')
         await $fetch<AuthPOSTAPIResponse>('/api/auth', {
             method: 'PUT',
             body: {
@@ -51,7 +51,7 @@
             },
         })
             .then(async (res) => {
-                toast.update(loginToast, { type: 'loading', message: res.message })
+                toast.update(loginToast1, { type: 'loading', message: res.message })
                 await $fetch<User>('/api/auth').then(async (res) => {
                     userState.value = res
                     await $fetch<Avatar>('/api/auth/?image=')
@@ -61,12 +61,12 @@
                         .catch((err) => {
                             toast.error('โหลดรูปล้มเหลว')
                         })
-                    toast.update(loginToast, { type: 'success', message: 'เข้าสู่ระบบสำเร็จ' })
+                    toast.update(loginToast1, { type: 'success', message: 'เข้าสู่ระบบสำเร็จ' })
                     closeModal()
                 })
             })
             .catch((err) => {
-                toast.update(loginToast, { type: 'error', message: err.data.message })
+                toast.update(loginToast1, { type: 'error', message: err.data?.message })
             })
     }
 
