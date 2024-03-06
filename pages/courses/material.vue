@@ -100,10 +100,10 @@
                 <button
                 v-if="userRole?.[route.query.id] !== 'STUDENT'"
                     type="button"
-                    class="hs-dropdown-toggle py-3 px-3 flex-shrink-0 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                    class="hs-dropdown-toggle py-3 px-4 flex-shrink-0 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
                     เพิ่ม
                     <svg
-                        class="hs-dropdown-open:rotate-180 size-4"
+                        class="hs-dropdown-open:rotate-180 size-4 transition duration-150 ease-in-out "
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
                         height="24"
@@ -137,7 +137,7 @@
                 </div>
             </div>
         </div>
-        <div v-if="(file_post?.length || 0) > 0" v-for="file in file_post" class="flex flex-col border border-1 rounded-md w-full p-2" :class="file.f_type === 'FOLDER' ? 'hover:bg-slate-50' : ''">
+        <div v-if="(file_post?.length || 0) > 0" v-for="file in file_post" class="flex flex-col border border-1 rounded-md w-full p-2" :class="file.f_type === 'FOLDER' ? 'hover:bg-slate-50 transition-color duration-200 ease-in-out' : ''">
             <div class="flex flex-row justify-between items-center gap-2 w-full">
                 <div
                     class="flex flex-row items-center gap-2 w-full"

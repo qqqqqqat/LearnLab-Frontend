@@ -41,7 +41,16 @@
     // console.log(userRole?.value[route.query.id])
 </script>
 <template>
-    <div class="flex flex-col gap-8 w-full">
+    <div class="flex flex-col gap-4 w-full">
+      <div class="flex flex-row justify-between items-center gap-4">
+        <div></div>
+        <button
+                v-if="userRole?.[route.query.id] !== 'STUDENT'"
+                    type="button"
+                    class="py-2 px-3 flex-shrink-0 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                    <span class="material-icons-outlined">add</span>เพิ่มโพสต์ในคอร์ส
+                </button>
+      </div>
         <div v-if="(crs_post?.data.length || 0) > 0" v-for="post in crs_post?.data" class="flex flex-col border border-1 rounded-md gap-2 w-full p-4">
             <div class="flex items-center gap-4 w-full">
                 <div v-if="post.u_avatar" class="rounded-md w-12 h-12"><img class="rounded-md aspect-square object-cover border bottom-1" :src="`/api/avatar/?u_id=${post.u_id}`" /></div>

@@ -90,12 +90,12 @@
                     <div class="flex flex-row pt-2 pr-2">
                         <button
                             type="button"
-                            class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-gray-200 text-gray-500 hover:border-blue-600 hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none">
+                            class="transition-color duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-gray-200 text-gray-500 hover:border-blue-600 hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none">
                             <span class="material-icons-outlined">edit</span>แก้ไข
                         </button>
                         <button
                             type="button"
-                            class="py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-gray-200 text-gray-500 hover:border-red-600 hover:text-red-600 disabled:opacity-50 disabled:pointer-events-none">
+                            class="transition-color duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-gray-200 text-gray-500 hover:border-red-600 hover:text-red-600 disabled:opacity-50 disabled:pointer-events-none">
                             <span class="material-icons-outlined">delete</span>ลบคอร์ส
                         </button>
                     </div>

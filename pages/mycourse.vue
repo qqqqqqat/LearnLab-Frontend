@@ -124,7 +124,7 @@
                                         class="hs-dropdown-toggle py-3 px-4 inline-flex justify-between w-full items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none">
                                         {{ isLocked.title }}
                                         <svg
-                                            class="hs-dropdown-open:rotate-180 size-4"
+                                            class="hs-dropdown-open:rotate-180 size-4 transition duration-150 ease-in-out "
                                             xmlns="http://www.w3.org/2000/svg"
                                             width="24"
                                             height="24"
