@@ -78,6 +78,20 @@ declare global {
       status: number;
       message: string;
     }
+
+    interface File {
+      f_id: number;
+      f_name: string;
+      u_id: number;
+      f_mime_type: string | null; // Allow null for cases like "Studies"
+      f_type: "FILE" | "FOLDER";
+      created_at: string;
+      updated_at: string;
+    }
+    
+    type APIGETFilesResponse = File[];
+
+    type UserRoles = Record<string, "STUDENT" | "TA" | "INSTRUCTOR">;
 }
 
 export {};

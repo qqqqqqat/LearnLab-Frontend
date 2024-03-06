@@ -27,7 +27,21 @@
         }
     })
 
-    const { data: enrolled } = await useLazyFetch<EnrolledCourse>('/api/courses/me/?mycourse');
+    const enrolled = ref<EnrolledCourse>([]);
+
+    watch(userState, () => {
+        getEnrolledCourse()
+    })
+
+    if (userState.value) {
+        getEnrolledCourse()
+    }
+
+    async function getEnrolledCourse() {
+        await $fetch<EnrolledCourse>('/api/courses/me/?mycourse').then(res => {
+            enrolled.value = res
+        });
+    }
 
     async function updateQuery(searchQuery: string) {
         pending.value = true
@@ -109,8 +123,6 @@
             crscode.value = crscode.value.slice(0, 8)
         }
     })
-
-    
 </script>
 <template>
     <div
@@ -280,7 +292,7 @@
                             <hr class="mb-2 mt-4 xl:block md:hidden block" v-if="userState" />
                             <div class="w-[2px] rounded-full bg-slate-200 h-20 xl:hidden md:block hidden" v-if="userState"></div>
                             <div class="flex flex-col">
-                                    <TransitionGroup name="fade">
+                                <TransitionGroup name="fade">
                                     <span class="text-lg text-left w-full" key="enterCourseWithCodeLabel" v-if="userState">เข้าคอร์สด้วยรหัส</span>
                                     <div class="flex flex-row gap-x-2 justify-between" key="enterCourseWithCode" v-if="userState">
                                         <input
@@ -297,7 +309,7 @@
                                         </button>
                                     </div>
                                 </TransitionGroup>
-                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -328,7 +340,11 @@
                         </div>
                         <div v-else v-for="crs in courses?.data" class="flex justify-center items-center rounded-xl">
                             <div class="flex flex-col bg-white border shadow-sm rounded-xl w-80">
-                                <img class="w-full h-full object-cover aspect-[17/9] rounded-t-xl" loading="lazy" :src="crs.c_banner ? `/api/courses/banner/?c_id=${crs.c_id}` : '/images/CourseBannerDefault.svg'" alt="Image Description" />
+                                <img
+                                    class="w-full h-full object-cover aspect-[17/9] rounded-t-xl"
+                                    loading="lazy"
+                                    :src="crs.c_banner ? `/api/courses/banner/?c_id=${crs.c_id}` : '/images/CourseBannerDefault.svg'"
+                                    alt="Image Description" />
                                 <div class="p-4 md:p-5">
                                     <h3 class="text-lg font-bold text-gray-800 line-clamp-1">{{ crs.c_name }}</h3>
                                     <p class="mt-1 text-gray-500 h-12 overflow-auto">
@@ -348,7 +364,7 @@
                                                     }
                                                 }
                                             ">
-                                            <span class="material-icons-outlined" style="font-size: 17px;">
+                                            <span class="material-icons-outlined" style="font-size: 17px">
                                                 {{ enrolled?.includes(crs.c_id) ? 'check' : crs.c_hashed_password ? 'key' : 'login' }}
                                             </span>
                                             {{ enrolled?.includes(crs.c_id) ? 'เข้าร่วมแล้ว' : crs.c_hashed_password ? 'ใส่รหัสเพื่อเข้า' : 'เข้าร่วมคอร์ส' }}

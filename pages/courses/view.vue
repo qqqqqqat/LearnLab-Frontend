@@ -1,15 +1,15 @@
 <script setup lang="ts">
+    import { toast } from '@steveyuowo/vue-hot-toast'
+    const userRole = useUserCourseState()
     definePageMeta({
         layout: 'course',
     })
 
-    import { toast } from '@steveyuowo/vue-hot-toast'
-
     const route = useRoute()
 
-    let crs_post = ref<PostGETAPIResponse>()
-    let sessionInfo = ref()
-    let crs_pending = ref(true)
+    const crs_post = ref<PostGETAPIResponse>()
+    const crs_pending = ref(true)
+    const sessionInfo = ref()
 
     watch(
         () => route.query.id,
@@ -37,11 +37,14 @@
     if (route.query.id) {
         fetchPost(route.query.id)
     }
+
+
+    // console.log(userRole?.value[route.query.id])
 </script>
 <template>
     <div class="flex flex-col gap-8 w-full">
         <div v-if="(crs_post?.data.length || 0) > 0" v-for="post in crs_post?.data" class="flex flex-col border border-1 rounded-md gap-2 w-full p-4">
-            <div class="flex flex- items-center gap-4 w-full">
+            <div class="flex items-center gap-4 w-full">
                 <div class="bg-red-100 w-12 h-12 rounded-md"></div>
                 <div class="flex flex-col">
                     <span>{{ post.u_firstname }} {{ post.u_lastname }}</span>
@@ -52,7 +55,10 @@
             <div class="text-xl font-bold">{{ post.p_title }}</div>
             <div class="">{{ post.p_content }}</div>
         </div>
-        <div v-else-if="!crs_pending && (crs_post?.data.length || 0) === 0" class="flex md:flex-row flex-col items-center border border-1 rounded-md gap-2 w-full p-4"><img class="w-64" src="~/assets/images/content.svg"><span class="text-3xl font-bold">ยังไม่มีโพสต์ในคอร์สนี้</span></div>
+        <div v-else-if="!crs_pending && (crs_post?.data.length || 0) === 0" class="flex md:flex-row flex-col items-center border border-1 rounded-md gap-2 w-full p-4">
+            <img class="w-64" src="~/assets/images/content.svg" />
+            <span class="text-3xl font-bold">ยังไม่มีโพสต์ในคอร์สนี้</span>
+        </div>
         <div v-else class="flex flex-row border border-1 rounded-md gap-2 w-full p-4">
             <div class="animate-spin inline-block size-6 border-[3px] border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500" role="status" aria-label="loading">
                 <span class="sr-only">Loading...</span>
