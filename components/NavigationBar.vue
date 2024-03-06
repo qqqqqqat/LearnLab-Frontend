@@ -90,6 +90,7 @@ import { toast } from "@steveyuowo/vue-hot-toast";
                         หน้าหลัก
                     </NuxtLink>
                     <NuxtLink
+                    v-if="userState?.u_role !== 'INSTRUCTOR'"
                         class="transition-color duration-200 ease-in-out font-medium"
                         :class="route.path === '/courses' ? 'text-blue-600 hover:text-blue-400' : 'hover:text-gray-400'"
                         to="/courses"

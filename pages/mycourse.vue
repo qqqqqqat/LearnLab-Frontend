@@ -1,10 +1,16 @@
 <script setup lang="ts">
+
+
+    const userState = useUserState()
+
     const search = ref<string>('')
     const currentPage = ref<number>(0)
     const totalPages = ref<number>(0)
     const isLocked = ref({ title: 'ทั้งหมด', value: 'false' })
     const courses = ref<CourseListing | null>()
     const pending = ref()
+
+    const createCourseModal = ref();
 
     const once = ref(true)
 
@@ -32,7 +38,9 @@
         })
     }
 
-    updateQuery(search.value)
+    if (!pending.value) {
+        updateQuery(search.value)
+    }
 
     watch(currentPage, () => {
         if (currentPage.value > totalPages.value) {
@@ -40,27 +48,29 @@
         } else if (currentPage.value < 1) {
             currentPage.value = 1
         }
-        updateQuery(search.value)
+        if (!pending.value) {
+            updateQuery(search.value)
+        }
     })
 
     watch(isLocked, () => {
         currentPage.value = 1
-        updateQuery(search.value)
+        if (!pending.value) {
+            updateQuery(search.value)
+        }
     })
 
     async function goToCourse(c_id: number, is_locked: boolean) {
-        console.log(c_id)
-        if (!is_locked) {
-            await navigateTo({
-                path: '/courses/view',
-                query: {
-                    id: c_id,
-                },
-            })
-        }
+        await navigateTo({
+            path: '/courses/view',
+            query: {
+                id: c_id,
+            },
+        })
     }
 </script>
 <template>
+    <CourseCreateModal ref="createCourseModal" @refresh-course="updateQuery(search)" />
     <div class="max-w-screen-2xl mx-auto mb-8">
         <div class="flex flex-col items-center w-full h-full">
             <h1 class="text-5xl mt-24 font-bold mb-4">คอร์สเรียนของฉัน</h1>
@@ -104,9 +114,10 @@
                                     </button>
                                 </div>
                             </div>
-                            <div class="flex flex-col">
+                            <div class="flex xl:flex-col md:flex-row flex-col gap-4">
+                                <div class="flex flex-col">
                                 <span class="text-lg text-left w-full">การแสดงผล</span>
-                                <div class="hs-dropdown max-w-64 relative inline-flex [--placement:bottom-right]">
+                                <div class="hs-dropdown w-full max-w-64 relative inline-flex [--placement:bottom-right]">
                                     <button
                                         id="hs-dropdown"
                                         type="button"
@@ -126,7 +137,6 @@
                                             <path d="m6 9 6 6 6-6" />
                                         </svg>
                                     </button>
-
                                     <div
                                         class="hs-dropdown-menu w-72 transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden z-10 bg-white shadow-md rounded-lg p-2"
                                         aria-labelledby="hs-dropdown">
@@ -147,6 +157,16 @@
                                         </a>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="flex items-end">
+                                <button
+                                class="mt-2 py-2 px-3 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                                href="#"
+                                @click="createCourseModal.c_openModal()">
+                                สร้างคอร์ส
+                            </button>
+                        </div>
+                                <div></div>
                             </div>
                         </div>
                     </div>
@@ -178,7 +198,11 @@
                         </div>
                         <div v-else v-for="crs in courses?.data" class="flex justify-center items-center rounded-xl">
                             <div class="flex flex-col bg-white border shadow-sm rounded-xl w-80">
-                                <img class="w-full h-full object-cover aspect-[17/9] rounded-t-xl" loading="lazy" :src="crs.c_banner ? `/api/courses/banner/?c_id=${crs.c_id}` : '/images/CourseBannerDefault.svg'" alt="Image Description" />
+                                <img
+                                    class="w-full h-full object-cover aspect-[17/9] rounded-t-xl"
+                                    loading="lazy"
+                                    :src="crs.c_banner ? `/api/courses/banner/?c_id=${crs.c_id}` : '/images/CourseBannerDefault.svg'"
+                                    alt="Image Description" />
                                 <div class="p-4 md:p-5">
                                     <h3 class="text-lg font-bold text-gray-800 line-clamp-2">{{ crs.c_name }}</h3>
                                     <p class="mt-1 text-gray-500 h-12 overflow-auto">
@@ -201,12 +225,21 @@
                     </TransitionGroup>
 
                     <div class="flex flex-col justify-center items-center col-span-3 pt-16 pb-96" v-if="!courses?.data.length && !pending && !search">
-                        <h1 class="text-xl">คุณไม่ได้เป็นสมาชิกของคอร์สใด ๆ</h1>
+                        <h1 class="text-xl" v-if="userState?.u_role === 'STUDENT'">คุณไม่ได้เป็นสมาชิกของคอร์สใด ๆ</h1>
                         <button
                             class="mt-2 py-2 px-3 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
                             href="#"
+                            v-if="userState?.u_role === 'STUDENT'"
                             @click="navigateTo('/courses')">
                             ไปดูคอร์ส
+                        </button>
+                        <h1 class="text-xl" v-if="userState?.u_role === 'INSTRUCTOR'">คุณไม่ได้เป็นผู้จัดการคอร์สใด ๆ</h1>
+                        <button
+                            class="mt-2 py-2 px-3 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                            href="#"
+                            @click="createCourseModal.c_openModal()"
+                            v-if="userState?.u_role === 'INSTRUCTOR'">
+                            สร้างคอร์ส
                         </button>
                     </div>
                     <div class="flex justify-center items-center col-span-3 pt-16 pb-96" v-if="!courses?.data.length && !pending && search">
@@ -283,6 +316,24 @@
     </div>
 </template>
 <style scoped>
+    ::-webkit-scrollbar {
+        width: 20px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background-color: transparent;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background-color: #d6dee1;
+        border-radius: 20px;
+        border: 6px solid transparent;
+        background-clip: content-box;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background-color: #a8bbbf;
+    }
     .fade-enter-active,
     .fade-leave-active {
         transition: opacity 0.25s ease;

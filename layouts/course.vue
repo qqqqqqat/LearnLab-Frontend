@@ -32,7 +32,7 @@
     }
 
     async function fetchCourse(id: number) {
-        await $fetch('/api/courses/', {
+        await $fetch<CoursePageAPIPUTResponse>('/api/courses/', {
             method: 'PUT',
             body: { "c_id": id },
         })

@@ -17,6 +17,7 @@
     "@steveyuowo/vue-hot-toast": "^1.2.1",
     "material-icons": "^1.13.12",
     "preline": "^2.0.3",
+    "sanitize-html": "^2.12.1",
     "vue": "^3.4.19",
     "vue-router": "^4.3.0"
   },

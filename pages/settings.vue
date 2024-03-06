@@ -4,7 +4,6 @@
     const avatarState = useAvatarState()
     const name = ref<string | undefined>(userState.value?.u_firstname)
     const surname = ref<string | undefined>(userState.value?.u_lastname)
-    const regis_email = ref<string | undefined>(userState.value?.u_email)
     const phone = ref<string | undefined>(userState.value?.u_tel)
 
     const regis_passw = ref<string>('')
@@ -62,6 +61,20 @@
     <div class="max-w-screen-2xl mx-auto mb-8">
         <div class="flex flex-col items-center w-full h-full gap-y-8">
             <h1 class="text-5xl mt-24 font-bold mb-4">ตั้งค่าผู้ใช้</h1>
+            <div class="flex md:flex-row md:items-start flex-col items-center gap-8">
+                <div class="rounded-md w-64 h-64 bg-slate-200 flex flex-col justify-center items-center text-[140px]" v-if="!avatarState?.u_avatar">
+                    {{ userState?.u_firstname ? `${userState?.u_firstname.slice(0, 1)}${userState?.u_lastname.slice(0, 1)}` : '' }}
+                </div>
+                <div class="rounded-md w-64 h-64" v-else>
+                    <img class="rounded-md w-64 h-64 aspect-square object-cover" :src="`data:${avatarState?.u_avatar_mime_type};base64,${avatarState?.u_avatar}`" />
+                </div>
+                <div class="flex flex-col rounded-md max-w-full md:h-64 bg-gradient-to-r from-slate-100 to-slate-50/0 gap-4 py-4 pl-8 md:pr-16 pr-8 justify-center">
+                    <span class="font-bold text-5xl">{{ userState?.u_firstname ? userState?.u_firstname : '' }} {{ userState?.u_lastname ? userState?.u_lastname : '' }}</span>
+                    <span class="text-2xl">{{ userState?.u_role ? userState?.u_role === 'STUDENT' ? 'นักศึกษา' : 'ผู้สอน' : '' }} | {{ userState?.u_email ? userState?.u_email : '' }}</span>
+                    <span class="text-2xl">{{ userState?.u_tel || '' }}</span>
+                    <span class="text-lg">สร้างบัญชีเมื่อ {{ userState?.u_created_at ? new Date(userState?.u_created_at).toLocaleString() : '' }}</span>
+                </div>
+            </div>
             <div class="relative w-72">
                 <input
                     type="text"
@@ -92,31 +105,6 @@
                     class="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                     placeholder="นามสกุล"
                     v-model.lazy="surname" />
-                <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
-                    <svg
-                        class="flex-shrink-0 size-4 text-gray-500"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                        stroke-linecap="round"
-                        stroke-linejoin="round">
-                        <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-                        <circle cx="12" cy="7" r="4" />
-                    </svg>
-                </div>
-            </div>
-            <div class="relative w-72">
-                <input
-                    type="email"
-                    class="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
-                    placeholder="อีเมล์"
-                    readonly
-                    disabled
-                    v-model="regis_email" />
                 <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
                     <svg
                         class="flex-shrink-0 size-4 text-gray-500"

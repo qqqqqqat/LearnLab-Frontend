@@ -6,7 +6,7 @@ declare global {
         u_tel: string;
         u_email: string;
         u_gender: "MALE" | "FEMALE"; // Assuming gender can be MALE, FEMALE or OTHER
-        u_role: string;
+        u_role: "STUDENT" | "INSTRUCTOR";
         u_created_at: string;
         u_updated_on: string;
       }
@@ -63,8 +63,21 @@ declare global {
         u_avatar: boolean;
       }[];
     }
-    
-    
+    interface CoursePageAPIPUTResponse {
+      c_id: number;
+      c_name: string;
+      c_description: string;
+      c_code: string;
+      c_hashed_password: boolean;
+      c_updated_at: string;
+      c_created_at: string;
+      u_role: string;
+      c_banner: boolean;
+    }
+    interface CourseCreationResponse {
+      status: number;
+      message: string;
+    }
 }
 
 export {};
