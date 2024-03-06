@@ -19,6 +19,7 @@
     const delFileType = ref<'FOLDER' | 'FILE'>('FILE')
 
     async function fetchFile(id: number) {
+        file_post.value = []
         await $fetch<APIGETFilesResponse>('/api/file/', {
             query: {
                 c_id: id,
@@ -97,6 +98,7 @@
             </button>
             <div class="hs-dropdown relative inline-flex">
                 <button
+                v-if="userRole?.[route.query.id] !== 'STUDENT'"
                     type="button"
                     class="hs-dropdown-toggle py-3 px-3 flex-shrink-0 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
                     เพิ่ม
@@ -167,6 +169,7 @@
                     <div class="flex flex-col">
                         <span>{{ file.f_name }}</span>
                         <span class="text-sm text-slate-400">{{ new Date(file.updated_at).toLocaleString() }} {{ file.updated_at === file.created_at ? '' : '(ถูกแก้ไข)' }}</span>
+                        <span class="text-xs text-slate-400">โดย {{ file.u_firstname }} {{ file.u_lastname }}</span>
                     </div>
                 </div>
                 <div class="flex flex-row items-center gap-2 w-fit">

@@ -85,6 +85,8 @@ declare global {
       u_id: number;
       f_mime_type: string | null; // Allow null for cases like "Studies"
       f_type: "FILE" | "FOLDER";
+      u_firstname: string;
+      u_lastname: string;
       created_at: string;
       updated_at: string;
     }
