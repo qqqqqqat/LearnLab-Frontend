@@ -1,5 +1,7 @@
 <script setup lang="ts">
     import { toast } from '@steveyuowo/vue-hot-toast'
+    import { MdPreview } from 'md-editor-v3'
+    import 'md-editor-v3/lib/preview.css'
     const userRole = useUserCourseState()
     definePageMeta({
         layout: 'course',
@@ -34,6 +36,14 @@
             })
     }
 
+    async function downloadFile(f_id: number) {
+        await navigateTo(`/api/file?f_id=${f_id}`, { open: { target: '_blank' } })
+    }
+
+    async function openQuiz(q_id: number) {
+        await navigateTo(`/courses/quiz?q_id=${q_id}`)
+    }
+
     if (route.query.id) {
         fetchPost(route.query.id)
     }
@@ -55,7 +65,7 @@
             </button>
         </div>
         <div v-if="(crs_post?.data.length || 0) > 0" v-for="post in crs_post?.data" class="flex flex-col border border-1 rounded-md gap-2 w-full p-4">
-            <div class="flex items-center gap-4 w-full">
+            <div class="flex flex-wrap items-center gap-4 w-full">
                 <div v-if="post.u_avatar" class="rounded-md w-12 h-12"><img class="rounded-md aspect-square object-cover border bottom-1" :src="`/api/avatar/?u_id=${post.u_id}`" /></div>
                 <div class="rounded-md w-12 h-12 bg-slate-200 flex flex-col justify-center items-center text-2xl select-none" v-if="!post?.u_avatar">
                     {{ `${post?.u_firstname.slice(0, 1)}${post?.u_lastname.slice(0, 1)}` }}
@@ -69,13 +79,110 @@
                     </span>
                     <span class="text-sm text-slate-400">{{ new Date(post.p_updated_at).toLocaleString() }} {{ post.p_updated_at === post.p_created_at ? '' : '(ถูกแก้ไข)' }}</span>
                 </div>
+                <div v-if="post.p_type === 'ASSIGNMENT'" class="flex flex-col">
+                    <span class="inline-flex items-center gap-x-2 py-1 px-2 rounded-md text-sm font-medium bg-emerald-100 text-emerald-800">งานมอบหมาย</span>
+                    <div class="flex flex-row flex-wrap"></div>
+                </div>
+                <div v-else-if="post.p_type === 'QUIZ'" class="flex flex-col">
+                    <span class="inline-flex items-center gap-x-2 py-1 px-2 rounded-md text-sm font-medium bg-orange-100 text-orange-800">แบบทดสอบ</span>
+                    <div class="flex flex-row flex-wrap"></div>
+                </div>
             </div>
-
             <div class="text-xl font-bold">{{ post.p_title }}</div>
-            <div v-if="post.p_content" v-html="post.p_content"></div>
-            <div v-if="post.p_type === 'ASSIGNMENT'" class="flex flex-col">
-                <span class="inline-flex items-center gap-x-2 py-1 px-2 rounded-md text-sm font-medium bg-gradient-to-r from-red-100 to-50% to-red-100/0  text-red-800">งานมอบหมาย</span>
-                <div class="flex flex-row flex-wrap"></div>
+            <div v-if="post.p_content">
+                <MdPreview language="en-US" :editorId="post.p_title + post.p_id" :modelValue="post.p_content" />
+            </div>
+            <div class="flex flex-col" v-if="post.p_item_list.files.length">
+                <span class="flex items-center gap-2">
+                    <span class="material-icons-outlined">attach_file</span>
+                    ไฟล์แนบ
+                </span>
+                <hr class="mb-2" />
+                <div class="flex flex-row flex-wrap gap-2">
+                    <div v-for="file in post?.p_item_list?.files" class="flex flex-row border border-1 rounded-md md:w-72 w-full p-2 mt-1">
+                        <div class="flex flex-row justify-between items-center gap-2 md:w-72 w-full">
+                            <div class="flex flex-row items-center gap-2 overflow-hidden">
+                                <div class="bg-slate-100 w-8 h-8 rounded-md flex flex-shrink-0 justify-center items-center select-none">
+                                    <span class="material-icons-outlined">
+                                        {{
+                                            file.f_mime_type?.split('/')[0] === 'image'
+                                                ? 'image'
+                                                : file.f_mime_type?.split('/')[0] === 'audio'
+                                                ? 'audio_file'
+                                                : file.f_mime_type === 'application/pdf'
+                                                ? 'description'
+                                                : file.f_mime_type?.split('/')[0] === 'video'
+                                                ? 'video_file'
+                                                : 'insert_drive_file'
+                                        }}
+                                    </span>
+                                </div>
+                                <div class="flex flex-col md:w-48 w-10/12">
+                                    <span class="text-xs whitespace-nowrap text-ellipsis overflow-hidden">{{ file.f_name }}</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-row items-center gap-2 w-fit">
+                                <span class="material-icons-outlined select-none cursor-pointer text-gray-500" @click="downloadFile(file.f_id)">download</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col" v-if="post.p_item_list.quizzes.length">
+                <span class="flex items-center gap-2">
+                    <span class="material-icons-outlined">quiz</span>
+                    แบบทดสอบ
+                </span>
+                <hr class="mb-2" />
+                <div class="flex flex-row flex-wrap gap-2">
+                    <div v-for="quiz in post?.p_item_list?.quizzes" class="flex flex-row border border-1 rounded-md md:w-72 w-full p-2 mt-1">
+                        <div class="flex flex-row justify-between items-center gap-2 md:w-72 w-full">
+                            <div class="flex flex-row items-center gap-2 overflow-hidden">
+                                <div class="bg-slate-100 w-8 h-8 rounded-md flex flex-shrink-0 justify-center items-center select-none">
+                                    <span class="material-icons-outlined">
+                                        quiz
+                                    </span>
+                                </div>
+                                <div class="flex flex-col md:w-48 w-10/12">
+                                    <span class="text-xs whitespace-nowrap text-ellipsis overflow-hidden">{{ quiz.q_name }}</span>
+                                    <span class="text-xs whitespace-nowrap text-slate-400" >{{ quiz.q_due_date ? `กำหนดส่ง ${new Date(quiz.q_due_date).toLocaleString()}` : 'ไม่มีกำหนดส่ง' }}</span>
+                                    <span class="text-xs whitespace-nowrap text-slate-400" v-if="quiz.q_time_limit">{{ quiz.q_time_limit ?  `จำกัดเวลาทำ ${quiz.q_time_limit} นาที` : '' }}</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-row items-center gap-2 w-fit">
+                                <span class="material-icons-outlined select-none cursor-pointer text-gray-500" @click="downloadFile(quiz.q_id)">open_in_new</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex flex-col" v-if="post.p_item_list.assignments.length">
+                <span class="flex items-center gap-2">
+                    <span class="material-icons-outlined">assignment</span>
+                    งานมอบหมาย
+                </span>
+                <hr class="mb-2" />
+                <div class="flex flex-row flex-wrap gap-2">
+                    <div v-for="assign in post?.p_item_list?.assignments" class="flex flex-row border border-1 rounded-md md:w-72 w-full p-2 mt-1">
+                        <div class="flex flex-row justify-between items-center gap-2 md:w-72 w-full">
+                            <div class="flex flex-row items-center gap-2 overflow-hidden">
+                                <div class="bg-slate-100 w-8 h-8 rounded-md flex flex-shrink-0 justify-center items-center select-none">
+                                    <span class="material-icons-outlined">
+                                        quiz
+                                    </span>
+                                </div>
+                                <div class="flex flex-col md:w-48 w-10/12">
+                                    <span class="text-xs whitespace-nowrap text-ellipsis overflow-hidden">{{ assign.a_name }}</span>
+                                    <span class="text-xs whitespace-nowrap text-slate-400" >{{ assign.a_due_date ? `กำหนดส่ง ${new Date(assign.a_due_date).toLocaleString()}` : 'ไม่มีกำหนดส่ง' }}</span>
+                                    <span class="text-xs whitespace-nowrap text-slate-400">{{ assign.a_score }}</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-row items-center gap-2 w-fit">
+                                <span class="material-icons-outlined select-none cursor-pointer text-gray-500" @click="downloadFile(quiz.q_id)">open_in_new</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div v-else-if="!crs_pending && (crs_post?.data.length || 0) === 0" class="flex md:flex-row flex-col items-center border border-1 rounded-md gap-2 w-full p-4">

@@ -62,9 +62,9 @@ declare global {
     }
 
     interface PostItemList {
-      files: number[];
-      assignments: number[];
-      quizzes: number[];
+      files: {f_id: number, f_name: string, f_mime_type: string}[];
+      assignments: {a_id: number, a_name: string, a_due_date?: string, a_score?: string}[];
+      quizzes: {q_id: number, q_name: string, q_due_date?: string, q_time_limit?: number}[];
     }
 
     interface CoursePageAPIPUTResponse {
