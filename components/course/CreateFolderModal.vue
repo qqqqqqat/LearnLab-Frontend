@@ -40,7 +40,7 @@
             body: formData,
         })
             .then((res) => {
-                toast.update(createFileToast, { type: 'success', message: res.message })
+                toast.update(createFileToast, { type: 'success', message: res?.message })
                 isFolderCreating.value = false
                 folderName.value = ''
                 emit('refreshFile')
@@ -48,7 +48,7 @@
             })
             .catch((err) => {
                 isFolderCreating.value = false
-                toast.update(createFileToast, { type: 'error', message: err.data.message })
+                toast.update(createFileToast, { type: 'error', message: err?.data?.message })
             })
     }
 

@@ -41,7 +41,7 @@
                 crs_pending.value = false
             })
             .catch((err) => {
-                toast.error(err.data.message)
+                toast.error(err?.data?.message)
                 navigateTo('/mycourse', { replace: true })
             })
     }

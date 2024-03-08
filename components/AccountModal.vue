@@ -51,7 +51,7 @@
             },
         })
             .then(async (res) => {
-                toast.update(loginToast1, { type: 'loading', message: res.message })
+                toast.update(loginToast1, { type: 'loading', message: res?.message })
                 await $fetch<User>('/api/auth').then(async (res) => {
                     userState.value = res
                     await $fetch<Avatar>('/api/auth/?image=')
@@ -94,7 +94,7 @@
                 closeModal()
             })
             .catch((err) => {
-                toast.update(loginToast, { type: 'error', message: err.data.message })
+                toast.update(loginToast, { type: 'error', message: err?.data?.message })
             })
     }
 </script>
@@ -475,8 +475,6 @@
 </template>
 
 <style scoped>
-
-
     .fade-enter-active,
     .fade-leave-active {
         height: inherit;

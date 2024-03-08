@@ -9,7 +9,7 @@
 
     const crs_post = ref<PostGETAPIResponse>()
     const crs_pending = ref(true)
-    const sessionInfo = ref()
+    const postModal = ref()
 
     watch(
         () => route.query.id,
@@ -29,7 +29,7 @@
                 crs_pending.value = false
             })
             .catch((err) => {
-                toast.error(err.data.message)
+                toast.error(err?.data?.message)
                 navigateTo('/mycourse', { replace: true })
             })
     }
@@ -41,16 +41,19 @@
     // console.log(userRole?.value[route.query.id])
 </script>
 <template>
+    <LazyCourseCreatePostModal ref="postModal" :c_id="route.query.id" @refresh-post="fetchPost(route.query.id)" />
     <div class="flex flex-col gap-4 w-full">
-      <div class="flex flex-row justify-between items-center gap-4">
-        <div></div>
-        <button
+        <div class="flex flex-row justify-between items-center gap-4">
+            <div></div>
+            <button
                 v-if="userRole?.[route.query.id] !== 'STUDENT'"
-                    type="button"
-                    class="py-2 px-3 flex-shrink-0 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-                    <span class="material-icons-outlined">add</span>เพิ่มโพสต์ในคอร์ส
-                </button>
-      </div>
+                type="button"
+                @click="postModal.c_openModal"
+                class="py-2 px-3 flex-shrink-0 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                <span class="material-icons-outlined">add</span>
+                เพิ่มโพสต์ในคอร์ส
+            </button>
+        </div>
         <div v-if="(crs_post?.data.length || 0) > 0" v-for="post in crs_post?.data" class="flex flex-col border border-1 rounded-md gap-2 w-full p-4">
             <div class="flex items-center gap-4 w-full">
                 <div v-if="post.u_avatar" class="rounded-md w-12 h-12"><img class="rounded-md aspect-square object-cover border bottom-1" :src="`/api/avatar/?u_id=${post.u_id}`" /></div>
@@ -58,13 +61,22 @@
                     {{ `${post?.u_firstname.slice(0, 1)}${post?.u_lastname.slice(0, 1)}` }}
                 </div>
                 <div class="flex flex-col">
-                    <span>{{ post.u_firstname }} {{ post.u_lastname }} <span class="inline-flex items-center gap-x-1.5 py-0.5 px-1.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 ">{{ post.u_role === 'INSTRUCTOR' ? 'ผู้สอน' : post.u_role }}</span></span>
+                    <span>
+                        {{ post.u_firstname }} {{ post.u_lastname }}
+                        <span class="inline-flex items-center gap-x-1.5 py-0.5 px-1.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                            {{ post.u_role === 'INSTRUCTOR' ? 'ผู้สอน' : post.u_role }}
+                        </span>
+                    </span>
                     <span class="text-sm text-slate-400">{{ new Date(post.p_updated_at).toLocaleString() }} {{ post.p_updated_at === post.p_created_at ? '' : '(ถูกแก้ไข)' }}</span>
                 </div>
             </div>
 
             <div class="text-xl font-bold">{{ post.p_title }}</div>
-            <div v-if="post.p_content">{{ post.p_content }}</div>
+            <div v-if="post.p_content" v-html="post.p_content"></div>
+            <div v-if="post.p_type === 'ASSIGNMENT'" class="flex flex-col">
+                <span class="inline-flex items-center gap-x-2 py-1 px-2 rounded-md text-sm font-medium bg-gradient-to-r from-red-100 to-50% to-red-100/0  text-red-800">งานมอบหมาย</span>
+                <div class="flex flex-row flex-wrap"></div>
+            </div>
         </div>
         <div v-else-if="!crs_pending && (crs_post?.data.length || 0) === 0" class="flex md:flex-row flex-col items-center border border-1 rounded-md gap-2 w-full p-4">
             <img class="w-64" src="~/assets/images/content.svg" />

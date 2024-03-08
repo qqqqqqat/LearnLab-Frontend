@@ -31,7 +31,7 @@
                 file_pending.value = false
             })
             .catch((err) => {
-                toast.error(err.data.message)
+                toast.error(err?.data?.message)
                 navigateTo('/mycourse', { replace: true })
             })
     }
@@ -39,7 +39,7 @@
     async function deleteFile(f_id: number, f_type: string) {
         deleteConfirmModal.value.c_closeModal()
         const deleteFileToast = toast.loading('กำลังลบ')
-        await $fetch('/api/file/', {
+        await $fetch<{message: string, status: number}>('/api/file/', {
             method: 'DELETE',
             body: {
                 f_id: f_id,
@@ -49,10 +49,10 @@
             .then((res) => {
                 file_pending.value = true
                 fetchFile(route.query.id)
-                toast.update(deleteFileToast, { type: 'success', message: res.message })
+                toast.update(deleteFileToast, { type: 'success', message: res?.message })
             })
             .catch((err) => {
-                toast.update(deleteFileToast, { type: 'error', message: err.data.message })
+                toast.update(deleteFileToast, { type: 'error', message: err?.data?.message })
             })
     }
 
@@ -137,8 +137,8 @@
                 </div>
             </div>
         </div>
-        <div v-if="(file_post?.length || 0) > 0" v-for="file in file_post" class="flex flex-col border border-1 rounded-md w-full p-2" :class="file.f_type === 'FOLDER' ? 'hover:bg-slate-50 transition-color duration-200 ease-in-out' : ''">
-            <div class="flex flex-row justify-between items-center gap-2 w-full">
+        <div v-if="(file_post?.length || 0) > 0" v-for="file in file_post" class="flex flex-col border border-1 rounded-md w-full p-2"  :class="file.f_type === 'FOLDER' ? 'hover:bg-slate-50 transition-color duration-200 ease-in-out' : ''">
+            <div class="flex flex-row justify-between items-center gap-2 w-full" :class="file.f_privacy === 'PRIVATE' ? 'opacity-60' : ''">
                 <div
                     class="flex flex-row items-center gap-2 w-full"
                     :class="file.f_type === 'FOLDER' ? 'cursor-pointer' : ''"
@@ -176,6 +176,7 @@
                     <span class="material-icons-outlined select-none cursor-pointer text-gray-500" v-if="file.f_type === 'FILE'" @click="downloadFile(file.f_id)">download</span>
                     <span
                         class="material-icons-outlined select-none cursor-pointer text-red-500"
+                        v-if="file.f_privacy === 'PUBLIC'"
                         @click="
                             () => {
                                 delFileName = file.f_name

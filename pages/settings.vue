@@ -49,11 +49,11 @@
         })
             .then(async (res) => {
                 await fetchUser()
-                toast.update(loginToast, { type: 'success', message: res.message })
+                toast.update(loginToast, { type: 'success', message: res?.message })
                 regis_passw.value = ''
             })
             .catch((err) => {
-                toast.update(loginToast, { type: 'error', message: err.data.message })
+                toast.update(loginToast, { type: 'error', message: err?.data?.message })
             })
     }
 </script>

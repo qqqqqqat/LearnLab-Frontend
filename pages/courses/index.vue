@@ -97,12 +97,12 @@
             body: crspayload,
         })
             .then((res) => {
-                toast.update(joinToast, { type: 'success', message: res.message })
+                toast.update(joinToast, { type: 'success', message: res?.message })
                 closeModal()
             })
             .catch((err) => {
-                if (err.data.message === 'คุณเป็นสมาชิกของคอร๋สนี้อยู่แล้ว') closeModal()
-                toast.update(joinToast, { type: 'error', message: err.data.message })
+                if (err?.data?.message === 'คุณเป็นสมาชิกของคอร๋สนี้อยู่แล้ว') closeModal()
+                toast.update(joinToast, { type: 'error', message: err?.data?.message })
             })
     }
 

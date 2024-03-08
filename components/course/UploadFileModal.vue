@@ -35,12 +35,12 @@
         formData.append('f_path', props.f_path)
         formData.append('f_type', 'FILE')
         formData.append('f_data', uploadMaterial.value)
-        await $fetch('/api/file/', {
+        await $fetch<{message: string, status: number}>('/api/file/', {
             method: 'POST',
             body: formData,
         })
             .then((res) => {
-                toast.update(createFileToast, { type: 'success', message: res.message })
+                toast.update(createFileToast, { type: 'success', message: res?.message })
                 isFileUploading.value = false
                 uploadMaterial.value = undefined
                 emit('refreshFile')
@@ -48,7 +48,7 @@
             })
             .catch((err) => {
                 isFileUploading.value = false
-                toast.update(createFileToast, { type: 'error', message: err.data.message })
+                toast.update(createFileToast, { type: 'error', message: err?.data?.message })
             })
     }
 
