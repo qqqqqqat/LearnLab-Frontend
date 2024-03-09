@@ -4,7 +4,6 @@
     const userRole = useUserCourseState()
     const assignments = ref()
     const assignPending = ref(true)
-    const createSubmission = ref()
     const postContent = ref<string>('')
     const submitFiles = ref<{ name: string; file: File }[]>([])
     const inputFile = ref()
@@ -33,22 +32,26 @@
         postContent.value = text
     }
     async function makeSubmission(postFile: number[]) {
-        const createSubmissionToast = toast.loading('กำลังสร้างโพสต์')
+        assignPending.value = true
+        const createSubmissionToast = toast.loading('กำลังบันทึกการส่งงาน')
         let payload = {
             a_id: route.query.a_id,
+            c_id: route.query.id,
             s_content: { files: [], text: "" }
         }
         if (postFile.length > 0) Object.assign(payload.s_content, {files: postFile})
         if (postContent.value) Object.assign(payload.s_content, {text: postContent.value})
-        await $fetch<{ message: string }>('/api/post/', {
+        await $fetch<{ message: string }>('/api/courses/assignment/submit', {
             method: 'PUT',
             body: payload,
         })
             .then((Pres) => {
                 toast.update(createSubmissionToast, { type: 'success', message: Pres?.message })
+                assignPending.value = false
             })
             .catch((Perr) => {
                 toast.update(createSubmissionToast, { type: 'error', message: Perr?.data?.message })
+                assignPending.value = false
             })
     }
 
@@ -59,10 +62,11 @@
         const uploadSubmitFileToast = toast.loading('กำลังอัพโหลดไฟล์แนบ')
         const formData = new FormData()
         formData.append('c_id', route.query.id)
+        formData.append('a_id', route.query.a_id)
         for (let x = 0; x < submitFiles.value.length; x++) {
             formData.append('f_data[]', submitFiles.value[x].file)
         }
-        await $fetch<{ f_id: number[]; message: string }>('/api/file/post/', {
+        await $fetch<{ f_id: number[]; message: string }>('/api/file/submit/', {
             method: 'POST',
             body: formData,
         })
@@ -87,22 +91,42 @@
 </script>
 <template>
     <div class="flex flex-col gap-4 w-full">
-        <div class="flex flex-row gap-2">
-            <div>
+        <div class="flex md:flex-row flex-col md:justify-between md:items-center gap-2">
+            <div class="flex items-center gap-2">
+                <div>
+                    <button
+                        @click="navigateTo(`/courses/assignment?id=${route.query.id}`)"
+                        class="transition-all duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:bg-blue-100 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none">
+                        <span class="material-icons-outlined">arrow_back</span>
+                    </button>
+                </div>
+                <span class="text-2xl font-bold">
+                    ส่งงาน : {{ assignments?.a_name }}
+                    <div class="flex flex-col">
+                        <span class="text-sm text-slate-400">{{ assignments?.a_due_date ? `กำหนดส่ง ${new Date(assignments?.a_due_date).toLocaleString()}` : 'ไม่มีกำหนดส่ง' }}</span>
+                        <span class="text-sm text-slate-400">{{ assignments?.a_score ? `${assignments?.a_score} คะแนน` : 'ไม่มีคะแนน' }}</span>
+                    </div>
+                </span>
+            </div>
+            <div class="md:w-fit w-full">
                 <button
-                    @click="navigateTo(`/courses/assignment?id=${route.query.id}`)"
-                    class="transition-all duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:bg-blue-100 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none">
-                    <span class="material-icons-outlined">arrow_back</span>
+                    @click="
+                        () => {
+                            if (submitFiles.length) {
+                                submitFile()
+                            } else {
+                                makeSubmission([])
+                            }
+                        }
+                    "
+                    type="button"
+                    :disabled="assignPending"
+                    class="md:w-fit w-full justify-center transition-color duration-200 ease-in-out py-2 px-6 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                    ส่ง
                 </button>
             </div>
-            <span class="text-2xl font-bold">
-                ส่งงาน : {{ assignments?.a_name }}
-                <div class="flex flex-col">
-                    <span class="text-sm text-slate-400">{{ assignments?.a_due_date ? `กำหนดส่ง ${new Date(assignments?.a_due_date).toLocaleString()}` : 'ไม่มีกำหนดส่ง' }}</span>
-                    <span class="text-sm text-slate-400">{{ assignments?.a_score ? `${assignments?.a_score} คะแนน` : 'ไม่มีคะแนน' }}</span>
-                </div>
-            </span>
         </div>
+        
     </div>
         <div class="flex flex-col gap-4 overflow-y-auto">
             <div>
@@ -115,6 +139,7 @@
                     <button
                         @click="inputFile.click()"
                         type="button"
+                        :disabled="assignPending"
                         class="transition-color duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
                         <span class="material-icons-outlined">upload_file</span>
                         เพิ่มไฟล์แนบ
@@ -143,20 +168,5 @@
                 </div>
             </div>
         </div>
-        <div class="flex justify-end items-center gap-x-2 py-3 px-4">
-            <button
-                @click="
-                    () => {
-                        if (submitFiles.length) {
-                            submitFile()
-                        } else {
-                            makeSubmission([])
-                        }
-                    }
-                "
-                type="button"
-                class="transition-color duration-200 ease-in-out py-2 px-6 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-                ส่ง
-            </button>
-        </div>
+        
 </template>

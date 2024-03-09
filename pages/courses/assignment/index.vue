@@ -29,7 +29,11 @@
     }
 
     async function openAssignment(a_id: number) {
-        await navigateTo(`/courses/submission?a_id=${a_id}&id=${route.query.id}`)
+        if (userRole?.value?.[route.query.id] === "STUDENT") {
+            await navigateTo(`/courses/submission?a_id=${a_id}&id=${route.query.id}`)
+        } else {
+            await navigateTo(`/courses/assignment/view?a_id=${a_id}&id=${route.query.id}`)
+        }
     }
 
     if (route.query.id) {
@@ -64,7 +68,8 @@
                     type="button"
                     @click="openAssignment(assign.a_id)"
                     class="py-2 px-3 flex-shrink-0 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-                    ส่งงาน
+                    {{userRole?.[route.query.id] === 'STUDENT' ? "ส่งงาน" : "ดูงาน" }}
+                    <span class="material-icons-outlined">{{userRole?.[route.query.id] === 'STUDENT' ? "send" : "remove_red_eye"  }}</span>
                 </button>
             </div>
         </div>
