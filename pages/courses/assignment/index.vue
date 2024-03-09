@@ -24,10 +24,6 @@
             })
     }
 
-    async function downloadFile(f_id: number) {
-        await navigateTo(`/api/file?f_id=${f_id}`, { open: { target: '_blank' } })
-    }
-
     async function openAssignment(a_id: number) {
         if (userRole?.value?.[route.query.id] === "STUDENT") {
             await navigateTo(`/courses/submission?a_id=${a_id}&id=${route.query.id}`)

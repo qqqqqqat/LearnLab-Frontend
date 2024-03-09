@@ -15,7 +15,7 @@
         await $fetch('/api/courses/assignment/', {
             query: {
                 c_id: id,
-                a_id: a_id
+                a_id: a_id,
             },
         })
             .then((res) => {
@@ -31,16 +31,19 @@
     function getRteText(text: string) {
         postContent.value = text
     }
+    async function downloadFile(f_id: number) {
+        await navigateTo(`/api/file?f_id=${f_id}`, { open: { target: '_blank' } })
+    }
     async function makeSubmission(postFile: number[]) {
         assignPending.value = true
         const createSubmissionToast = toast.loading('กำลังบันทึกการส่งงาน')
         let payload = {
             a_id: route.query.a_id,
             c_id: route.query.id,
-            s_content: { files: [], text: "" }
+            s_content: { files: [], text: '' },
         }
-        if (postFile.length > 0) Object.assign(payload.s_content, {files: postFile})
-        if (postContent.value) Object.assign(payload.s_content, {text: postContent.value})
+        if (postFile.length > 0) Object.assign(payload.s_content, { files: postFile })
+        if (postContent.value) Object.assign(payload.s_content, { text: postContent.value })
         await $fetch<{ message: string }>('/api/courses/assignment/submit', {
             method: 'PUT',
             body: payload,
@@ -90,7 +93,7 @@
     }
 </script>
 <template>
-    <div class="flex flex-col gap-4 w-full">
+    <div class="flex flex-col w-full">
         <div class="flex md:flex-row flex-col md:justify-between md:items-center gap-2">
             <div class="flex items-center gap-2">
                 <div>
@@ -126,47 +129,81 @@
                 </button>
             </div>
         </div>
-        
-    </div>
-        <div class="flex flex-col gap-4 overflow-y-auto">
-            <div>
-                <RichEditor @send-text="getRteText" />
-            </div>
-            <div class="flex md:flex-row md:flex-nowrap flex-col gap-2 w-full">
-                <input @change="onFileChangedMat" ref="inputFile" type="file" hidden />
-                <!-- End Floating Input -->
-                <div>
-                    <button
-                        @click="inputFile.click()"
-                        type="button"
-                        :disabled="assignPending"
-                        class="transition-color duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-                        <span class="material-icons-outlined">upload_file</span>
-                        เพิ่มไฟล์แนบ
-                    </button>
-                </div>
-                <div class="flex md:flex-row flex-col overflow-auto gap-x-4 gap-y-2">
-                    <TransitionGroup name="fade">
-                        <div v-for="(file, index) in submitFiles" :key="index + file.name" class="flex gap-2 justify-between items-center px-2 py-1.5 rounded-md bg-blue-100 text-blue-600">
-                            <div class="flex flex-row flex-nowrap items-center gap-2 w-full overflow-hidden">
-                                <span class="material-icons-outlined select-none">insert_drive_file</span>
-                                <span class="md:w-24 w-full text-xs whitespace-nowrap text-ellipsis overflow-hidden">{{ file.name }}</span>
-                            </div>
-                            <span
-                                class="material-icons-outlined select-none cursor-pointer text-red-500"
-                                @click="
-                                    () => {
-                                        if (index > -1) {
-                                            submitFiles.splice(index, 1)
-                                        }
-                                    }
-                                ">
-                                delete
+        <div class="mt-4" v-if="assignments?.a_files?.length">
+            <span class="flex items-center gap-2">
+                <span class="material-icons-outlined">attach_file</span>
+                ไฟล์แนบ
+            </span>
+            <hr class="mb-2" />
+        </div>
+        <div class="flex flex-row flex-wrap gap-2" v-if="assignments?.a_files?.length">
+            <div v-for="file in assignments?.a_files" class="flex flex-row border border-1 rounded-md md:w-72 w-full p-2 mt-1">
+                <div class="flex flex-row justify-between items-center gap-2 md:w-72 w-full">
+                    <div class="flex flex-row items-center gap-2 overflow-hidden">
+                        <div class="bg-slate-100 w-8 h-8 rounded-md flex flex-shrink-0 justify-center items-center select-none">
+                            <span class="material-icons-outlined">
+                                {{
+                                    file.f_mime_type?.split('/')[0] === 'image'
+                                        ? 'image'
+                                        : file.f_mime_type?.split('/')[0] === 'audio'
+                                        ? 'audio_file'
+                                        : file.f_mime_type === 'application/pdf'
+                                        ? 'description'
+                                        : file.f_mime_type?.split('/')[0] === 'video'
+                                        ? 'video_file'
+                                        : 'insert_drive_file'
+                                }}
                             </span>
                         </div>
-                    </TransitionGroup>
+                        <div class="flex flex-col md:w-48 w-10/12">
+                            <span class="text-xs whitespace-nowrap text-ellipsis overflow-hidden">{{ file.f_name }}</span>
+                        </div>
+                    </div>
+                    <div class="flex flex-row items-center gap-2 w-fit">
+                        <span class="material-icons-outlined select-none cursor-pointer text-gray-500" @click="downloadFile(file.f_id)">download</span>
+                    </div>
                 </div>
             </div>
         </div>
-        
+    </div>
+    <div class="flex flex-col gap-4 overflow-y-auto">
+        <div class="w-full">
+            <RichEditor @send-text="getRteText" />
+        </div>
+        <div class="flex md:flex-row md:flex-nowrap flex-col gap-2 w-full">
+            <input @change="onFileChangedMat" ref="inputFile" type="file" hidden />
+            <!-- End Floating Input -->
+            <div>
+                <button
+                    @click="inputFile.click()"
+                    type="button"
+                    :disabled="assignPending"
+                    class="transition-color duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                    <span class="material-icons-outlined">upload_file</span>
+                    เพิ่มไฟล์แนบ
+                </button>
+            </div>
+            <div class="flex md:flex-row flex-col overflow-auto gap-x-4 gap-y-2">
+                <TransitionGroup name="fade">
+                    <div v-for="(file, index) in submitFiles" :key="index + file.name" class="flex gap-2 justify-between items-center px-2 py-1.5 rounded-md bg-blue-100 text-blue-600">
+                        <div class="flex flex-row flex-nowrap items-center gap-2 w-full overflow-hidden">
+                            <span class="material-icons-outlined select-none">insert_drive_file</span>
+                            <span class="md:w-24 w-full text-xs whitespace-nowrap text-ellipsis overflow-hidden">{{ file.name }}</span>
+                        </div>
+                        <span
+                            class="material-icons-outlined select-none cursor-pointer text-red-500"
+                            @click="
+                                () => {
+                                    if (index > -1) {
+                                        submitFiles.splice(index, 1)
+                                    }
+                                }
+                            ">
+                            delete
+                        </span>
+                    </div>
+                </TransitionGroup>
+            </div>
+        </div>
+    </div>
 </template>
