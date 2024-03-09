@@ -70,6 +70,20 @@
             })
     }
 
+    async function deleteCourse(id: number) {
+        await $fetch<{status: number, message: string}>('/api/courses/', {
+            method: 'DELETE',
+            body: { c_id: id },
+        })
+            .then((res) => {
+                toast.success(res.message)
+                navigateTo('/mycourse', { replace: true })
+            })
+            .catch((err) => {
+                toast.error(err?.data?.message)
+            })
+    }
+
     if (route.query.id) {
         fetchCourse(route.query.id)
     }
@@ -155,6 +169,12 @@
         </div>
         <div class="flex justify-end items-center gap-x-2 py-3 px-4">
             <button
+                @click="deleteCourse(route.query.id)"
+                type="button"
+                class="transition-color duration-200 ease-in-out py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 disabled:pointer-events-none">
+                ลบคอร์ส
+            </button>
+            <button
                 :disabled="!(courseName && courseDescription)"
                 @click="updateCourse()"
                 type="button"
@@ -162,6 +182,8 @@
                 แก้ไข
             </button>
         </div>
+        <div><span class="text-4xl font-bold">ตั้งตำแหน่ง</span></div>
+
     </div>
 </template>
 <style scoped>

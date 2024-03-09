@@ -100,6 +100,20 @@ declare global {
     type APIGETFilesResponse = File[];
 
     type UserRoles = Record<string, "STUDENT" | "TA" | "INSTRUCTOR">;
+
+    interface SubmissionData {
+      u_id: number;
+      a_id: number;
+      u_firstname: string;
+      u_lastname: string;
+      s_datetime: string | null;
+      u_avatar: boolean;
+    }
+    
+    interface SubmissionGETApiResponse {
+      data: SubmissionData[];
+    }
+    
 }
 
 export {};
