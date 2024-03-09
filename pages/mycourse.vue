@@ -35,6 +35,8 @@
             pending.value = false
             courses.value = res
             totalPages.value = res.total_page
+        }).catch(async err => {
+            await navigateTo('/courses', {replace: true})
         })
     }
 

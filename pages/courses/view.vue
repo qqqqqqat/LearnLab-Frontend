@@ -174,7 +174,7 @@
                                 <div class="flex flex-col md:w-48 w-10/12">
                                     <span class="text-xs whitespace-nowrap text-ellipsis overflow-hidden">{{ assign.a_name }}</span>
                                     <span class="text-xs whitespace-nowrap text-slate-400" >{{ assign.a_due_date ? `กำหนดส่ง ${new Date(assign.a_due_date).toLocaleString()}` : 'ไม่มีกำหนดส่ง' }}</span>
-                                    <span class="text-xs whitespace-nowrap text-slate-400">{{ assign.a_score }}</span>
+                                    <span class="text-xs whitespace-nowrap text-slate-400" v-if="assign.a_score">{{ assign.a_score }} คะแนน</span>
                                 </div>
                             </div>
                             <div class="flex flex-row items-center gap-2 w-fit">

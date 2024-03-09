@@ -27,7 +27,7 @@
         }
     })
 
-    const enrolled = ref<EnrolledCourse>([]);
+    const enrolled = ref<EnrolledCourse>([])
 
     watch(userState, () => {
         getEnrolledCourse()
@@ -38,9 +38,9 @@
     }
 
     async function getEnrolledCourse() {
-        await $fetch<EnrolledCourse>('/api/courses/me/?mycourse').then(res => {
+        await $fetch<EnrolledCourse>('/api/courses/me/?mycourse').then((res) => {
             enrolled.value = res
-        });
+        })
     }
 
     async function updateQuery(searchQuery: string) {
@@ -202,7 +202,6 @@
         </div>
     </div>
 
-    <div class="max-w-screen-2xl mx-auto mb-8">
         <div class="flex flex-col items-center w-full h-full">
             <h1 class="text-5xl mt-24 font-bold mb-4">คอร์สเรียน</h1>
             <div class="flex xl:flex-row flex-col gap-4">
@@ -254,7 +253,7 @@
                                         class="hs-dropdown-toggle py-3 px-4 inline-flex justify-between w-full items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none">
                                         {{ isLocked.title }}
                                         <svg
-                                            class="hs-dropdown-open:rotate-180 size-4 transition duration-150 ease-in-out "
+                                            class="hs-dropdown-open:rotate-180 size-4 transition duration-150 ease-in-out"
                                             xmlns="http://www.w3.org/2000/svg"
                                             width="24"
                                             height="24"
@@ -449,7 +448,6 @@
             </nav>
             <!-- End Pagination -->
         </div>
-    </div>
 </template>
 <style scoped>
     .fade-enter-active,

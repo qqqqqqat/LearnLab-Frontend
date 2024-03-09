@@ -24,7 +24,7 @@
                     .then((res) => {
                         avatarState.value = res
                     })
-                    .catch((err) => {
+                    .catch(async (err) => {
                         toast.error('โหลดรูปล้มเหลว')
                     })
             })
@@ -70,7 +70,7 @@
                 </div>
                 <div class="flex flex-col rounded-md max-w-full md:h-64 bg-gradient-to-r from-slate-100 to-slate-50/0 gap-4 py-4 pl-8 md:pr-16 pr-8 justify-center">
                     <span class="font-bold text-5xl">{{ userState?.u_firstname ? userState?.u_firstname : '' }} {{ userState?.u_lastname ? userState?.u_lastname : '' }}</span>
-                    <span class="text-2xl">{{ userState?.u_role ? userState?.u_role === 'STUDENT' ? 'นักศึกษา' : 'ผู้สอน' : '' }} | {{ userState?.u_email ? userState?.u_email : '' }}</span>
+                    <span class="text-2xl">{{ userState?.u_role ? (userState?.u_role === 'STUDENT' ? 'นักศึกษา' : 'ผู้สอน') : '' }} | {{ userState?.u_email ? userState?.u_email : '' }}</span>
                     <span class="text-2xl">{{ userState?.u_tel || '' }}</span>
                     <span class="text-lg">สร้างบัญชีเมื่อ {{ userState?.u_created_at ? new Date(userState?.u_created_at).toLocaleString() : '' }}</span>
                 </div>

@@ -17,9 +17,11 @@ import { toast } from "@steveyuowo/vue-hot-toast";
                     toast.error('โหลดรูปล้มเหลว')
                 })
             })
-            .catch((err) => {
+            .catch(async (err) => {
+                if (route.path !== '/' && route.path !== '/courses') await navigateTo('/', { replace: true })
             })
     }
+
     async function signOut() {
       userMenu.value = false
       const signoutToast = toast.loading('กำลังออกจากระบบ')
@@ -33,7 +35,7 @@ import { toast } from "@steveyuowo/vue-hot-toast";
               toast.update(signoutToast, {type: 'error', message: 'ออกจากระบบล้มเหลว'})
             })
     }
-
+    
     fetchUser()
 </script>
 <template>
