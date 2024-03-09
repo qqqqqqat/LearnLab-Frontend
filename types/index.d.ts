@@ -76,6 +76,7 @@ declare global {
       c_updated_at: string;
       c_created_at: string;
       u_role: string;
+      c_privacy: 'PUBLIC' | 'PRIVATE'
       c_banner: boolean;
     }
     interface CourseCreationResponse {

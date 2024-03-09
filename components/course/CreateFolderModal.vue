@@ -35,7 +35,7 @@
         formData.append('f_path', props.f_path)
         formData.append('f_name', folderName.value)
         formData.append('f_type', 'FOLDER')
-        await $fetch('/api/file/', {
+        await $fetch<{status: number, message: string}>('/api/file/', {
             method: 'POST',
             body: formData,
         })

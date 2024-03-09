@@ -202,6 +202,7 @@
         </div>
     </div>
 
+    <div class="max-w-screen-2xl mx-auto mb-8">
         <div class="flex flex-col items-center w-full h-full">
             <h1 class="text-5xl mt-24 font-bold mb-4">คอร์สเรียน</h1>
             <div class="flex xl:flex-row flex-col gap-4">
@@ -448,6 +449,7 @@
             </nav>
             <!-- End Pagination -->
         </div>
+    </div>
 </template>
 <style scoped>
     .fade-enter-active,

@@ -4,9 +4,9 @@
     const route = useRoute()
     const userRole = useUserCourseState()
     let crs_info = ref()
-    let sessionInfo = ref()
     let crs_pending = ref(true)
-
+    
+    let sessionInfo = ref()
     watch(
         () => route.query.id,
         async (id) => {
@@ -89,14 +89,10 @@
                 <div v-if="userRole?.[route.query.id] === 'INSTRUCTOR'" class="absolute right-0">
                     <div class="flex flex-row pt-2 pr-2">
                         <button
+                        @click="navigateTo(`/courses/edit?id=${route.query.id}`)"
                             type="button"
                             class="transition-color duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-gray-200 text-gray-500 hover:border-blue-600 hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none">
                             <span class="material-icons-outlined">edit</span>แก้ไข
-                        </button>
-                        <button
-                            type="button"
-                            class="transition-color duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-gray-200 text-gray-500 hover:border-red-600 hover:text-red-600 disabled:opacity-50 disabled:pointer-events-none">
-                            <span class="material-icons-outlined">delete</span>ลบคอร์ส
                         </button>
                     </div>
                 </div>
