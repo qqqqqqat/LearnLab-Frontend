@@ -28,12 +28,16 @@
         await navigateTo(`/api/file?f_id=${f_id}`, { open: { target: '_blank' } })
     }
 
+    async function openAssignment(a_id: number) {
+        await navigateTo(`/courses/submission?a_id=${a_id}&id=${route.query.id}`)
+    }
 
     if (route.query.id) {
         fetchAssignment(route.query.id)
     }
 </script>
 <template>
+    <!-- <LazyCourseCreateSubmission :c_id="route.query.id" :a_id=""/> -->
     <div class="flex flex-col gap-4 w-full">
         <div class="flex flex-row justify-between items-center gap-4">
             <div></div>
@@ -45,14 +49,24 @@
                 เพิ่มงานมอบหมายในคอร์ส
             </button>
         </div>
-        <div v-if="(assignments?.length || 0) > 0" v-for="assign in assignments" class="flex flex-col border border-1 rounded-md gap-2 w-full p-4">
-            <div class="flex flex-wrap items-center gap-4 w-full">
-                <div class="flex flex-col">
-                    <span class="text-sm text-slate-400">{{ assign.a_due_date ? `กำหนดส่ง ${new Date(assign.a_due_date).toLocaleString()}` : 'ไม่มีกำหนดส่ง' }}</span>
-                    <span class="text-sm text-slate-400">{{ assign.a_score ? `${assign.a_score} คะแนน` : 'ไม่มีคะแนน' }}</span>
+        <div v-if="(assignments?.length || 0) > 0" v-for="assign in assignments" class="flex flex-row justify-between border border-1 rounded-md gap-2 w-full p-4">
+            <div>
+                <div class="flex flex-wrap items-center gap-4 w-full">
+                    <div class="flex flex-col">
+                        <span class="text-sm text-slate-400">{{ assign.a_due_date ? `กำหนดส่ง ${new Date(assign.a_due_date).toLocaleString()}` : 'ไม่มีกำหนดส่ง' }}</span>
+                        <span class="text-sm text-slate-400">{{ assign.a_score ? `${assign.a_score} คะแนน` : 'ไม่มีคะแนน' }}</span>
+                    </div>
                 </div>
+                <div class="text-xl font-bold">{{ assign.a_name }}</div>
             </div>
-            <div class="text-xl font-bold">{{ assign.a_name }}</div>
+            <div class="flex items-center">
+                <button
+                    type="button"
+                    @click="openAssignment(assign.a_id)"
+                    class="py-2 px-3 flex-shrink-0 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                    ส่งงาน
+                </button>
+            </div>
         </div>
         <div v-else-if="!assignPending && (assignments?.data?.length || 0) === 0" class="flex md:flex-row flex-col items-center border border-1 rounded-md gap-2 w-full p-4">
             <img class="w-64" src="~/assets/images/content.svg" />
