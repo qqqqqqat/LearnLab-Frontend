@@ -64,8 +64,8 @@
                     type="button"
                     @click="openAssignment(assign.a_id)"
                     class="py-2 px-3 flex-shrink-0 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-                    {{userRole?.[route.query.id] === 'STUDENT' ? "ส่งงาน" : "ดูงาน" }}
-                    <span class="material-icons-outlined">{{userRole?.[route.query.id] === 'STUDENT' ? "send" : "remove_red_eye"  }}</span>
+                    {{userRole?.[route.query.id] === 'STUDENT' ? assign?.s_datetime ? "ดูงาน" : "ส่งงาน" : "ดูงาน" }}
+                    <span class="material-icons-outlined">{{userRole?.[route.query.id] === 'STUDENT' ? assign?.s_datetime ? "remove_red_eye" : "send" : "remove_red_eye"  }}</span>
                 </button>
             </div>
         </div>
