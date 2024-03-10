@@ -283,7 +283,7 @@
                             eScore = assign.a_score
                             e_openModal()
                         }
-                    " v-if="userRole?.[route.query.id] !== 'STUDENT'" class="material-icons-outlined cursor-pointer select-none">edit</span>
+                    " v-if="userRole?.[route.query.id] !== 'STUDENT'" class="material-icons-outlined cursor-pointer select-none hover:text-blue-600">edit</span>
                 <span
                     v-if="userRole?.[route.query.id] !== 'STUDENT'"
                     @click="
@@ -293,7 +293,7 @@
                             c_openModal()
                         }
                     "
-                    class="material-icons-outlined cursor-pointer select-none">
+                    class="material-icons-outlined cursor-pointer select-none hover:text-rose-600">
                     delete
                 </span>
                 <button
