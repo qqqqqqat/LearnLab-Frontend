@@ -21,6 +21,7 @@
     const editPostId = ref<number | null>(null)
     const editPostTitle = ref<string | null>(null)
     const editPostContent = ref<string | null>(null)
+    const commentStore = ref({})
 
     watch(
         () => route.query.id,
@@ -63,6 +64,7 @@
                 toast.update(deletePostToast, { type: 'error', message: err?.data?.message })
             })
     }
+
 
     async function unenrollCourse() {
         const deletePostToast = toast.loading('กำลังออกจากคอร์ส')
@@ -179,7 +181,6 @@
                     </button>
                 </div>
             </div>
-
             <div class="text-xl font-black">{{ post.p_title }}</div>
             <div v-if="post.p_content">
                 <MdPreview language="en-US" :modelValue="post.p_content" />
@@ -266,11 +267,29 @@
                                 </div>
                             </div>
                             <div class="flex flex-row items-center gap-2 w-fit">
-                                <span v-if="userRole?.[route.query.id] === 'STUDENT'" class="material-icons-outlined select-none cursor-pointer text-gray-500" @click="navigateTo(`/courses/submission?a_id=${assign.a_id}&id=${route.query.id}`)">open_in_new</span>
-                                <span v-else class="material-icons-outlined select-none cursor-pointer text-gray-500" @click="navigateTo(`/courses/assignment/view?a_id=${assign.a_id}&id=${route.query.id}`)">open_in_new</span>
+                                <span
+                                    v-if="userRole?.[route.query.id] === 'STUDENT'"
+                                    class="material-icons-outlined select-none cursor-pointer text-gray-500"
+                                    @click="navigateTo(`/courses/submission?a_id=${assign.a_id}&id=${route.query.id}`)">
+                                    open_in_new
+                                </span>
+                                <span
+                                    v-else
+                                    class="material-icons-outlined select-none cursor-pointer text-gray-500"
+                                    @click="navigateTo(`/courses/assignment/view?a_id=${assign.a_id}&id=${route.query.id}`)">
+                                    open_in_new
+                                </span>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+            <hr />
+            <div class="flex flex-col gap-4">
+                <div class="flex flex-col gap-2">
+                    <span class="text-xl font-bold">Comments</span>
+                    <CourseComment :c_id="route.query.id" :p_id="post.p_id" />
+
                 </div>
             </div>
         </div>
