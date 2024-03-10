@@ -15,11 +15,12 @@
     const postModal = ref()
     const delPostId = ref<number>(0)
     const delPostConfirm = ref()
+    const unenroll = ref()
 
     const editPostModal = ref()
-    const editPostId = ref<number|null>(null)
-    const editPostTitle = ref<string|null>(null)
-    const editPostContent = ref<string|null>(null)
+    const editPostId = ref<number | null>(null)
+    const editPostTitle = ref<string | null>(null)
+    const editPostContent = ref<string | null>(null)
 
     watch(
         () => route.query.id,
@@ -63,6 +64,24 @@
             })
     }
 
+    async function unenrollCourse() {
+        
+        const deletePostToast = toast.loading('กำลังออกจากคอร์ส')
+        await $fetch<{ status: number; message: string }>('/api/courses/enroll/', {
+            method: 'DELETE',
+            body: {
+                c_id: route.query.id,
+            },
+        })
+            .then(async (res) => {
+                toast.update(deletePostToast, { type: 'success', message: res?.message })
+                setTimeout(async () => (await navigateTo('/mycourse', {replace: true})), 1000);
+            })
+            .catch((err) => {
+                toast.update(deletePostToast, { type: 'error', message: err?.data?.message })
+            })
+    }
+
     async function downloadFile(f_id: number) {
         await navigateTo(`/api/file?f_id=${f_id}`, { open: { target: '_blank' } })
     }
@@ -80,18 +99,34 @@
 <template>
     <LazyCourseCreatePostModal ref="postModal" :c_id="route.query.id" @refresh-post="fetchPost(route.query.id)" />
     <LazyCourseDeletePostConfirm ref="delPostConfirm" :p_id="delPostId" @delete-post="deletePost" />
-    <LazyCourseEditPostModal ref="editPostModal" :p_id="editPostId || 0" :p_title="editPostTitle || ''" :p_content="editPostContent || ''" :c_id="route.query.id" @refresh-post="fetchPost(route.query.id)" />
+    <CourseUnenrollConfirmModal ref="unenroll" @unenroll="unenrollCourse()" />
+    <LazyCourseEditPostModal
+        ref="editPostModal"
+        :p_id="editPostId || 0"
+        :p_title="editPostTitle || ''"
+        :p_content="editPostContent || ''"
+        :c_id="route.query.id"
+        @refresh-post="fetchPost(route.query.id)" />
     <div class="flex flex-col gap-4 w-full">
         <div class="flex flex-row justify-between items-center gap-4">
             <div></div>
-            <button
-                v-if="userRole?.[route.query.id] !== 'STUDENT'"
-                type="button"
-                @click="postModal.c_openModal"
-                class="py-2 px-3 flex-shrink-0 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-                <span class="material-icons-outlined">add</span>
-                เพิ่มโพสต์ในคอร์ส
-            </button>
+            <div>
+                <button
+                    type="button"
+                    @click="unenroll.c_openModal()"
+                    class="mr-2 py-2 px-3 flex-shrink-0 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 disabled:pointer-events-none">
+                    <span class="material-icons-outlined">remove</span>
+                    ออกจากคอร์ส
+                </button>
+                <button
+                    v-if="userRole?.[route.query.id] !== 'STUDENT'"
+                    type="button"
+                    @click="postModal.c_openModal"
+                    class="py-2 px-3 flex-shrink-0 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                    <span class="material-icons-outlined">add</span>
+                    เพิ่มโพสต์ในคอร์ส
+                </button>
+            </div>
         </div>
         <div v-if="(crs_post?.data.length || 0) > 0" v-for="post in crs_post?.data" class="flex flex-col border border-1 rounded-md gap-2 w-full p-4">
             <div class="flex flex-wrap items-center justify-between gap-4 w-full">

@@ -98,6 +98,7 @@
         })
             .then((res) => {
                 toast.update(joinToast, { type: 'success', message: res?.message })
+                getEnrolledCourse()
                 closeModal()
             })
             .catch((err) => {
