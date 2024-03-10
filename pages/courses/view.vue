@@ -65,7 +65,6 @@
     }
 
     async function unenrollCourse() {
-        
         const deletePostToast = toast.loading('กำลังออกจากคอร์ส')
         await $fetch<{ status: number; message: string }>('/api/courses/enroll/', {
             method: 'DELETE',
@@ -75,7 +74,7 @@
         })
             .then(async (res) => {
                 toast.update(deletePostToast, { type: 'success', message: res?.message })
-                setTimeout(async () => (await navigateTo('/mycourse', {replace: true})), 1000);
+                setTimeout(async () => await navigateTo('/mycourse', { replace: true }), 1000)
             })
             .catch((err) => {
                 toast.update(deletePostToast, { type: 'error', message: err?.data?.message })
@@ -267,7 +266,8 @@
                                 </div>
                             </div>
                             <div class="flex flex-row items-center gap-2 w-fit">
-                                <span class="material-icons-outlined select-none cursor-pointer text-gray-500" @click="downloadFile(quiz.q_id)">open_in_new</span>
+                                <span v-if="userRole?.[route.query.id] === 'STUDENT'" class="material-icons-outlined select-none cursor-pointer text-gray-500" @click="navigateTo(`/courses/submission?a_id=${assign.a_id}&id=${route.query.id}`)">open_in_new</span>
+                                <span v-else class="material-icons-outlined select-none cursor-pointer text-gray-500" @click="navigateTo(`/courses/assignment/view?a_id=${assign.a_id}&id=${route.query.id}`)">open_in_new</span>
                             </div>
                         </div>
                     </div>
