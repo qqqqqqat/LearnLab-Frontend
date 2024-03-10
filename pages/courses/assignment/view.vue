@@ -49,7 +49,7 @@
                 <span class="text-sm"> {{ assignments?.a_due_date ? `กำหนดส่ง ${new Date(assignments?.a_due_date).toLocaleString() }` : 'ไม่มีกำหนดส่ง' }}</span>
             </div>
         </div>
-        <div v-if="(assignments?.data?.length || 0) > 0" v-for="assign in assignments?.data" class="flex flex-row justify-between border border-1 rounded-md gap-2 w-full p-4">
+        <div v-if="(assignments?.data?.length || 0) > 0" v-for="assign in assignments?.data" class="flex md:flex-row flex-col md:justify-between border border-1 rounded-md gap-2 w-full p-4">
             <div class="flex items-center gap-2">
                 <div v-if="assign.u_avatar" class="rounded-md w-12 h-12"><img class="rounded-md aspect-square object-cover border bottom-1" :src="`/api/avatar/?u_id=${assign.u_id}`" /></div>
                 <div class="rounded-md w-12 h-12 bg-slate-200 flex flex-col justify-center items-center text-2xl select-none" v-if="!assign?.u_avatar">
@@ -57,9 +57,9 @@
                 </div>
                 <div class="flex justify-center">{{ assign.u_firstname }} {{ assign.u_lastname }}</div>
             </div>
-            <div class="flex gap-4 items-center">
-                <div class="flex items-center gap-2">
-                    <div class="flex flex-col items-end">
+            <div class="flex gap-4 items-center md:justify-normal justify-between">
+                <div class="flex md:flex-row flex-row-reverse items-center gap-2">
+                    <div class="flex flex-col md:items-end items-start">
                         {{ assign.s_datetime ? 'ส่งแล้ว' : 'ยังไม่ส่ง' }}
                         <span class="text-xs text-red-400" v-if="assignments?.a_due_date && assign?.s_datetime && getTimeDiff(assignments.a_due_date, assign?.s_datetime).isLate">{{ 
                         

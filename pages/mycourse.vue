@@ -75,7 +75,7 @@
     <CourseCreateModal ref="createCourseModal" @refresh-course="updateQuery(search)" />
     <div class="max-w-screen-2xl mx-auto mb-8">
         <div class="flex flex-col items-center w-full h-full">
-            <h1 class="text-5xl mt-24 font-bold mb-4">คอร์สเรียนของฉัน</h1>
+            <h1 class="text-5xl mt-24 font-bold font-title mb-4">คอร์สเรียนของฉัน</h1>
             <div class="flex xl:flex-row flex-col gap-4">
                 <div class="flex flex-col justify-center items-center border border-1 rounded-lg shadow-sm p-8 h-fit">
                     <div class="flex flex-col">
@@ -121,7 +121,7 @@
                                 <span class="text-lg text-left w-full">การแสดงผล</span>
                                 <div class="hs-dropdown w-full max-w-64 relative inline-flex [--placement:bottom-right]">
                                     <button
-                                        id="hs-dropdown"
+                                        id="hs-dropdown-mycourse"
                                         type="button"
                                         class="hs-dropdown-toggle py-3 px-4 inline-flex justify-between w-full items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none">
                                         {{ isLocked.title }}
@@ -141,7 +141,7 @@
                                     </button>
                                     <div
                                         class="hs-dropdown-menu w-72 transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden z-10 bg-white shadow-md rounded-lg p-2"
-                                        aria-labelledby="hs-dropdown">
+                                        aria-labelledby="hs-dropdown-mycourse">
                                         <a
                                             class="flex items-center cursor-pointer gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
                                             @click="isLocked = { title: 'ทั้งหมด', value: 'false' }">
@@ -206,7 +206,7 @@
                                     :src="crs.c_banner ? `/api/courses/banner/?c_id=${crs.c_id}` : '/images/CourseBannerDefault.svg'"
                                     alt="Image Description" />
                                 <div class="p-4 md:p-5">
-                                    <h3 class="text-lg font-bold text-gray-800 line-clamp-2">{{ crs.c_name }}</h3>
+                                    <h3 class="text-lg font-bold text-gray-800 line-clamp-1">{{ crs.c_name }}</h3>
                                     <p class="mt-1 text-gray-500 h-12 overflow-auto">
                                         {{ crs.c_description }}
                                     </p>

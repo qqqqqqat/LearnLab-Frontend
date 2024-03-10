@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@fontsource/bai-jamjuree':
+    specifier: ^5.0.12
+    version: 5.0.12
   '@fontsource/noto-sans-thai':
     specifier: ^5.0.12
     version: 5.0.12
@@ -1180,6 +1183,10 @@ packages:
     resolution: {integrity: sha512-+KpH+QxZU7O4675t3mnkQKcZZg56u+K/Ct2K+N2AZYNVK8kyeo/bI18tI8aPm3tvNNRyTWfj6s5tnGNlcbQRsA==}
     engines: {node: '>=14'}
     dev: true
+
+  /@fontsource/bai-jamjuree@5.0.12:
+    resolution: {integrity: sha512-NnHQ2wJTITkcD/gg8UHGMqL5CYDg1XXleIk0oSuqzJ8HcX5/o5PgG1NipEgaGDw8RjRm/Pg8SIs6zLtLUGFH/Q==}
+    dev: false
 
   /@fontsource/noto-sans-thai@5.0.12:
     resolution: {integrity: sha512-/z46pCR05gFTkhaZSUDae+eSWklUsP1kZ7bZ3MNTOnPAQXlH7GD9O2cbKxZvi1KndXeDHTEuao9vMNOEZuR7Kw==}

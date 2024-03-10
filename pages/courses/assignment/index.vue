@@ -37,7 +37,6 @@
     }
 </script>
 <template>
-    <!-- <LazyCourseCreateSubmission :c_id="route.query.id" :a_id=""/> -->
     <div class="flex flex-col gap-4 w-full">
         <div class="flex flex-row justify-between items-center gap-4">
             <div></div>

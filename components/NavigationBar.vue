@@ -42,7 +42,7 @@ import { toast } from "@steveyuowo/vue-hot-toast";
     <header class="flex fixed top-0 flex-wrap transition-all duration-150 ease-in-out sm:justify-start sm:flex-nowrap z-50 w-full bg-white text-sm py-4 border border-1 select-none">
         <nav class="max-w-screen-2xl w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between" aria-label="Global">
             <div class="flex items-center justify-between">
-                <NuxtLink class="flex-none text-xl text-blue-600 font-bold" to="/">LearnLab</NuxtLink>
+                <NuxtLink class="flex-none text-xl text-blue-600 font-bold font-title" to="/">LearnLab</NuxtLink>
                 <div class="sm:hidden">
                     <button
                         type="button"

@@ -57,7 +57,7 @@
                     </button>
                 </div>
                 <span class="text-2xl font-bold">
-                    งานของ {{ assignments?.data.u_firstname }} {{ assignments?.data.u_lastname }}
+                    <span>งานของ {{ assignments?.data.u_firstname }} {{ assignments?.data.u_lastname }}</span>
                     <div class="flex flex-col">
                         <span class="text-sm text-slate-400">{{ assignments?.data.a_due_date ? `กำหนดส่ง ${new Date(assignments?.data.a_due_date).toLocaleString()}` : 'ไม่มีกำหนดส่ง' }}</span>
                         <span class="text-sm text-slate-400">{{ assignments?.data.a_score ? `${assignments?.data.a_score} คะแนน` : 'ไม่มีคะแนน' }}</span>
@@ -75,7 +75,7 @@
     </div>
     <div class="flex flex-col overflow-y-auto">
         <div class="w-full" v-if="assignments?.data?.s_content?.text">
-            <span class="flex items-center gap-2">
+            <span class="flex items-center gap-2 font-bold">
                 <span class="material-icons-outlined select-none">article</span>
                 ข้อความจากนักเรียน
             </span>
@@ -83,7 +83,7 @@
             <MdPreview language="en-US" :modelValue="assignments?.data?.s_content?.text" />
         </div>
         <div class="mt-4" v-if="assignments?.data?.s_content?.files.length">
-            <span class="flex items-center gap-2">
+            <span class="flex items-center gap-2 font-bold">
                 <span class="material-icons-outlined select-none">attach_file</span>
                 ไฟล์จากนักเรียน
             </span>

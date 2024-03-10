@@ -10,6 +10,7 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@fontsource/bai-jamjuree": "^5.0.12",
     "@fontsource/noto-sans-thai": "^5.0.12",
     "@preline/collapse": "^2.0.2",
     "@preline/dropdown": "^2.0.2",

@@ -71,8 +71,8 @@
                     {{ `${post?.u_firstname.slice(0, 1)}${post?.u_lastname.slice(0, 1)}` }}
                 </div>
                 <div class="flex flex-col">
-                    <span>
-                        {{ post.u_firstname }} {{ post.u_lastname }}
+                    <span class="flex gap-2">
+                        <span class="font-black">{{ post.u_firstname }} {{ post.u_lastname }}</span>
                         <span class="inline-flex items-center gap-x-1.5 py-0.5 px-1.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                             {{ post.u_role === 'INSTRUCTOR' ? 'ผู้สอน' : post.u_role }}
                         </span>
@@ -88,12 +88,12 @@
                     <div class="flex flex-row flex-wrap"></div>
                 </div>
             </div>
-            <div class="text-xl font-bold">{{ post.p_title }}</div>
+            <div class="text-xl font-black">{{ post.p_title }}</div>
             <div v-if="post.p_content">
                 <MdPreview language="en-US" :editorId="post.p_title + post.p_id" :modelValue="post.p_content" />
             </div>
             <div class="flex flex-col" v-if="post.p_item_list.files.length">
-                <span class="flex items-center gap-2">
+                <span class="flex items-center gap-2 font-bold">
                     <span class="material-icons-outlined">attach_file</span>
                     ไฟล์แนบ
                 </span>
@@ -118,7 +118,7 @@
                                     </span>
                                 </div>
                                 <div class="flex flex-col md:w-48 w-10/12">
-                                    <span class="text-xs whitespace-nowrap text-ellipsis overflow-hidden">{{ file.f_name }}</span>
+                                    <span class="text-xs whitespace-nowrap text-ellipsis overflow-hidden font-bold">{{ file.f_name }}</span>
                                 </div>
                             </div>
                             <div class="flex flex-row items-center gap-2 w-fit">
@@ -129,7 +129,7 @@
                 </div>
             </div>
             <div class="flex flex-col" v-if="post.p_item_list.quizzes.length">
-                <span class="flex items-center gap-2">
+                <span class="flex items-center gap-2 font-bold">
                     <span class="material-icons-outlined">quiz</span>
                     แบบทดสอบ
                 </span>
@@ -144,7 +144,7 @@
                                     </span>
                                 </div>
                                 <div class="flex flex-col md:w-48 w-10/12">
-                                    <span class="text-xs whitespace-nowrap text-ellipsis overflow-hidden">{{ quiz.q_name }}</span>
+                                    <span class="text-xs whitespace-nowrap text-ellipsis overflow-hidden font-bold">{{ quiz.q_name }}</span>
                                     <span class="text-xs whitespace-nowrap text-slate-400" >{{ quiz.q_due_date ? `กำหนดส่ง ${new Date(quiz.q_due_date).toLocaleString()}` : 'ไม่มีกำหนดส่ง' }}</span>
                                     <span class="text-xs whitespace-nowrap text-slate-400" v-if="quiz.q_time_limit">{{ quiz.q_time_limit ?  `จำกัดเวลาทำ ${quiz.q_time_limit} นาที` : '' }}</span>
                                 </div>
@@ -157,7 +157,7 @@
                 </div>
             </div>
             <div class="flex flex-col" v-if="post.p_item_list.assignments.length">
-                <span class="flex items-center gap-2">
+                <span class="flex items-center gap-2 font-bold">
                     <span class="material-icons-outlined">assignment</span>
                     งานมอบหมาย
                 </span>
@@ -172,7 +172,7 @@
                                     </span>
                                 </div>
                                 <div class="flex flex-col md:w-48 w-10/12">
-                                    <span class="text-xs whitespace-nowrap text-ellipsis overflow-hidden">{{ assign.a_name }}</span>
+                                    <span class="text-xs whitespace-nowrap text-ellipsis overflow-hidden font-bold">{{ assign.a_name }}</span>
                                     <span class="text-xs whitespace-nowrap text-slate-400" >{{ assign.a_due_date ? `กำหนดส่ง ${new Date(assign.a_due_date).toLocaleString()}` : 'ไม่มีกำหนดส่ง' }}</span>
                                     <span class="text-xs whitespace-nowrap text-slate-400" v-if="assign.a_score">{{ assign.a_score }} คะแนน</span>
                                 </div>

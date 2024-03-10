@@ -91,14 +91,20 @@
                         <button
                         @click="navigateTo(`/courses/edit?id=${route.query.id}`)"
                             type="button"
-                            class="transition-color duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-gray-200 text-gray-500 hover:border-blue-600 hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none">
+                            class="transition-color duration-200 ease-in-out drop-shadow-[0_0_8px_rgba(0,0,0,1)] py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg text-white hover:text-blue-300 disabled:opacity-50 disabled:pointer-events-none">
                             <span class="material-icons-outlined">edit</span>แก้ไข
                         </button>
                     </div>
                 </div>
+                <div v-if="userRole?.[route.query.id] === 'INSTRUCTOR'" class="absolute left-0">
+                    <div class="flex flex-col items-center justify-center pt-4 pl-4 text-white drop-shadow-[0_0_8px_rgba(0,0,0,1)]">
+                        <span class="font-md text-xl">รหัสเข้าคอร์ส</span>
+                        <span class="font-light font-mono text-2xl">{{crs_info?.c_code}}</span>
+                    </div>
+                </div>
                 <div v-if="!crs_pending" class="absolute flex flex-col gap-2 left-5 bottom-5">
-                    <span class="text-4xl font-bold text-white line-clamp-1">{{ crs_info?.c_name }}</span>
-                    <span class="bottom-0 text-sm font-light text-white h-auto max-h-10 overflow-auto">
+                    <span class="text-4xl font-bold text-white line-clamp-1 drop-shadow-[0_0_12px_rgba(0,0,0,1)]">{{ crs_info?.c_name }}</span>
+                    <span class="bottom-0 text-sm font-light text-white h-auto max-h-10 overflow-auto drop-shadow-[0_0_12px_rgba(0,0,0,1)]">
                         {{ crs_info?.c_description }}
                     </span>
                 </div>

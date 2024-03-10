@@ -4,7 +4,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Noto Sans Thai"', 'sans-serif'],
+        sans: ['"Bai Jamjuree"', 'sans-serif'],
+        title: ['"Noto Sans Thai"', 'sans-serif'],
       }
     },
   },

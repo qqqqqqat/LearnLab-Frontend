@@ -13,7 +13,7 @@ const devname = [
       class="flex md:flex-row flex-col gap-8 justify-between p-12 mx-auto max-w-screen-2xl"
     >
       <div class="flex flex-col">
-        <span class="text-3xl font-bold">LearnLab</span>
+        <span class="text-3xl font-bold font-title">LearnLab</span>
         <span class="text-lg mb-4">ระบบจัดการเนื้อหาเรียนแบบออนไลน์</span>
         <span class="text-lg"
           >เว็บไซต์นี้เป็นส่วนหนึ่งของวิชาการเขียนโปรแกรมเว็บพื้นฐาน รหัส

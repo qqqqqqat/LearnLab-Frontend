@@ -81,9 +81,11 @@
     <LazyCourseCreateFolderModal :f_path="file_path" :c_id="route.query.id" ref="createFolderModal" @refresh-file="fetchFile(route.query.id)" />
     <LazyCourseUploadFileModal :f_path="file_path" :c_id="route.query.id" ref="uploadFileModal" @refresh-file="fetchFile(route.query.id)" />
     <LazyCourseDeleteFileConfirmModal :f_name="delFileName" :f_path="delFilePath" ref="deleteConfirmModal" :f_id="delFileID" :f_type="delFileType" @delete-file="deleteFile" />
+    
     <div class="flex flex-col gap-2">
-        <div v-if="!((file_post?.length || 0) === 0)" class="flex flex-row justify-between items-center gap-4 pb-4">
+        <div class="flex flex-row justify-between items-center gap-4 pb-4">
             <input
+            v-if="((file_post?.length || 0) > 0)"
                 type="text"
                 class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                 :value="file_path"
@@ -96,8 +98,10 @@
                 href="#">
                 <span class="material-icons-outlined" style="font-size: 18px">arrow_upward</span>
             </button>
-            <div v-if="userRole?.[route.query.id] !== 'STUDENT'" class="hs-dropdown relative inline-flex">
+            <div class="hs-dropdown relative inline-flex">
                 <button
+                    v-if="userRole?.[route.query.id] !== 'STUDENT'"
+                    id="hs-dropdown-create-file"
                     type="button"
                     class="hs-dropdown-toggle py-3 px-4 flex-shrink-0 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
                     เพิ่ม
@@ -115,20 +119,16 @@
                         <path d="m6 9 6 6 6-6" />
                     </svg>
                 </button>
-
                 <div
-                    v-if="userRole?.[route.query.id] !== 'STUDENT'"
-                    class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-40 bg-white shadow-md rounded-lg p-2 mt-2 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full">
+                    class="hs-dropdown-menu z-[100] transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-40 bg-white shadow-md rounded-lg p-2 mt-2 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full" aria-labelledby="hs-dropdown-create-file">
                     <a
-                        class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                        href="#"
+                        class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none cursor-pointer focus:bg-gray-100"
                         @click="uploadFileModal.c_openModal()">
                         <span class="material-icons-outlined">insert_drive_file</span>
                         ไฟล์
                     </a>
                     <a
-                        class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                        href="#"
+                        class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none cursor-pointer focus:bg-gray-100"
                         @click="createFolderModal.c_openModal()">
                         <span class="material-icons-outlined">folder</span>
                         โฟลเดอร์

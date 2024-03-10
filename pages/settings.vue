@@ -60,7 +60,7 @@
 <template>
     <div class="max-w-screen-2xl mx-auto mb-8">
         <div class="flex flex-col items-center w-full h-full gap-y-8">
-            <h1 class="text-5xl mt-24 font-bold mb-4">ตั้งค่าผู้ใช้</h1>
+            <h1 class="text-5xl mt-24 font-bold mb-4 font-title">ตั้งค่าผู้ใช้</h1>
             <div class="flex md:flex-row md:items-start flex-col items-center gap-8">
                 <div class="rounded-md w-64 h-64 bg-slate-200 flex flex-col justify-center items-center text-[140px]" v-if="!avatarState?.u_avatar">
                     {{ userState?.u_firstname ? `${userState?.u_firstname.slice(0, 1)}${userState?.u_lastname.slice(0, 1)}` : '' }}
