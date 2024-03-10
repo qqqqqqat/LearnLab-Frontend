@@ -142,47 +142,6 @@
                             </label>
                         </div>
                         <!-- End Floating Input -->
-
-                        <div class="hs-dropdown relative inline-flex">
-                            <button
-                                id="hs-select-post-type-dropdown"
-                                type="button"
-                                class="hs-dropdown-toggle py-3 px-4 inline-flex justify-between w-48 items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none">
-                                {{ postType.title }}
-                                <svg
-                                    class="hs-dropdown-open:rotate-180 size-4"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="24"
-                                    height="24"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round">
-                                    <path d="m6 9 6 6 6-6" />
-                                </svg>
-                            </button>
-                            <!-- <div
-                                class="hs-dropdown-menu transition-[opacity,margin] z-[20] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white shadow-md rounded-lg p-2 mt-2 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
-                                aria-labelledby="hs-select-post-type-dropdown">
-                                <a
-                                    class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 cursor-pointer"
-                                    @click="postType = { title: 'ประกาศ', type: 'ANNOUNCEMENT' }">
-                                    ประกาศ (Announcement)
-                                </a>
-                                <a
-                                    class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 cursor-pointer"
-                                    @click="postType = { title: 'งานมอบหมาย', type: 'ASSIGNMENT' }">
-                                    งานมอบหมาย (Assignment)
-                                </a>
-                                <a
-                                    class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 cursor-pointer"
-                                    @click="postType = { title: 'แบบทดสอบ', type: 'QUIZ' }">
-                                    แบบทดสอบ (Quiz)
-                                </a>
-                            </div> -->
-                        </div>
                     </div>
                     <div>
                         <label>เนื้อหาของโพสต์</label>
@@ -190,19 +149,6 @@
                     </div>
                     <div class="flex flex-col">
                         <!-- Floating Input -->
-                        <div class="relative flex-grow">
-                            <input
-                                type="datetime-local"
-                                v-model="postShowTime"
-                                id="hs-floating-crs-name"
-                                placeholder="หัวข้อโพสต์"
-                                class="peer p-4 block w-full border-gray-200 rounded-lg text-sm placeholder:text-transparent focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none focus:pt-6 focus:pb-2 [&:not(:placeholder-shown)]:pt-6 [&:not(:placeholder-shown)]:pb-2 autofill:pt-6 autofill:pb-2" />
-                            <label
-                                for="hs-floating-crs-name"
-                                class="absolute top-0 start-0 p-4 h-full text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent peer-disabled:opacity-50 peer-disabled:pointer-events-none peer-focus:text-xs peer-focus:-translate-y-1.5 peer-focus:text-gray-500 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-gray-500">
-                                เวลาแสดงโพสต์
-                            </label>
-                        </div>
                     </div>
                     <div class="flex md:flex-row md:flex-nowrap flex-col gap-2 w-full">
                         <input @change="onFileChangedMat" ref="inputFile" type="file" hidden />

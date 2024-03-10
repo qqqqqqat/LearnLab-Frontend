@@ -3,9 +3,12 @@
         layout: 'course',
     })
     import { toast } from '@steveyuowo/vue-hot-toast'
+    const userState = useUserState()
 
     let crs_pending = ref(true)
     const route = useRoute()
+
+    const crs_member = ref()
 
     const courseName = ref<string>('')
     const courseDescription = ref<string>('')
@@ -58,7 +61,7 @@
         })
             .then((res) => {
                 courseName.value = res.c_name
-                courseDescription.value = res.c_description 
+                courseDescription.value = res.c_description
                 wasPasswordProtected.value = res.c_hashed_password
                 passwordProtected.value = res.c_hashed_password
                 coursePrivacy.value = res.c_privacy === 'PRIVATE'
@@ -70,8 +73,58 @@
             })
     }
 
+    async function fetchMember(id: number) {
+        await $fetch('/api/courses/enroll/', {
+            query: { c_id: id },
+        })
+            .then((res) => {
+                crs_member.value = res
+                crs_pending.value = false
+            })
+            .catch((err) => {
+                toast.error(err?.data?.message)
+                navigateTo('/mycourse', { replace: true })
+            })
+    }
+
+    async function updateMemberRole(u_id: number, c_id: number, u_role: 'TA' | 'STUDENT') {
+        const updateRoleToast = toast.loading('กำลังอัพเดทตำแหน่ง')
+        
+        await $fetch('/api/courses/enroll/', {
+            method: 'PATCH',
+            body: { u_id: u_id, c_id: c_id, u_role: u_role },
+        })
+            .then((res) => {
+                fetchMember(route.query.id)
+                toast.update(updateRoleToast, {type:'success', message: res?.message})
+                crs_pending.value = false
+            })
+            .catch((err) => {
+                toast.update(updateRoleToast, {type:'error', message: err?.data?.message})
+                navigateTo('/mycourse', { replace: true })
+            })
+    }
+
+    async function deleteMember(u_id: number, c_id: number) {
+        const updateRoleToast = toast.loading('กำลังอัพเดทตำแหน่ง')
+        
+        await $fetch('/api/courses/enroll/', {
+            method: 'DELETE',
+            body: { u_id: u_id, c_id: c_id },
+        })
+            .then((res) => {
+                fetchMember(route.query.id)
+                toast.update(updateRoleToast, {type:'success', message: res?.message})
+                crs_pending.value = false
+            })
+            .catch((err) => {
+                toast.update(updateRoleToast, {type:'error', message: err?.data?.message})
+                navigateTo('/mycourse', { replace: true })
+            })
+    }
+
     async function deleteCourse(id: number) {
-        await $fetch<{status: number, message: string}>('/api/courses/', {
+        await $fetch<{ status: number; message: string }>('/api/courses/', {
             method: 'DELETE',
             body: { c_id: id },
         })
@@ -86,6 +139,7 @@
 
     if (route.query.id) {
         fetchCourse(route.query.id)
+        fetchMember(route.query.id)
     }
 </script>
 <template>
@@ -182,8 +236,66 @@
                 แก้ไข
             </button>
         </div>
-        <div><span class="text-4xl font-bold">ตั้งตำแหน่ง</span></div>
+        <div>
+            <span class="text-4xl font-bold">สมาชิก</span>
+            <div class="flex flex-col mt-4">
+                <div class="-m-1.5 overflow-x-auto">
+                    <div class="p-1.5 min-w-full inline-block align-middle">
+                        <div class="border rounded-lg overflow-hidden">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">รูป</th>
+                                        <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">ชื่อ</th>
+                                        <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">ตำแหน่ง</th>
+                                        <th scope="col" class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-gray-200">
+                                    <tr v-for="member in crs_member">
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
+                                            <div v-if="member.u_avatar" class="rounded-md w-12 h-12">
+                                                <img class="rounded-md aspect-square object-cover border bottom-1" loading="lazy" :src="`/api/avatar/?u_id=${member.u_id}`" />
+                                            </div>
+                                            <div class="rounded-md w-12 h-12 bg-slate-200 flex flex-col justify-center items-center text-2xl select-none" v-if="!member?.u_avatar">
+                                                {{ `${member?.u_firstname.slice(0, 1)}${member?.u_lastname.slice(0, 1)}` }}
+                                            </div>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ member.u_firstname }} {{ member.u_lastname }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ member.u_role }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
+                                            <div class="flex flex-row justify-end gap-4" v-if="member.u_role !== 'INSTRUCTOR' && member.u_id !== userState?.u_id">
+                                                <button
+                                                    v-if="member.u_role === 'STUDENT'"
+                                                    type="button"
+                                                    @click="updateMemberRole(member.u_id, route.query.id, 'TA')"
+                                                    class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none">
+                                                    ปรับเป็น TA
+                                                </button>
+                                                <button
+                                                    v-else
+                                                    type="button"
+                                                    @click="updateMemberRole(member.u_id, route.query.id, 'STUDENT')"
+                                                    class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none">
+                                                    ปรับเป็น STUDENT
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    @click="deleteMember(member.u_id, route.query.id)"
 
+                                                    class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-red-600 hover:text-red-800 disabled:opacity-50 disabled:pointer-events-none">
+                                                    ลบ
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <style scoped>
