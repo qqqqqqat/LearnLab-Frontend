@@ -79,6 +79,7 @@
             body: formData,
         })
             .then(async (res) => {
+                toast.update(uploadPostFileToast, { type: 'success', message: res?.message })
                 await uploadPost(res.f_id);
             })
             .catch((err) => {
@@ -162,7 +163,7 @@
                                     <path d="m6 9 6 6 6-6" />
                                 </svg>
                             </button>
-                            <div
+                            <!-- <div
                                 class="hs-dropdown-menu transition-[opacity,margin] z-[20] duration hs-dropdown-open:opacity-100 opacity-0 hidden min-w-60 bg-white shadow-md rounded-lg p-2 mt-2 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
                                 aria-labelledby="hs-select-post-type-dropdown">
                                 <a
@@ -180,7 +181,7 @@
                                     @click="postType = { title: 'แบบทดสอบ', type: 'QUIZ' }">
                                     แบบทดสอบ (Quiz)
                                 </a>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                     <div>

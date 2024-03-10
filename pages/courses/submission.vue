@@ -153,13 +153,17 @@
                     ส่ง
                 </button>
                 <button
-                    v-else
+                    v-else-if="!assignments?.score"
                     @click="removeSubmission()"
                     type="button"
                     :disabled="assignPending"
                     class="md:w-fit w-full justify-center transition-color duration-200 ease-in-out py-2 px-6 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
                     ยกเลิกการส่ง
                 </button>
+                <div class="flex flex-col justify-end items-end" v-else>
+                    <span class="text-xl">คุณได้ {{ `${assignments?.score}/${assignments?.a_score}` }} คะแนน</span>
+                    <span class="text-slate-800" v-if="assignments?.s_feedback">"{{ assignments?.s_feedback }}"</span>
+                </div>
             </div>
         </div>
         <div class="mt-4" v-if="assignments?.a_files?.length">
@@ -245,14 +249,14 @@
                 </TransitionGroup>
             </div>
             <div class="">
-                <div class="mt-4" v-if="assignments?.s_content?.files">
+                <div class="mt-4" v-if="assignments?.s_content?.files?.length">
                     <span class="flex items-center gap-2 font-bold">
                         <span class="material-icons-outlined">attach_file</span>
                         ไฟล์ที่ส่งไป
                     </span>
                     <hr class="mb-2" />
                 </div>
-                <div class="flex flex-row flex-wrap gap-2" v-if="assignments?.s_content?.files">
+                <div class="flex flex-row flex-wrap gap-2" v-if="assignments?.s_content?.files?.length">
                     <div v-for="file in assignments?.s_content?.files" class="flex flex-row border border-1 rounded-md md:w-72 w-full p-2 mt-1">
                         <div class="flex flex-row justify-between items-center gap-2 md:w-72 w-full">
                             <div class="flex flex-row items-center gap-2 overflow-hidden">

@@ -124,7 +124,7 @@
 
             <div class="text-xl font-black">{{ post.p_title }}</div>
             <div v-if="post.p_content">
-                <MdPreview language="en-US" :editorId="post.p_title + post.p_id" :modelValue="post.p_content" />
+                <MdPreview language="en-US" :modelValue="post.p_content" />
             </div>
             <div class="flex flex-col" v-if="post.p_item_list.files.length">
                 <span class="flex items-center gap-2 font-bold">
