@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Toaster } from "@steveyuowo/vue-hot-toast";
 import '@fontsource/noto-sans-thai';
+import '@fontsource/bai-jamjuree';
 import "@steveyuowo/vue-hot-toast/vue-hot-toast.css";
 useSeoMeta({
         title: 'LearnLab',
