@@ -104,6 +104,7 @@ declare global {
     interface SubmissionData {
         u_id: number
         a_id: number
+        score: number | null
         u_firstname: string
         u_lastname: string
         s_datetime: string | null

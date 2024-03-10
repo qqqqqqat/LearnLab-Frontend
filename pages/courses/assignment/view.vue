@@ -60,7 +60,7 @@
             <div class="flex gap-4 items-center md:justify-normal justify-between">
                 <div class="flex md:flex-row flex-row-reverse items-center gap-2">
                     <div class="flex flex-col md:items-end items-start">
-                        {{ assign.s_datetime ? 'ส่งแล้ว' : 'ยังไม่ส่ง' }}
+                        {{ assign.s_datetime ? 'ส่งแล้ว' : 'ยังไม่ส่ง' }} {{ assign?.score ? 'ให้คะแนนแล้ว' : '' }}
                         <span class="text-xs text-red-400" v-if="assignments?.a_due_date && assign?.s_datetime && getTimeDiff(assignments.a_due_date, assign?.s_datetime).isLate">{{ 
                         
                         getTimeDiff(assignments.a_due_date, assign?.s_datetime).isLate ? 'ส่งช้า' : ''
@@ -68,7 +68,6 @@
                         }}
                          {{ getTimeDiff(assignments.a_due_date, assign?.s_datetime)?.day ? `${getTimeDiff(assignments.a_due_date, assign?.s_datetime).day} วัน` : '' }} {{ getTimeDiff(assignments.a_due_date, assign?.s_datetime)?.hour ? `${getTimeDiff(assignments.a_due_date, assign?.s_datetime).hour} ชั่วโมง` : '' }} {{ getTimeDiff(assignments.a_due_date, assign?.s_datetime)?.minute ? `${getTimeDiff(assignments.a_due_date, assign?.s_datetime).minute} นาที` : '' }} {{ getTimeDiff(assignments.a_due_date, assign?.s_datetime)?.second ? `${getTimeDiff(assignments.a_due_date, assign?.s_datetime).second} วินาที` : '' }}
                     </span>
-                        <span class="text-sm text-slate-400" v-else-if="assign?.s_datetime">{{ new Date(assign.s_datetime).toLocaleString() }}</span>
                     </div>
                     <div class="material-icons-outlined">{{ assign.s_datetime ? 'check_circle' : 'close' }}</div>
                 </div>
