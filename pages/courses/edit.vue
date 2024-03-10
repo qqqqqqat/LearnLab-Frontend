@@ -89,36 +89,36 @@
 
     async function updateMemberRole(u_id: number, c_id: number, u_role: 'TA' | 'STUDENT') {
         const updateRoleToast = toast.loading('กำลังอัพเดทตำแหน่ง')
-        
+
         await $fetch('/api/courses/enroll/', {
             method: 'PATCH',
             body: { u_id: u_id, c_id: c_id, u_role: u_role },
         })
             .then((res) => {
                 fetchMember(route.query.id)
-                toast.update(updateRoleToast, {type:'success', message: res?.message})
+                toast.update(updateRoleToast, { type: 'success', message: res?.message })
                 crs_pending.value = false
             })
             .catch((err) => {
-                toast.update(updateRoleToast, {type:'error', message: err?.data?.message})
+                toast.update(updateRoleToast, { type: 'error', message: err?.data?.message })
                 navigateTo('/mycourse', { replace: true })
             })
     }
 
     async function deleteMember(u_id: number, c_id: number) {
         const updateRoleToast = toast.loading('กำลังอัพเดทตำแหน่ง')
-        
+
         await $fetch('/api/courses/enroll/', {
             method: 'DELETE',
             body: { u_id: u_id, c_id: c_id },
         })
             .then((res) => {
                 fetchMember(route.query.id)
-                toast.update(updateRoleToast, {type:'success', message: res?.message})
+                toast.update(updateRoleToast, { type: 'success', message: res?.message })
                 crs_pending.value = false
             })
             .catch((err) => {
-                toast.update(updateRoleToast, {type:'error', message: err?.data?.message})
+                toast.update(updateRoleToast, { type: 'error', message: err?.data?.message })
                 navigateTo('/mycourse', { replace: true })
             })
     }
@@ -262,7 +262,17 @@
                                             </div>
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ member.u_firstname }} {{ member.u_lastname }}</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ member.u_role }}</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                                            <span v-if="member.u_role === 'INSTRUCTOR'" class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-blue-600 text-white dark:bg-blue-500">
+                                                {{ member.u_role }}
+                                            </span>
+                                            <span v-if="member.u_role === 'STUDENT'" class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-teal-500 text-white">
+                                                {{ member.u_role }}
+                                            </span>
+                                            <span v-if="member.u_role === 'TA'" class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-yellow-500 text-white">
+                                                {{ member.u_role }}
+                                            </span>
+                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
                                             <div class="flex flex-row justify-end gap-4" v-if="member.u_role !== 'INSTRUCTOR' && member.u_id !== userState?.u_id">
                                                 <button
@@ -282,7 +292,6 @@
                                                 <button
                                                     type="button"
                                                     @click="deleteMember(member.u_id, route.query.id)"
-
                                                     class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-red-600 hover:text-red-800 disabled:opacity-50 disabled:pointer-events-none">
                                                     ลบ
                                                 </button>
