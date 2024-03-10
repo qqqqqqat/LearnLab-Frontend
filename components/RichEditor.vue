@@ -1,7 +1,14 @@
 <script setup lang="ts">
     import { MdEditor, en_US } from 'md-editor-v3'
     import 'md-editor-v3/lib/style.css'
-    const text = ref('')
+    const text = ref()
+    const props = defineProps({ content : {
+        required: false,
+        type: String
+    }})
+    watch(() => props.content, () => {
+        text.value = props.content
+    })
 
     const emit =defineEmits(['sendText'])
 

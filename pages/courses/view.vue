@@ -13,8 +13,13 @@
     const crs_post = ref<PostGETAPIResponse>()
     const crs_pending = ref(true)
     const postModal = ref()
-    const delPostId = ref()
+    const delPostId = ref<number>(0)
     const delPostConfirm = ref()
+
+    const editPostModal = ref()
+    const editPostId = ref<number|null>(null)
+    const editPostTitle = ref<string|null>(null)
+    const editPostContent = ref<string|null>(null)
 
     watch(
         () => route.query.id,
@@ -74,7 +79,8 @@
 </script>
 <template>
     <LazyCourseCreatePostModal ref="postModal" :c_id="route.query.id" @refresh-post="fetchPost(route.query.id)" />
-    <LazyCourseDeletePostConfirm ref="delPostConfirm" :p_id="delPostId" @delete-post="deletePost"/>
+    <LazyCourseDeletePostConfirm ref="delPostConfirm" :p_id="delPostId" @delete-post="deletePost" />
+    <LazyCourseEditPostModal ref="editPostModal" :p_id="editPostId || 0" :p_title="editPostTitle || ''" :p_content="editPostContent || ''" :c_id="route.query.id" />
     <div class="flex flex-col gap-4 w-full">
         <div class="flex flex-row justify-between items-center gap-4">
             <div></div>
@@ -114,6 +120,14 @@
                 </div>
                 <div class="flex gap-2" v-if="userState?.u_id === post?.u_id">
                     <button
+                        @click="
+                            () => {
+                                editPostId = post.p_id
+                                editPostTitle = post.p_title
+                                editPostContent = post.p_content
+                                editPostModal.c_openModal()
+                            }
+                        "
                         type="button"
                         class="transition-color duration-200 ease-in-out py-1 px-2 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-gray-200 text-gray-500 hover:border-blue-600 hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none">
                         <span class="material-icons-outlined">edit</span>
