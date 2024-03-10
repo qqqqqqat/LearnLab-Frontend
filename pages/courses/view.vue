@@ -13,6 +13,8 @@
     const crs_post = ref<PostGETAPIResponse>()
     const crs_pending = ref(true)
     const postModal = ref()
+    const delPostId = ref()
+    const delPostConfirm = ref()
 
     watch(
         () => route.query.id,
@@ -38,6 +40,8 @@
     }
 
     async function deletePost(p_id: number) {
+        delPostConfirm.value.c_closeModal()
+        const deletePostToast = toast.loading('กำลังลบโพสต์')
         await $fetch<{ status: number; message: string }>('/api/post/', {
             method: 'DELETE',
             body: {
@@ -46,11 +50,11 @@
             },
         })
             .then((res) => {
-                toast.success(res.message)
                 fetchPost(route.query.id)
+                toast.update(deletePostToast, { type: 'success', message: res?.message })
             })
             .catch((err) => {
-                toast.error(err?.data?.message)
+                toast.update(deletePostToast, { type: 'error', message: err?.data?.message })
             })
     }
 
@@ -70,6 +74,7 @@
 </script>
 <template>
     <LazyCourseCreatePostModal ref="postModal" :c_id="route.query.id" @refresh-post="fetchPost(route.query.id)" />
+    <LazyCourseDeletePostConfirm ref="delPostConfirm" :p_id="delPostId" @delete-post="deletePost"/>
     <div class="flex flex-col gap-4 w-full">
         <div class="flex flex-row justify-between items-center gap-4">
             <div></div>
@@ -114,7 +119,12 @@
                         <span class="material-icons-outlined">edit</span>
                     </button>
                     <button
-                        @click="deletePost(post?.p_id)"
+                        @click="
+                            () => {
+                                delPostId = post.p_id
+                                delPostConfirm.c_openModal()
+                            }
+                        "
                         type="button"
                         class="transition-color duration-200 ease-in-out py-1 px-2 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-gray-200 text-gray-500 hover:border-rose-600 hover:text-rose-600 disabled:opacity-50 disabled:pointer-events-none">
                         <span class="material-icons-outlined">delete</span>
