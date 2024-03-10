@@ -43,6 +43,7 @@
             method: 'DELETE',
             body: {
                 f_id: f_id,
+                c_id: route.query.id,
                 f_type: f_type,
             },
         })
@@ -175,7 +176,7 @@
                     <span class="material-icons-outlined select-none cursor-pointer text-gray-500" v-if="file.f_type === 'FILE'" @click="downloadFile(file.f_id)">download</span>
                     <span
                         class="material-icons-outlined select-none cursor-pointer text-red-500"
-                        v-if="file.f_privacy === 'PUBLIC'"
+                        v-if="file.f_privacy === 'PUBLIC' && userRole?.[route.query.id] !== 'STUDENT'"
                         @click="
                             () => {
                                 delFileName = file.f_name

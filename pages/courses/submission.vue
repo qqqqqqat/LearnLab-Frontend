@@ -1,6 +1,8 @@
 <script setup lang="ts">
     import { toast } from '@steveyuowo/vue-hot-toast'
     import { MdPreview } from 'md-editor-v3'
+    import 'md-editor-v3/lib/preview.css'
+
     const userRole = useUserCourseState()
     const assignments = ref()
     const assignPending = ref(true)
@@ -12,7 +14,7 @@
     })
 
     async function getOneAssignment(id: number, a_id: number) {
-        await $fetch('/api/courses/assignment/', {
+        await $fetch<StudentAssignmentGETResponse>('/api/courses/assignment/', {
             query: {
                 c_id: id,
                 a_id: a_id,
@@ -20,6 +22,7 @@
         })
             .then((res) => {
                 assignments.value = res
+                postContent.value = res?.s_content?.text || ''
                 assignPending.value = false
             })
             .catch((err) => {
@@ -34,6 +37,26 @@
     async function downloadFile(f_id: number) {
         await navigateTo(`/api/file?f_id=${f_id}`, { open: { target: '_blank' } })
     }
+
+    async function removeSubmission() {
+        assignPending.value = true
+        const deleteSubmissionToast = toast.loading('กำลังลบการส่งงาน')
+
+        await $fetch<{ status: number; message: string }>('/api/courses/assignment/submit', {
+            method: 'DELETE',
+            body: { a_id: route.query.a_id },
+        })
+            .then((Pres) => {
+                toast.update(deleteSubmissionToast, { type: 'success', message: Pres?.message })
+                assignPending.value = false
+                getOneAssignment(route.query.id, route.query.a_id)
+            })
+            .catch((Perr) => {
+                toast.update(deleteSubmissionToast, { type: 'error', message: Perr?.data?.message })
+                assignPending.value = false
+            })
+    }
+
     async function makeSubmission(postFile: number[]) {
         assignPending.value = true
         const createSubmissionToast = toast.loading('กำลังบันทึกการส่งงาน')
@@ -51,6 +74,7 @@
             .then((Pres) => {
                 toast.update(createSubmissionToast, { type: 'success', message: Pres?.message })
                 assignPending.value = false
+                getOneAssignment(route.query.id, route.query.a_id)
             })
             .catch((Perr) => {
                 toast.update(createSubmissionToast, { type: 'error', message: Perr?.data?.message })
@@ -113,6 +137,7 @@
             </div>
             <div class="md:w-fit w-full">
                 <button
+                    v-if="!assignments?.s_datetime"
                     @click="
                         () => {
                             if (submitFiles.length) {
@@ -126,6 +151,14 @@
                     :disabled="assignPending"
                     class="md:w-fit w-full justify-center transition-color duration-200 ease-in-out py-2 px-6 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
                     ส่ง
+                </button>
+                <button
+                    v-else
+                    @click="removeSubmission()"
+                    type="button"
+                    :disabled="assignPending"
+                    class="md:w-fit w-full justify-center transition-color duration-200 ease-in-out py-2 px-6 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                    ยกเลิกการส่ง
                 </button>
             </div>
         </div>
@@ -168,13 +201,20 @@
     </div>
     <div class="flex flex-col gap-4 overflow-y-auto">
         <div class="w-full">
-            <RichEditor @send-text="getRteText" />
+            <span class="flex items-center gap-2 font-bold">
+                <span class="material-icons-outlined select-none">article</span>
+                ข้อความ
+            </span>
+            <hr class="mb-2" />
+            <MdPreview v-if="assignments?.s_datetime" :model-value="postContent" />
+            <RichEditor v-else @send-text="getRteText" />
         </div>
         <div class="flex md:flex-row md:flex-nowrap flex-col gap-2 w-full">
             <input @change="onFileChangedMat" ref="inputFile" type="file" hidden />
             <!-- End Floating Input -->
             <div>
                 <button
+                    v-if="!assignments?.s_datetime"
                     @click="inputFile.click()"
                     type="button"
                     :disabled="assignPending"
@@ -183,7 +223,7 @@
                     เพิ่มไฟล์แนบ
                 </button>
             </div>
-            <div class="flex md:flex-row flex-col overflow-auto gap-x-4 gap-y-2">
+            <div v-if="!assignments?.s_datetime" class="flex md:flex-row flex-col overflow-auto gap-x-4 gap-y-2">
                 <TransitionGroup name="fade">
                     <div v-for="(file, index) in submitFiles" :key="index + file.name" class="flex gap-2 justify-between items-center px-2 py-1.5 rounded-md bg-blue-100 text-blue-600">
                         <div class="flex flex-row flex-nowrap items-center gap-2 w-full overflow-hidden">
@@ -203,6 +243,44 @@
                         </span>
                     </div>
                 </TransitionGroup>
+            </div>
+            <div class="">
+                <div class="mt-4" v-if="assignments?.s_content?.files">
+                    <span class="flex items-center gap-2 font-bold">
+                        <span class="material-icons-outlined">attach_file</span>
+                        ไฟล์ที่ส่งไป
+                    </span>
+                    <hr class="mb-2" />
+                </div>
+                <div class="flex flex-row flex-wrap gap-2" v-if="assignments?.s_content?.files">
+                    <div v-for="file in assignments?.s_content?.files" class="flex flex-row border border-1 rounded-md md:w-72 w-full p-2 mt-1">
+                        <div class="flex flex-row justify-between items-center gap-2 md:w-72 w-full">
+                            <div class="flex flex-row items-center gap-2 overflow-hidden">
+                                <div class="bg-slate-100 w-8 h-8 rounded-md flex flex-shrink-0 justify-center items-center select-none">
+                                    <span class="material-icons-outlined">
+                                        {{
+                                            file.f_mime_type?.split('/')[0] === 'image'
+                                                ? 'image'
+                                                : file.f_mime_type?.split('/')[0] === 'audio'
+                                                ? 'audio_file'
+                                                : file.f_mime_type === 'application/pdf'
+                                                ? 'description'
+                                                : file.f_mime_type?.split('/')[0] === 'video'
+                                                ? 'video_file'
+                                                : 'insert_drive_file'
+                                        }}
+                                    </span>
+                                </div>
+                                <div class="flex flex-col md:w-48 w-10/12">
+                                    <span class="text-xs whitespace-nowrap text-ellipsis overflow-hidden">{{ file.f_name }}</span>
+                                </div>
+                            </div>
+                            <div class="flex flex-row items-center gap-2 w-fit">
+                                <span class="material-icons-outlined select-none cursor-pointer text-gray-500" @click="downloadFile(file.f_id)">download</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

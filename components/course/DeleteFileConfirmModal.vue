@@ -18,6 +18,7 @@
             type: String,
             required: true
         },
+        
     })
     defineExpose({ c_closeModal, c_openModal })
 

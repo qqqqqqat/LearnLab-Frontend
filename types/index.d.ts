@@ -141,6 +141,32 @@ declare global {
             u_avatar: boolean
         }
     }
+
+    interface StudentAssignmentGETResponse {
+        a_id: number | null;
+        c_id: number;
+        a_name: string;
+        a_due_date: string | null;
+        a_score: number | null; // Optional property for a_score
+        a_files: {
+          f_id: number;
+          f_name: string;
+          f_mime_type: string;
+        }[];
+        u_id: number | null;
+        s_content: {
+          files: {
+            f_id: number;
+            f_name: string;
+            f_mime_type: string;
+          }[];
+          text: string;
+        };
+        examiner_id: number | null;
+        s_feedback: string | null;
+        score: number | null;
+        s_datetime: string | null;
+      }
 }
 
 export {}
