@@ -80,7 +80,7 @@
 <template>
     <LazyCourseCreatePostModal ref="postModal" :c_id="route.query.id" @refresh-post="fetchPost(route.query.id)" />
     <LazyCourseDeletePostConfirm ref="delPostConfirm" :p_id="delPostId" @delete-post="deletePost" />
-    <LazyCourseEditPostModal ref="editPostModal" :p_id="editPostId || 0" :p_title="editPostTitle || ''" :p_content="editPostContent || ''" :c_id="route.query.id" />
+    <LazyCourseEditPostModal ref="editPostModal" :p_id="editPostId || 0" :p_title="editPostTitle || ''" :p_content="editPostContent || ''" :c_id="route.query.id" @refresh-post="fetchPost(route.query.id)" />
     <div class="flex flex-col gap-4 w-full">
         <div class="flex flex-row justify-between items-center gap-4">
             <div></div>
