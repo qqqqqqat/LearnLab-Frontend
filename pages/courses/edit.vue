@@ -130,9 +130,28 @@
         })
             .then((res) => {
                 toast.success(res.message)
-                navigateTo('/mycourse', { replace: true })
+                confirmModal.value.c_closeModal()
+                setTimeout(async () => navigateTo('/mycourse', { replace: true }), 1000)
             })
             .catch((err) => {
+                toast.error(err?.data?.message)
+            })
+    }
+
+    async function addMember(id: number, u_email: string) {
+        isImporting.value = true
+        await $fetch<{ status: number; message: string }>('/api/courses/enroll/mail/', {
+            method: 'PUT',
+            body: { c_id: id, u_email: u_email },
+        })
+            .then((res) => {
+                fetchMember(route.query.id)
+                inviteUserEmail.value = ''
+                isImporting.value = false
+                toast.success(res.message)
+            })
+            .catch((err) => {
+                isImporting.value = false
                 toast.error(err?.data?.message)
             })
     }
@@ -141,8 +160,13 @@
         fetchCourse(route.query.id)
         fetchMember(route.query.id)
     }
+    const confirmModal = ref()
+    const actionName = ref('')
+    const inviteUserEmail = ref('')
+    const isImporting = ref(false)
 </script>
 <template>
+    <CourseConfirmModal ref="confirmModal" :action="actionName" @do-action="deleteCourse(route.query.id)" />
     <div class="flex flex-col gap-4 w-full">
         <div><span class="text-4xl font-bold">แก้ไขคอร์ส</span></div>
         <div class="flex flex-col gap-4 px-4">
@@ -150,11 +174,11 @@
                 <input
                     type="text"
                     v-model="courseName"
-                    id="hs-floating-input-text-course"
+                    id="hs-floating-input-text-course-1"
                     class="peer p-4 block w-full border-gray-200 rounded-lg text-sm placeholder:text-transparent focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-non focus:pt-6 focus:pb-2 [&:not(:placeholder-shown)]:pt-6 [&:not(:placeholder-shown)]:pb-2 autofill:pt-6 autofill:pb-2"
                     placeholder="LearnLab Course-course" />
                 <label
-                    for="hs-floating-input-text"
+                    for="hs-floating-input-text-course-1"
                     class="absolute top-0 start-0 p-4 h-full text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent peer-disabled:opacity-50 peer-disabled:pointer-events-none peer-focus:text-xs peer-focus:-translate-y-1.5 peer-focus:text-gray-500 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-gray-500">
                     ชื่อคอร์ส
                     <span class="text-red-600">*</span>
@@ -223,7 +247,12 @@
         </div>
         <div class="flex justify-end items-center gap-x-2 py-3 px-4">
             <button
-                @click="deleteCourse(route.query.id)"
+                @click="
+                    () => {
+                        actionName = 'ลบคอร์สนี้'
+                        confirmModal.c_openModal()
+                    }
+                "
                 type="button"
                 class="transition-color duration-200 ease-in-out py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 disabled:pointer-events-none">
                 ลบคอร์ส
@@ -236,8 +265,35 @@
                 แก้ไข
             </button>
         </div>
+        <hr />
         <div>
-            <span class="text-4xl font-bold">สมาชิก</span>
+            <div class="flex md:flex-row flex-col justify-between mt-4 gap-4">
+                <span class="text-4xl font-bold">สมาชิก</span>
+                <div class="flex flex-row gap-4">
+                    <div class="relative w-64">
+                        <input
+                            type="email"
+                            :readonly="isImporting"
+                            v-model="inviteUserEmail"
+                            id="hs-floating-input-text-course"
+                            class="peer p-4 block w-full border-gray-200 rounded-lg text-sm placeholder:text-transparent focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-non focus:pt-6 focus:pb-2 [&:not(:placeholder-shown)]:pt-6 [&:not(:placeholder-shown)]:pb-2 autofill:pt-6 autofill:pb-2"
+                            placeholder="LearnLab Course-course" />
+                        <label
+                            for="hs-floating-input-text-course"
+                            class="absolute top-0 start-0 p-4 h-full text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent peer-disabled:opacity-50 peer-disabled:pointer-events-none peer-focus:text-xs peer-focus:-translate-y-1.5 peer-focus:text-gray-500 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-gray-500">
+                            E-Mail ของผู้ที่ต้องการนำเข้าคอร์ส
+                            <span class="text-red-600">*</span>
+                        </label>
+                    </div>
+                    <button
+                        @click="addMember(route.query.id, inviteUserEmail)"
+                        :disabled="isImporting"
+                        type="button"
+                        class="transition-color duration-200 ease-in-out py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                        นำเข้า
+                    </button>
+                </div>
+            </div>
             <div class="flex flex-col mt-4">
                 <div class="-m-1.5 overflow-x-auto">
                     <div class="p-1.5 min-w-full inline-block align-middle">
@@ -263,7 +319,9 @@
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ member.u_firstname }} {{ member.u_lastname }}</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                                            <span v-if="member.u_role === 'INSTRUCTOR'" class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-blue-600 text-white dark:bg-blue-500">
+                                            <span
+                                                v-if="member.u_role === 'INSTRUCTOR'"
+                                                class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-blue-600 text-white dark:bg-blue-500">
                                                 {{ member.u_role }}
                                             </span>
                                             <span v-if="member.u_role === 'STUDENT'" class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-teal-500 text-white">
