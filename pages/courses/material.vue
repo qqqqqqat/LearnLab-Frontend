@@ -82,7 +82,7 @@
     <LazyCourseUploadFileModal :f_path="file_path" :c_id="route.query.id" ref="uploadFileModal" @refresh-file="fetchFile(route.query.id)" />
     <LazyCourseDeleteFileConfirmModal :f_name="delFileName" :f_path="delFilePath" ref="deleteConfirmModal" :f_id="delFileID" :f_type="delFileType" @delete-file="deleteFile" />
     <div class="flex flex-col gap-2">
-        <div class="flex flex-row justify-between items-center gap-4 pb-4">
+        <div v-if="!((file_post?.length || 0) === 0)" class="flex flex-row justify-between items-center gap-4 pb-4">
             <input
                 type="text"
                 class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
@@ -96,9 +96,8 @@
                 href="#">
                 <span class="material-icons-outlined" style="font-size: 18px">arrow_upward</span>
             </button>
-            <div class="hs-dropdown relative inline-flex">
+            <div v-if="userRole?.[route.query.id] !== 'STUDENT'" class="hs-dropdown relative inline-flex">
                 <button
-                v-if="userRole?.[route.query.id] !== 'STUDENT'"
                     type="button"
                     class="hs-dropdown-toggle py-3 px-4 flex-shrink-0 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
                     เพิ่ม

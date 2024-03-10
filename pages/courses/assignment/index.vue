@@ -70,8 +70,8 @@
             </div>
         </div>
         <div v-else-if="!assignPending && (assignments?.data?.length || 0) === 0" class="flex md:flex-row flex-col items-center border border-1 rounded-md gap-2 w-full p-4">
-            <img class="w-64" src="~/assets/images/content.svg" />
-            <span class="text-3xl font-bold">ยังไม่มีโพสต์ในคอร์สนี้</span>
+            <img class="w-48 p-4" src="/images/exam.svg" />
+            <span class="text-3xl font-bold">ยังไม่มีงานมอบหมายในคอร์สนี้</span>
         </div>
         <div v-else class="flex flex-row border border-1 rounded-md gap-2 w-full p-4">
             <div class="animate-spin inline-block size-6 border-[3px] border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500" role="status" aria-label="loading">

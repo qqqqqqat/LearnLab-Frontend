@@ -81,7 +81,7 @@
             </div>
             <div class="flex relative">
                 <img
-                    class="w-full h-full max-h-96 object-cover object-[0%_50%] rounded-xl"
+                    class="w-full h-full min-h-56 max-h-96 object-cover object-[0%_50%] rounded-xl"
                     loading="lazy"
                     :src="crs_info?.c_banner ? `/api/courses/banner/?c_id=${crs_info?.c_id}` : '/images/CourseBannerDefault.svg'"
                     alt="Image Description" />
