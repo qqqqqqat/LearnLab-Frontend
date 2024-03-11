@@ -51,7 +51,7 @@
         if (userRole.value?.[route.query.id] === 'STUDENT') {
             await navigateTo({path: '/courses/quiz/begin' ,query: {id: route.query.id, q_id: q_id}})
         } else {
-            await navigateTo({path: '/courses/quiz/begin' ,query: {id: route.query.id, q_id: q_id}})
+            await navigateTo({path: '/courses/quiz/view' ,query: {id: route.query.id, q_id: q_id}})
         }
     }
 
@@ -67,6 +67,15 @@
     function d_openModal() {
         const { element } = HSOverlay.getInstance(quizDeleteModal.value, true)
         element.open()
+    }
+
+    function getTimeDiff(due_date: string, submit_date: string) {
+        const millis = new Date(due_date).getTime() - new Date(submit_date).getTime()
+        let timeRemainingSec = Math.floor(millis / 1000)
+        let timeRemainingMin = Math.floor(millis / (1000 * 60))
+        let timeRemainingHr = Math.floor(millis / (1000 * 60 * 60))
+        let timeRemainingDay = Math.floor(millis / (1000 * 60 * 60 * 24))
+        return { isLate: !(timeRemainingDay >= 0 && timeRemainingHr >= 0 && timeRemainingMin >= 0 && timeRemainingSec >= 0), day: Math.abs(timeRemainingDay), hour: Math.abs(timeRemainingHr) % 24, minute: Math.abs(timeRemainingMin)  % 60, second: Math.abs(timeRemainingSec)  % 60 }
     }
 
     const quizDeleteModal = ref()
@@ -164,12 +173,24 @@
                     delete
                 </span>
                 <button
+                v-if="!quiz.s_datetime"
                 @click="goToQuiz(quiz.q_id)"
                     type="button"
                     class="py-2 px-3 flex-shrink-0 select-none transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
                     <span class="material-icons-outlined select-none">remove_red_eye</span>
-                    {{ userRole?.[route.query.id] === 'STUDENT' ? 'ทำแบบทดสอบ' : 'ดูแบบทดสอบ' }}
+                    {{ userRole?.[route.query.id] === 'STUDENT' ? 'ทำแบบทดสอบ' : 'ดูการส่ง' }}
                 </button>
+                <div v-if="userRole?.[route.query.id] === 'STUDENT'" class="flex flex-col md:items-end items-start">
+                        {{ quiz.s_datetime ? 'ส่งแล้ว' : 'ยังไม่ส่ง' }} {{ quiz?.score ? `ได้ ${quiz?.score}/${quiz?.full_score} คะแนน` : '' }}
+                        <span class="text-sm text-slate-400" v-if="quiz?.q_due_date && quiz?.s_datetime && !getTimeDiff(quiz.q_due_date, quiz?.s_datetime).isLate">ส่งมาเวลา {{ new Date(quiz?.s_datetime).toLocaleString() }}</span>
+                        <span class="text-xs text-red-400" v-if="quiz?.q_due_date && quiz?.s_datetime && getTimeDiff(quiz.q_due_date, quiz?.s_datetime).isLate">{{ 
+                        
+                        getTimeDiff(quiz.q_due_date, quiz?.s_datetime).isLate ? 'ส่งช้า' : ''
+                        
+                        }}
+                         {{ getTimeDiff(quiz.q_due_date, quiz?.s_datetime)?.day ? `${getTimeDiff(quiz.q_due_date, quiz?.s_datetime).day} วัน` : '' }} {{ getTimeDiff(quiz.q_due_date, quiz?.s_datetime)?.hour ? `${getTimeDiff(quiz.q_due_date, quiz?.s_datetime).hour} ชั่วโมง` : '' }} {{ getTimeDiff(quiz.q_due_date, quiz?.s_datetime)?.minute ? `${getTimeDiff(quiz.q_due_date, quiz?.s_datetime).minute} นาที` : '' }} {{ getTimeDiff(quiz.q_due_date, quiz?.s_datetime)?.second ? `${getTimeDiff(quiz.q_due_date, quiz?.s_datetime).second} วินาที` : '' }}
+                    </span>
+                    </div>
             </div>
         </div>
         <div v-else-if="!quizPending && (quizs?.data?.length || 0) === 0" class="flex md:flex-row flex-col items-center border border-1 rounded-md gap-2 w-full p-4">

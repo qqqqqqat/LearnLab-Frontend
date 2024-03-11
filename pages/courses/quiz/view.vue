@@ -60,7 +60,7 @@
             <div class="flex gap-4 items-center md:justify-normal justify-between">
                 <div class="flex md:flex-row flex-row-reverse items-center gap-2">
                     <div class="flex flex-col md:items-end items-start">
-                        {{ quiz.s_datetime ? 'ส่งแล้ว' : 'ยังไม่ส่ง' }} {{ quiz?.score ? `ได้ ${quiz?.score} คะแนน` : '' }}
+                        {{ quiz.s_datetime ? 'ส่งแล้ว' : 'ยังไม่ส่ง' }} {{ quiz?.score ? `ได้ ${quiz?.score}/${quizzes?.full_score} คะแนน` : '' }}
                         <span class="text-sm text-slate-400" v-if="quizzes?.q_due_date && quiz?.s_datetime && !getTimeDiff(quizzes.q_due_date, quiz?.s_datetime).isLate">ส่งมาเวลา {{ new Date(quiz?.s_datetime).toLocaleString() }}</span>
                         <span class="text-xs text-red-400" v-if="quizzes?.q_due_date && quiz?.s_datetime && getTimeDiff(quizzes.q_due_date, quiz?.s_datetime).isLate">{{ 
                         
