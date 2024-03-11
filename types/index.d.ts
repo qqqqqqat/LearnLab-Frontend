@@ -144,30 +144,45 @@ declare global {
     }
 
     interface StudentAssignmentGETResponse {
-        a_id: number | null;
-        c_id: number;
-        a_name: string;
-        a_due_date: string | null;
-        a_score: number | null; // Optional property for a_score
+        a_id: number | null
+        c_id: number
+        a_name: string
+        a_due_date: string | null
+        a_score: number | null // Optional property for a_score
         a_files: {
-          f_id: number;
-          f_name: string;
-          f_mime_type: string;
-        }[];
-        u_id: number | null;
+            f_id: number
+            f_name: string
+            f_mime_type: string
+        }[]
+        u_id: number | null
         s_content: {
-          files: {
-            f_id: number;
-            f_name: string;
-            f_mime_type: string;
-          }[];
-          text: string;
-        };
-        examiner_id: number | null;
-        s_feedback: string | null;
-        score: number | null;
-        s_datetime: string | null;
-      }
+            files: {
+                f_id: number
+                f_name: string
+                f_mime_type: string
+            }[]
+            text: string
+        }
+        examiner_id: number | null
+        s_feedback: string | null
+        score: number | null
+        s_datetime: string | null
+    }
+
+    interface QuizAPIResponse {
+        q_id: number
+        c_id: number
+        q_name: string
+        q_begin_date: Date
+        q_due_date: Date
+        q_items: QuizItems[]
+    }
+
+    interface QuizItems {
+        title: string
+        type: 'CHOICE' | 'FILL'
+        choice: string[]
+    }
 }
 
 export {}
