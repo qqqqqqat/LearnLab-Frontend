@@ -317,7 +317,10 @@
                                                 {{ `${member?.u_firstname.slice(0, 1)}${member?.u_lastname.slice(0, 1)}` }}
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">{{ member.u_firstname }} {{ member.u_lastname }}<p class="text-xs text-slate-400">{{ member.u_email }}</p></td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                                            {{ member.u_firstname }} {{ member.u_lastname }}
+                                            <p class="text-xs text-slate-400">{{ member.u_email }}</p>
+                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                                             <span
                                                 v-if="member.u_role === 'INSTRUCTOR'"

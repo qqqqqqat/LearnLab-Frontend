@@ -28,6 +28,7 @@
     })
 
     const enrolled = ref<EnrolledCourse>([])
+    const course = ref<{}|null>({})
 
     watch(userState, () => {
         getEnrolledCourse()
@@ -76,6 +77,7 @@
     })
 
     const modalElemOne = ref()
+    const enrollModal = ref();
 
     function closeModal() {
         crspassword.value = ''
@@ -104,6 +106,27 @@
             .catch((err) => {
                 if (err?.data?.message === 'คุณเป็นสมาชิกของคอร๋สนี้อยู่แล้ว') closeModal()
                 toast.update(joinToast, { type: 'error', message: err?.data?.message })
+            })
+    }
+
+    async function findCourse() {
+        const joinCodeToast = toast.loading('กำลังเข้าร่วมคอร์ส')
+        let payload = { c_code: crscode.value }
+        await $fetch('/api/courses/enroll/', {
+            method: 'PUT',
+            body: payload,
+        })
+            .then((res) => {
+                toast.update(joinCodeToast, { type: 'success', message: res?.message })
+                console.log(res?.c_id);
+                // modalCourseID.value = res?.c_id
+                goToCourse(res?.c_id, res?.c_name, res?.c_hashed_password)
+                crscode.value = ''
+            })
+            .catch((err) => {
+                if (err?.data?.message === 'คุณเป็นสมาชิกของคอร๋สนี้อยู่แล้ว')
+                toast.update(joinCodeToast, { type: 'error', message: err?.data?.message })
+                crscode.value = ''
             })
     }
 
@@ -303,6 +326,7 @@
                                             placeholder="รหัสคอร์ส" />
                                         <button
                                             type="button"
+                                            @click="findCourse()"
                                             :disabled="!(crscode.length === 8)"
                                             class="transition-colors duration-150 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
                                             <span class="material-icons-outlined" style="font-size: 18px">add</span>
