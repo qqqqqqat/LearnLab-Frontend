@@ -70,7 +70,6 @@
     }
 
     const quizDeleteModal = ref()
-
 </script>
 <template>
     <div
@@ -146,7 +145,12 @@
                 <div class="text-xl font-bold">{{ quiz.q_name }}</div>
             </div>
             <div class="flex items-center gap-2">
-                <span v-if="userRole?.[route.query.id] !== 'STUDENT'" @click="navigateTo(`/courses/quiz/edit?id=${route.query.id}&q_id=${quiz.q_id}`)" class="material-icons-outlined cursor-pointer select-none hover:text-blue-600">edit</span>
+                <span
+                    v-if="userRole?.[route.query.id] !== 'STUDENT'"
+                    @click="navigateTo(`/courses/quiz/edit?id=${route.query.id}&q_id=${quiz.q_id}`)"
+                    class="material-icons-outlined cursor-pointer select-none hover:text-blue-600">
+                    edit
+                </span>
                 <span
                     @click="
                         () => {
