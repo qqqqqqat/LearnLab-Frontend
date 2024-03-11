@@ -153,6 +153,18 @@
                         <span class="material-icons-outlined">edit_note</span>
                         งานมอบหมาย
                     </div>
+                    <div
+                        @click="
+                            navigateTo({
+                                path: '/courses/quiz',
+                                query: { id: route.query.id },
+                            })
+                        "
+                        :class="route.path === '/courses/quiz' ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'hover:bg-blue-300/50 text-black'"
+                        class="nav-menu">
+                        <span class="material-icons-outlined">quiz</span>
+                        แบบทดสอบ
+                    </div>
                 </nav>
                 <main class="flex flex-col gap-y-4 w-full">
                     <slot />

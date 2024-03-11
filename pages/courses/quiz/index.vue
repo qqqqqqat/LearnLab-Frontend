@@ -10,10 +10,9 @@
     const quizs = ref()
     const quizPending = ref(true)
     async function fetchQuiz(id: number) {
-        await $fetch('/api/courses/view/', {
+        await $fetch('/api/courses/quiz/', {
             query: {
                 c_id: id,
-                option: 'QUIZ',
             },
         })
             .then((res) => {
@@ -139,7 +138,7 @@
                 <div class="text-xl font-bold">{{ quiz.q_name }}</div>
             </div>
             <div class="flex items-center gap-2">
-                <span v-if="userRole?.[route.query.id] !== 'STUDENT'" class="material-icons-outlined cursor-pointer select-none hover:text-blue-600">edit</span>
+                <span v-if="userRole?.[route.query.id] !== 'STUDENT'" @click="navigateTo(`/courses/quiz/edit?id=${route.query.id}&q_id=${quiz.q_id}`)" class="material-icons-outlined cursor-pointer select-none hover:text-blue-600">edit</span>
                 <span
                     @click="
                         () => {
@@ -162,7 +161,7 @@
         </div>
         <div v-else-if="!quizPending && (quizs?.data?.length || 0) === 0" class="flex md:flex-row flex-col items-center border border-1 rounded-md gap-2 w-full p-4">
             <img class="w-48 p-4" src="/images/exam.svg" />
-            <span class="text-3xl font-bold">ยังไม่มีแบบประเมินผลในคอร์สนี้</span>
+            <span class="text-3xl font-bold">ยังไม่มีแบบทดสอบในคอร์สนี้</span>
         </div>
         <div v-else class="flex flex-row border border-1 rounded-md gap-2 w-full p-4">
             <div class="animate-spin inline-block size-6 border-[3px] border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500" role="status" aria-label="loading">

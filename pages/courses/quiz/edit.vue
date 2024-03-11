@@ -28,10 +28,30 @@
         }
     })
 
+    async function fetchQuiz(id: number, q_id: number) {
+        await $fetch('/api/courses/quiz/', {
+            query: {
+                c_id: id,
+                q_id: q_id,
+            },
+        })
+            .then((res) => {
+                quizItem.value = res?.q_items
+                beginDate.value = res?.q_begin_date
+                dueDate.value = res?.q_due_date
+                quizName.value = res?.q_name
+            })
+            .catch((err) => {
+                toast.error(err?.data?.message)
+                navigateTo('/mycourse', { replace: true })
+            })
+    }
+
 
     async function uploadQuiz() {
-        const createQuizToast = toast.loading('กำลังสร้างแบบทดสอบ')
+        const createQuizToast = toast.loading('กำลังบันทึกแบบทดสอบ')
         let payload = {
+            q_id: route.query.q_id,
             c_id: route.query.id,
             q_name: quizName.value,
             q_begin_date: beginDate.value,
@@ -40,7 +60,7 @@
         }
 
         await $fetch<{ message: string }>('/api/courses/quiz/', {
-            method: 'PUT',
+            method: 'POST',
             body: payload,
         })
             .then(async (Pres) => {
@@ -51,6 +71,11 @@
                 toast.update(createQuizToast, { type: 'error', message: Perr?.data?.message })
             })
     }
+
+    if (route.query.id && route.query.q_id) {
+        fetchQuiz(route.query.id, route.query.q_id)
+    }
+
 </script>
 <template>
     <div class="flex flex-col gap-4 w-full">
@@ -61,7 +86,7 @@
                     class="transition-all duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:bg-blue-100 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none">
                     <span class="material-icons-outlined">arrow_back</span>
                 </button>
-                <span class="text-4xl font-bold">เพิ่มแบบทดสอบ</span>
+                <span class="text-4xl font-bold">แก้ไขแบบทดสอบ: {{ quizName }}</span>
             </div>
             <div class="flex justify-end">
                 <button
@@ -69,7 +94,7 @@
                 :disabled="!(quizName && quizItem.length > 0)"
                     type="button"
                     class="transition-color duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-                    สร้าง
+                    บันทึก
                 </button>
             </div>
         </div>
