@@ -124,8 +124,7 @@
                 crscode.value = ''
             })
             .catch((err) => {
-                if (err?.data?.message === 'คุณเป็นสมาชิกของคอร๋สนี้อยู่แล้ว')
-                toast.update(joinCodeToast, { type: 'error', message: err?.data?.message })
+                if (err?.data?.message) toast.update(joinCodeToast, { type: 'error', message: err?.data?.message })
                 crscode.value = ''
             })
     }
