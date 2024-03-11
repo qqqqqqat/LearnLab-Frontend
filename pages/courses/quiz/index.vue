@@ -181,7 +181,7 @@
                     {{ userRole?.[route.query.id] === 'STUDENT' ? 'ทำแบบทดสอบ' : 'ดูการส่ง' }}
                 </button>
                 <div v-if="userRole?.[route.query.id] === 'STUDENT'" class="flex flex-col md:items-end items-start">
-                        {{ quiz.s_datetime ? 'ส่งแล้ว' : 'ยังไม่ส่ง' }} {{ quiz?.score ? `ได้ ${quiz?.score}/${quiz?.full_score} คะแนน` : '' }}
+                        {{ quiz.s_datetime ? 'ส่งแล้ว' : '' }} {{ quiz?.score ? `ได้ ${quiz?.score}/${quiz?.full_score} คะแนน` : '' }}
                         <span class="text-sm text-slate-400" v-if="quiz?.q_due_date && quiz?.s_datetime && !getTimeDiff(quiz.q_due_date, quiz?.s_datetime).isLate">ส่งมาเวลา {{ new Date(quiz?.s_datetime).toLocaleString() }}</span>
                         <span class="text-xs text-red-400" v-if="quiz?.q_due_date && quiz?.s_datetime && getTimeDiff(quiz.q_due_date, quiz?.s_datetime).isLate">{{ 
                         
