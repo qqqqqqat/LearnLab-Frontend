@@ -14,23 +14,8 @@ import 'material-icons/iconfont/outlined.css';
         <div
           class="flex sm:flex-row flex-col md:justify-start justify-center items-center gap-x-8 gap-y-4"
         >
-          <div class="flex justify-center">
-            <button
-              type="button"
-              class="transition-all duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
-            >
-            <span class="material-icons-outlined">school</span>
-              ลงทะเบียนเป็นผู้สอน
-            </button>
-          </div>
-          <div class="flex justify-center">
-            <button
-              type="button"
-              class="transition-all duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 font-semibold rounded-lg border border-transparent bg-blue-100 text-blue-800 hover:bg-blue-200 disabled:opacity-50 disabled:pointer-events-none"
-            >
-            <span class="material-icons-outlined">local_library</span>
-              ลงทะเบียนเข้าศึกษา
-            </button>
+          <div class="flex justify-center text-xl">
+              ลงทะเบียนเข้าศึกษาหรือเป็นผู้สอนเลย!
           </div>
         </div>
       </div>
