@@ -51,7 +51,7 @@
         if (userRole.value?.[route.query.id] === 'STUDENT') {
             await navigateTo({path: '/courses/quiz/begin' ,query: {id: route.query.id, q_id: q_id}})
         } else {
-            await navigateTo({path: '/courses/quiz/begin' ,query: {id: route.query.id, q_id: q_id}})
+            await navigateTo({path: '/courses/quiz/view' ,query: {id: route.query.id, q_id: q_id}})
         }
     }
 
