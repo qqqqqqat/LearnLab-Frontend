@@ -55,7 +55,7 @@
     }
 
     async function downloadFile(f_id: number) {
-        await navigateTo(`/api/file?f_id=${f_id}`, { open: { target: '_blank' } })
+        await navigateTo(`/api/file/?f_id=${f_id}`, { open: { target: '_blank' } })
     }
 
     const route = useRoute()

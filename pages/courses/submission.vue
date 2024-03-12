@@ -36,14 +36,14 @@
         postContent.value = text
     }
     async function downloadFile(f_id: number) {
-        await navigateTo(`/api/file?f_id=${f_id}`, { open: { target: '_blank' } })
+        await navigateTo(`/api/file/?f_id=${f_id}`, { open: { target: '_blank' } })
     }
 
     async function removeSubmission() {
         assignPending.value = true
         const deleteSubmissionToast = toast.loading('กำลังลบการส่งงาน')
 
-        await $fetch<{ status: number; message: string }>('/api/courses/assignment/submit', {
+        await $fetch<{ status: number; message: string }>('/api/courses/assignment/submit/', {
             method: 'DELETE',
             body: { a_id: route.query.a_id },
         })
@@ -68,7 +68,7 @@
         }
         if (postFile.length > 0) Object.assign(payload.s_content, { files: postFile })
         if (postContent.value) Object.assign(payload.s_content, { text: postContent.value })
-        await $fetch<{ message: string }>('/api/courses/assignment/submit', {
+        await $fetch<{ message: string }>('/api/courses/assignment/submit/', {
             method: 'PUT',
             body: payload,
         })
