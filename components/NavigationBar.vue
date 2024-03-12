@@ -5,6 +5,11 @@ import { toast } from "@steveyuowo/vue-hot-toast";
     const userState = useUserState()
     const avatarState = useAvatarState()
     const userMenu = ref(false)
+    const stripTrailingSlash = (str:string) => {
+    return str.endsWith('/') ?
+        str.slice(0, -1) :
+        str;
+};
 
     async function fetchUser() {
         if (userState.value && avatarState.value) return; // Do not fetch if state is already set 
@@ -18,7 +23,7 @@ import { toast } from "@steveyuowo/vue-hot-toast";
                 })
             })
             .catch(async (err) => {
-                if (route.path !== '/' && route.path !== '/courses') await navigateTo('/', { replace: true })
+                if (stripTrailingSlash(route.path) !== '/' && stripTrailingSlash(route.path) !== '/courses') await navigateTo('/', { replace: true })
             })
     }
 

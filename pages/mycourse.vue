@@ -40,6 +40,10 @@
         })
     }
 
+    if (!userState) {
+        navigateTo('/courses', {replace: true})
+    }
+
     if (!pending.value) {
         updateQuery(search.value)
     }

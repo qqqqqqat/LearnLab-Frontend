@@ -60,11 +60,17 @@
         })
     }
 
-    if (userState.value?.u_role === 'STUDENT') {
+    
+    watch(
+        () => userState.value?.u_role,
+        (role) => {
+            console.log(role)
+            if (role === 'INSTRUCTOR') {
+                navigateTo('/mycourse', { replace: true })
+            }
+        }
+        )
         updateQuery(search.value)
-    } else {
-        navigateTo('/mycourse', { replace: true })
-    }
 
     watch(currentPage, () => {
         if (currentPage.value > totalPages.value) {
