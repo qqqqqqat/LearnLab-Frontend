@@ -22,11 +22,16 @@
         })
             .then((res) => {
                 quizResponse.value = res
+                if ((new Date().getTime() - new Date(quiz.q_begin_date).getTime()) >= 0) {
                 quizAnswers.value = []
                 for (let i = 0; i < quizResponse?.value?.q_items.length; i++) {
                     quizAnswers.value.push('')
                 }
                 quiz.value = quizResponse?.value?.q_items?.[0]
+            } else {
+                toast.error('ยังไม่ถึงเวลาทำ')
+                navigateTo('/mycourse', { replace: true })
+            }
                 isFetching.value = false
             })
             .catch((err) => {

@@ -23,8 +23,16 @@
     function closeModal() {
         const { element } = HSOverlay.getInstance(modalElem.value, true)
         element.close()
+        email.value = ''
+        password.value = ''
+        name.value = ''
+        surname.value = ''
+        regis_email.value = ''
+        regis_passw.value = ''
+        regis_passw_conf.value = ''
+        regis_avatar.value = ''
     }
-    
+
     function openModal() {
         const { element } = HSOverlay.getInstance(modalElem.value, true)
         element.open()
@@ -51,6 +59,14 @@
             },
         })
             .then(async (res) => {
+                email.value = ''
+                password.value = ''
+                name.value = ''
+                surname.value = ''
+                regis_email.value = ''
+                regis_passw.value = ''
+                regis_passw_conf.value = ''
+                regis_avatar.value = ''
                 toast.update(loginToast1, { type: 'loading', message: res?.message })
                 await $fetch<User>('/api/auth/').then(async (res) => {
                     userState.value = res
@@ -90,6 +106,14 @@
             body: formData,
         })
             .then(async (res) => {
+                email.value = ''
+                password.value = ''
+                name.value = ''
+                surname.value = ''
+                regis_email.value = ''
+                regis_passw.value = ''
+                regis_passw_conf.value = ''
+                regis_avatar.value = ''
                 toast.update(loginToast, { type: 'success', message: 'สมัครสมาชิกสำเร็จ' })
                 closeModal()
             })
@@ -200,6 +224,7 @@
                                     <div class="flex md:justify-end justify-center items-center gap-x-2 py-3 px-4">
                                         <button
                                             type="button"
+                                            :disabled="!(email && password)"
                                             @click="
                                                 () => {
                                                     if (validateEmail(email) && password.length > 4) {
@@ -224,7 +249,7 @@
                                             class="hs-dropdown-toggle py-3 px-4 inline-flex justify-between w-full items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none">
                                             {{ position.title }}
                                             <svg
-                                                class="hs-dropdown-open:rotate-180 size-4 transition duration-150 ease-in-out "
+                                                class="hs-dropdown-open:rotate-180 size-4 transition duration-150 ease-in-out"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="24"
                                                 height="24"
@@ -260,7 +285,7 @@
                                             class="hs-dropdown-toggle py-3 px-4 inline-flex justify-between w-full items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none">
                                             {{ gender.title }}
                                             <svg
-                                                class="hs-dropdown-open:rotate-180 size-4 transition duration-150 ease-in-out "
+                                                class="hs-dropdown-open:rotate-180 size-4 transition duration-150 ease-in-out"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="24"
                                                 height="24"
@@ -429,24 +454,27 @@
                                         </div>
                                     </div>
                                     <div>
-                                    <div class="pb-2">รูปโปรไฟล์</div>
-                                    <label for="small-file-input" class="sr-only">เลือกไฟล์</label>
-                                    <input
-                                        type="file"
-                                        @change="onFileChangedAvatar($event)"
-                                        accept="image/*"
-                                        name="small-file-input"
-                                        id="small-file-input"
-                                        class="block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none file:bg-gray-50 file:border-0 file:me-4 file:py-2 file:px-4" />
-                                      </div>
-                                  
-                                        <div class="flex md:justify-end justify-center items-center gap-x-2 py-3 px-4">
+                                        <div class="pb-2">รูปโปรไฟล์</div>
+                                        <label for="small-file-input" class="sr-only">เลือกไฟล์</label>
+                                        <input
+                                            type="file"
+                                            @change="onFileChangedAvatar($event)"
+                                            accept="image/*"
+                                            name="small-file-input"
+                                            id="small-file-input"
+                                            class="block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none file:bg-gray-50 file:border-0 file:me-4 file:py-2 file:px-4" />
+                                    </div>
+
+                                    <div class="flex md:justify-end justify-center items-center gap-x-2 py-3 px-4">
                                         <button
                                             type="button"
+                                            :disabled="!(regis_passw === regis_passw_conf && phone.length === 10 && name && surname && regis_passw.length > 4)"
                                             @click="
                                                 () => {
                                                     if (validateEmail(regis_email) && regis_passw === regis_passw_conf && phone.length === 10 && name && surname && regis_passw.length > 4) {
                                                         registerUser()
+                                                    } else if (egis_passw.length <= 4) {
+                                                        toast.error('รหัสต้องยาวกว่า 4 ตัวอักษร')
                                                     } else if (regis_passw !== regis_passw_conf) {
                                                         toast.error('รหัสและยืนยันรหัสผ่านไม่ตรงกัน')
                                                     } else if (!(phone.length === 10)) {

@@ -11,6 +11,7 @@
     const tempQuizItem = ref<{ title: string; type: 'CHOICE' | 'FILL'; choice?: string | undefined[]; correct: string }>({ title: '', type: 'CHOICE', choice: ['', '', '', ''], correct: '' })
     const quizItem = ref<{ title: string; type: 'CHOICE' | 'FILL'; choice?: string | undefined[]; correct: string }[]>([])
     const quizTypeTemp = ref(false)
+    const quizLoading = ref(true)
 
     watch(quizTypeTemp, (val) => {
         tempQuizItem.value.correct = ''
@@ -29,6 +30,7 @@
     })
 
     async function fetchQuiz(id: number, q_id: number) {
+        quizLoading.value = true
         await $fetch('/api/courses/quiz/', {
             query: {
                 c_id: id,
@@ -40,8 +42,10 @@
                 beginDate.value = res?.q_begin_date
                 dueDate.value = res?.q_due_date
                 quizName.value = res?.q_name
+                quizLoading.value = false
             })
             .catch((err) => {
+                quizLoading.value = false
                 toast.error(err?.data?.message)
                 navigateTo('/mycourse', { replace: true })
             })
@@ -84,7 +88,7 @@
         <div class="flex sm:flex-row flex-col justify-between sm:w-full gap-2">
             <div class="flex flex-row gap-2">
                 <button
-                    @click="navigateTo(`/courses/quiz/?id=${route.query.id}`)"
+                    @click="navigateTo(`/courses/quiz?id=${route.query.id}`)"
                     class="transition-all duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:bg-blue-100 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none">
                     <span class="material-icons-outlined">arrow_back</span>
                 </button>
@@ -93,14 +97,14 @@
             <div class="flex justify-end">
                 <button
                 @click="uploadQuiz"
-                :disabled="!(quizName && quizItem.length > 0)"
+                :disabled="!(quizName && quizItem.length > 0) || quizLoading"
                     type="button"
                     class="transition-color duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
                     บันทึก
                 </button>
             </div>
         </div>
-        <div class="flex md:flex-row flex-col gap-4">
+        <div v-show="!quizLoading" class="flex md:flex-row flex-col gap-4">
             <div class="relative flex-grow">
                 <input
                     type="text"
@@ -117,7 +121,7 @@
             </div>
         </div>
 
-        <div class="flex md:flex-row flex-col gap-4">
+        <div v-show="!quizLoading" class="flex md:flex-row flex-col gap-4">
             <div class="relative flex-grow">
                 <input
                     type="datetime-local"
@@ -145,9 +149,9 @@
                 </label>
             </div>
         </div>
-        <span class="text-4xl font-bold mt-4">สร้างโจทย์</span>
-        <hr />
-        <div class="flex md:flex-row flex-col gap-2">
+        <span v-show="!quizLoading" class="text-4xl font-bold mt-4">แก้ไขโจทย์</span>
+        <hr v-show="!quizLoading" />
+        <div v-show="!quizLoading" class="flex md:flex-row flex-col gap-2">
             <div class="flex flex-col gap-2">
                 <span class="font-bold">รายการโจทย์</span>
                 <div class="flex flex-col md:max-w-64 w-full border border-1 rounded-md max-h-64 overflow-auto">
@@ -408,6 +412,12 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div v-if="quizLoading" class="flex flex-row border border-1 rounded-md gap-2 w-full p-4">
+            <div class="animate-spin inline-block size-6 border-[3px] border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500" role="status" aria-label="loading">
+                <span class="sr-only">Loading...</span>
+            </div>
+            กำลังโหลดข้อมูล
         </div>
     </div>
 </template>
