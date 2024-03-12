@@ -43,7 +43,7 @@
 
     async function loginUser() {
         const loginToast1 = toast.loading('กำลังเข้าสู่ระบบ')
-        await $fetch<AuthPOSTAPIResponse>('/api/auth', {
+        await $fetch<AuthPOSTAPIResponse>('/api/auth/', {
             method: 'PUT',
             body: {
                 u_email: email.value,
@@ -52,7 +52,7 @@
         })
             .then(async (res) => {
                 toast.update(loginToast1, { type: 'loading', message: res?.message })
-                await $fetch<User>('/api/auth').then(async (res) => {
+                await $fetch<User>('/api/auth/').then(async (res) => {
                     userState.value = res
                     await $fetch<Avatar>('/api/auth/?image=')
                         .then((res) => {
@@ -85,7 +85,7 @@
             formData.append('u_avatar', regis_avatar.value)
         }
 
-        await $fetch<AuthPOSTAPIResponse>('/api/auth', {
+        await $fetch<AuthPOSTAPIResponse>('/api/auth/', {
             method: 'POST',
             body: formData,
         })
