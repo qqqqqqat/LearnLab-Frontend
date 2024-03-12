@@ -275,7 +275,7 @@
                         <span class="text-sm text-slate-400">{{ assign.a_score ? `${assign.a_score} คะแนน` : 'ไม่มีคะแนน' }}</span>
                     </div>
                 </div>
-                <div class="text-xl font-bold">{{ assign.a_name }}</div>
+                <div class="text-xl font-bold flex flex-row items-center gap-2 flex-nowrap"><span class="flex items-center justify-center text-xs rounded-full px-2 py-1 bg-blue-500 font-normal text-white" v-if="userRole?.[route.query.id] !== 'STUDENT'">ID: {{ assign?.a_id }}</span>{{ assign.a_name }}</div>
             </div>
             <div class="flex items-center gap-2">
                 <span @click="

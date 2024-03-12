@@ -102,7 +102,7 @@
                 href="#">
                 <span class="material-icons-outlined" style="font-size: 18px">arrow_upward</span>
             </button>
-            <div v-if="userRole?.[route.query.id] !== 'STUDENT' && !file_pending" class="hs-dropdown relative inline-flex">
+            <div v-show="userRole?.[route.query.id] !== 'STUDENT' && !file_pending" class="hs-dropdown relative inline-flex">
                 <button
                     id="hs-dropdown-create-file"
                     type="button"

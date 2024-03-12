@@ -159,7 +159,7 @@
                         <span class="text-sm text-slate-400">{{ quiz.q_due_date ? `กำหนดส่ง ${new Date(quiz.q_due_date).toLocaleString()}` : 'ไม่มีกำหนดส่ง' }}</span>
                     </div>
                 </div>
-                <div class="text-xl font-bold">{{ quiz.q_name }}</div>
+                <div class="text-xl font-bold flex flex-row gap-2 flex-nowrap items-center"><span class="flex items-center justify-center text-xs rounded-full font-normal px-2 py-1 bg-blue-500 text-white" v-if="userRole?.[route.query.id] !== 'STUDENT'">ID: {{ quiz?.q_id }}</span>{{ quiz.q_name }}</div>
             </div>
             <div class="flex items-center gap-2">
                 <span
