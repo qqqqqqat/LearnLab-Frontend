@@ -99,9 +99,9 @@
             body: crspayload,
         })
             .then((res) => {
-                toast.update(joinToast, { type: 'success', message: res?.message })
                 getEnrolledCourse()
                 closeModal()
+                toast.update(joinToast, { type: 'success', message: res?.message })
             })
             .catch((err) => {
                 if (err?.data?.message === 'คุณเป็นสมาชิกของคอร๋สนี้อยู่แล้ว') closeModal()
@@ -117,11 +117,9 @@
             body: payload,
         })
             .then((res) => {
-                toast.update(joinCodeToast, { type: 'success', message: res?.message })
-                console.log(res?.c_id);
-                // modalCourseID.value = res?.c_id
                 goToCourse(res?.c_id, res?.c_name, res?.c_hashed_password)
                 crscode.value = ''
+                toast.update(joinCodeToast, { type: 'success', message: res?.message })
             })
             .catch((err) => {
                 if (err?.data?.message) toast.update(joinCodeToast, { type: 'error', message: err?.data?.message })

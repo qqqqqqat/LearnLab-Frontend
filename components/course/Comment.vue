@@ -26,8 +26,8 @@
         })
             .then((res) => {
                 isCommentLoading.value = false
-                toast.update(loadCommentToast, { type: 'success', message: res?.message })
                 commentStore.value = res
+                toast.update(loadCommentToast, { type: 'success', message: res?.message })
             })
             .catch((err) => {
                 isCommentLoading.value = false
@@ -49,14 +49,14 @@
             body: payload,
         })
             .then((res) => {
-                toast.update(sendCommentToast, { type: 'success', message: res?.message })
                 loadComments()
                 comment.value = null
                 isSending.value = false
+                toast.update(sendCommentToast, { type: 'success', message: res?.message })
             })
             .catch((err) => {
-                toast.update(sendCommentToast, { type: 'error', message: err?.data?.message })
                 isSending.value = false
+                toast.update(sendCommentToast, { type: 'error', message: err?.data?.message })
             })
     }
 
@@ -71,13 +71,13 @@
             body: payload,
         })
             .then((res) => {
-                toast.update(sendCommentToast, { type: 'success', message: res?.message })
                 loadComments()
                 isSending.value = false
+                toast.update(sendCommentToast, { type: 'success', message: res?.message })
             })
             .catch((err) => {
-                toast.update(sendCommentToast, { type: 'error', message: err?.data?.message })
                 isSending.value = false
+                toast.update(sendCommentToast, { type: 'error', message: err?.data?.message })
             })
     }
 </script>

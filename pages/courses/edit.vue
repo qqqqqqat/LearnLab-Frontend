@@ -114,8 +114,8 @@
         })
             .then((res) => {
                 fetchMember(route.query.id)
-                toast.update(updateRoleToast, { type: 'success', message: res?.message })
                 crs_pending.value = false
+                toast.update(updateRoleToast, { type: 'success', message: res?.message })
             })
             .catch((err) => {
                 toast.update(updateRoleToast, { type: 'error', message: err?.data?.message })

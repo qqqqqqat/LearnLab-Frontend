@@ -35,10 +35,10 @@
             },
         })
             .then((res) => {
-                toast.update(deleteAssignmentToast, { type: 'success', message: res?.message })
                 c_closeModal()
                 fetchAssignment(route.query.id)
                 assignPending.value = true
+                toast.update(deleteAssignmentToast, { type: 'success', message: res?.message })
             })
             .catch((err) => {
                 toast.update(deleteAssignmentToast, { type: 'error', message: err?.data?.message })
@@ -59,10 +59,10 @@
             },
         })
             .then((res) => {
-                toast.update(deleteAssignmentToast, { type: 'success', message: res?.message })
                 e_closeModal()
                 fetchAssignment(route.query.id)
                 assignPending.value = true
+                toast.update(deleteAssignmentToast, { type: 'success', message: res?.message })
             })
             .catch((err) => {
                 toast.update(deleteAssignmentToast, { type: 'error', message: err?.data?.message })

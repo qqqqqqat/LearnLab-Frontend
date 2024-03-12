@@ -36,10 +36,10 @@
             },
         })
             .then((res) => {
-                toast.update(deleteQuizToast, { type: 'success', message: res?.message })
                 d_closeModal()
                 fetchQuiz(route.query.id)
                 quizPending.value = true
+                toast.update(deleteQuizToast, { type: 'success', message: res?.message })
             })
             .catch((err) => {
                 toast.update(deleteQuizToast, { type: 'error', message: err?.data?.message })

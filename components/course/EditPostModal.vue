@@ -64,9 +64,9 @@
             body: payload,
         })
             .then((Pres) => {
-                toast.update(updatePostToast, { type: 'success', message: Pres?.message })
                 c_closeModal()
                 emit('refreshPost')
+                toast.update(updatePostToast, { type: 'success', message: Pres?.message })
             })
             .catch((Perr) => {
                 toast.update(updatePostToast, { type: 'error', message: Perr?.data?.message })

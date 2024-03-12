@@ -19,6 +19,7 @@
     const delFileType = ref<'FOLDER' | 'FILE'>('FILE')
 
     async function fetchFile(id: number) {
+        file_pending.value = true
         file_post.value = []
         await $fetch<APIGETFilesResponse>('/api/file/', {
             query: {

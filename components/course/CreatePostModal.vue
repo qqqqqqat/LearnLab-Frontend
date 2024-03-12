@@ -55,9 +55,9 @@
             body: payload,
         })
             .then((Pres) => {
-                toast.update(createPostFileToast, { type: 'success', message: Pres?.message })
                 c_closeModal()
                 emit('refreshPost')
+                toast.update(createPostFileToast, { type: 'success', message: Pres?.message })
             })
             .catch((Perr) => {
                 toast.update(createPostFileToast, { type: 'error', message: Perr?.data?.message })
@@ -79,8 +79,8 @@
             body: formData,
         })
             .then(async (res) => {
-                toast.update(uploadPostFileToast, { type: 'success', message: res?.message })
                 await uploadPost(res.f_id);
+                toast.update(uploadPostFileToast, { type: 'success', message: res?.message })
             })
             .catch((err) => {
                 toast.update(uploadPostFileToast, { type: 'error', message: err?.data?.message })

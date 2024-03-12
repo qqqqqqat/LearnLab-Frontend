@@ -40,11 +40,11 @@
             body: formData,
         })
             .then((res) => {
-                toast.update(createFileToast, { type: 'success', message: res?.message })
+                c_closeModal()
                 emit('refreshFile')
                 isFileUploading.value = false
                 uploadMaterial.value = undefined
-                c_closeModal()
+                toast.update(createFileToast, { type: 'success', message: res?.message })
             })
             .catch((err) => {
                 isFileUploading.value = false

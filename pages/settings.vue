@@ -49,8 +49,8 @@
         })
             .then(async (res) => {
                 await fetchUser()
-                toast.update(loginToast, { type: 'success', message: res?.message })
                 regis_passw.value = ''
+                toast.update(loginToast, { type: 'success', message: res?.message })
             })
             .catch((err) => {
                 toast.update(loginToast, { type: 'error', message: err?.data?.message })
