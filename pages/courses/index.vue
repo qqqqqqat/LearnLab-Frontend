@@ -28,7 +28,7 @@
     })
 
     const enrolled = ref<EnrolledCourse>([])
-    const course = ref<{}|null>({})
+    const course = ref<{} | null>({})
 
     watch(userState, () => {
         getEnrolledCourse()
@@ -60,7 +60,11 @@
         })
     }
 
-    updateQuery(search.value)
+    if (userState.value?.u_role === 'STUDENT') {
+        updateQuery(search.value)
+    } else {
+        navigateTo('/mycorse', { replace: true })
+    }
 
     watch(currentPage, () => {
         if (currentPage.value > totalPages.value) {
@@ -77,7 +81,7 @@
     })
 
     const modalElemOne = ref()
-    const enrollModal = ref();
+    const enrollModal = ref()
 
     function closeModal() {
         crspassword.value = ''
