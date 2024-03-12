@@ -21,7 +21,6 @@
     const editPostId = ref<number | null>(null)
     const editPostTitle = ref<string | null>(null)
     const editPostContent = ref<string | null>(null)
-    const commentStore = ref({})
 
     watch(
         () => route.query.id,
@@ -109,7 +108,7 @@
         :c_id="route.query.id"
         @refresh-post="fetchPost(route.query.id)" />
     <div class="flex flex-col gap-4 w-full">
-        <div class="flex flex-row justify-between items-center gap-4">
+        <div v-show="!crs_pending" class="flex flex-row justify-between items-center gap-4">
             <div></div>
             <div>
                 <button

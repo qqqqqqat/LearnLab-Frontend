@@ -14,6 +14,7 @@
     })
 
     async function getOneAssignment(id: number, a_id: number) {
+        assignPending.value = true
         await $fetch<StudentAssignmentGETResponse>('/api/courses/assignment/', {
             query: {
                 c_id: id,
@@ -119,7 +120,7 @@
     }
 </script>
 <template>
-    <div class="flex flex-col w-full">
+    <div v-if="!assignPending" class="flex flex-col w-full">
         <div class="flex md:flex-row flex-col md:justify-between md:items-center gap-2">
             <div class="flex items-center gap-2">
                 <div>
@@ -205,7 +206,7 @@
             </div>
         </div>
     </div>
-    <div class="flex flex-col gap-4 overflow-y-auto">
+    <div v-if="!assignPending" class="flex flex-col gap-4 overflow-y-auto">
         <div class="w-full">
             <span class="flex items-center gap-2 font-bold">
                 <span class="material-icons-outlined select-none">article</span>
@@ -290,4 +291,10 @@
             </div>
         </div>
     </div>
+    <div v-else class="flex flex-row border border-1 rounded-md gap-2 w-full p-4">
+            <div class="animate-spin inline-block size-6 border-[3px] border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500" role="status" aria-label="loading">
+                <span class="sr-only">Loading...</span>
+            </div>
+            กำลังโหลดข้อมูล
+        </div>
 </template>

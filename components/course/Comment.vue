@@ -13,8 +13,10 @@
     const commentReplyToSub = ref()
     const visibility = ref(false)
     const isSending = ref(false)
+    const isCommentLoading = ref(false)
 
     async function loadComments() {
+        isCommentLoading.value = true
         const loadCommentToast = toast.loading('กำลังแสดงคอมเมนต์')
         await $fetch<{ status: number; message: string }>('/api/message/', {
             query: {
@@ -23,10 +25,12 @@
             },
         })
             .then((res) => {
+                isCommentLoading.value = false
                 toast.update(loadCommentToast, { type: 'success', message: res?.message })
                 commentStore.value = res
             })
             .catch((err) => {
+                isCommentLoading.value = false
                 toast.update(loadCommentToast, { type: 'error', message: err?.data?.message })
             })
     }
@@ -116,13 +120,13 @@
         </div>
         <button
             type="button"
-            :disabled="!comment || isSending"
+            :disabled="!comment || isSending || isCommentLoading"
             @click="sendComment()"
             class="transition-color duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm w-16 justify-center font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
             <span class="material-icons-outlined no-underline">send</span>
         </button>
     </div>
-    <div v-show="visibility" v-for="comment in commentStore" class="flex flex-col gap-2">
+    <div v-if="!isCommentLoading" v-show="visibility" v-for="comment in commentStore" class="flex flex-col gap-2">
         <div
             class="transition-color duration-200 ease-in-out flex flex-col gap-1 border border-1 px-4 py-2 ml-4 rounded-md"
             :class="commentReplyTo === comment.m_id ? 'border-blue-600 border-2' : 'border-1'">
@@ -147,7 +151,7 @@
                     <span class="material-icons-outlined no-underline" style="font-size: 20px">reply</span>
                     ตอบกลับ
                 </div>
-                <div v-if="comment.m_sender === userState?.u_id"  @click="deleteComment(comment.m_id)" class="text-xs hover:underline cursor-pointer inline-flex items-center">
+                <div v-if="comment.m_sender === userState?.u_id" @click="deleteComment(comment.m_id)" class="text-xs hover:underline cursor-pointer inline-flex items-center">
                     <span class="material-icons-outlined no-underline" style="font-size: 20px">delete</span>
                     ลบ
                 </div>
@@ -185,5 +189,11 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div v-else class="flex flex-row border border-1 rounded-md gap-2 w-full p-4">
+        <div class="animate-spin inline-block size-6 border-[3px] border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500" role="status" aria-label="loading">
+            <span class="sr-only">Loading...</span>
+        </div>
+        กำลังโหลดข้อมูล
     </div>
 </template>
