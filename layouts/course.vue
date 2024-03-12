@@ -11,6 +11,7 @@
         () => route.query.id,
         async (id) => {
             fetchCourse(id)
+            fetchMember(id)
         }
     )
 
