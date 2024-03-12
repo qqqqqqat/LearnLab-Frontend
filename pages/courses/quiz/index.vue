@@ -57,6 +57,8 @@
 
     if (route.query.id) {
         fetchQuiz(route.query.id)
+    } else {
+        navigateTo('/courses', {replace: true})
     }
 
     function d_closeModal() {
@@ -132,7 +134,7 @@
     </div>
 
     <div class="flex flex-col gap-4 w-full">
-        <div class="flex flex-row justify-between items-center gap-4">
+        <div v-show="!quizPending" class="flex flex-row justify-between items-center gap-4">
             <div></div>
             <button
                 v-if="userRole?.[route.query.id] !== 'STUDENT'"

@@ -88,14 +88,14 @@
     }
 
     async function openQuiz(q_id: number) {
-        await navigateTo(`/courses/quiz?q_id=${q_id}`)
+        await navigateTo(`/courses/quiz/begin?id=${route.query.id}&q_id=${q_id}`)
     }
 
     if (route.query.id) {
         fetchPost(route.query.id)
+    } else {
+        navigateTo('/courses', { replace: true })
     }
-
-    // console.log(userRole?.value[route.query.id])
 </script>
 <template>
     <LazyCourseCreatePostModal ref="postModal" :c_id="route.query.id" @refresh-post="fetchPost(route.query.id)" />
@@ -241,7 +241,7 @@
                                 </div>
                             </div>
                             <div class="flex flex-row items-center gap-2 w-fit">
-                                <span class="material-icons-outlined select-none cursor-pointer text-gray-500" @click="downloadFile(quiz.q_id)">open_in_new</span>
+                                <span class="material-icons-outlined select-none cursor-pointer text-gray-500" @click="openQuiz(quiz.q_id)">open_in_new</span>
                             </div>
                         </div>
                     </div>

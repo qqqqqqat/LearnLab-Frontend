@@ -80,6 +80,8 @@
 
     if (route.query.id) {
         fetchAssignment(route.query.id)
+    } else {
+        navigateTo('/courses', {replace: true})
     }
 
     function c_closeModal() {

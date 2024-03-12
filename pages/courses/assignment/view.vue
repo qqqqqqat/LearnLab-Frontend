@@ -31,10 +31,19 @@
         let timeRemainingMin = Math.floor(millis / (1000 * 60))
         let timeRemainingHr = Math.floor(millis / (1000 * 60 * 60))
         let timeRemainingDay = Math.floor(millis / (1000 * 60 * 60 * 24))
-        return { isLate: !(timeRemainingDay >= 0 && timeRemainingHr >= 0 && timeRemainingMin >= 0 && timeRemainingSec >= 0), day: Math.abs(timeRemainingDay), hour: Math.abs(timeRemainingHr) % 24, minute: Math.abs(timeRemainingMin)  % 60, second: Math.abs(timeRemainingSec)  % 60 }
+        return {
+            isLate: !(timeRemainingDay >= 0 && timeRemainingHr >= 0 && timeRemainingMin >= 0 && timeRemainingSec >= 0),
+            day: Math.abs(timeRemainingDay),
+            hour: Math.abs(timeRemainingHr) % 24,
+            minute: Math.abs(timeRemainingMin) % 60,
+            second: Math.abs(timeRemainingSec) % 60,
+        }
     }
-
-    fetchSubmission(route.query.id, route.query.a_id)
+    if (route.query.id && route.query.a_id) {
+        fetchSubmission(route.query.id, route.query.a_id)
+    } else {
+        navigateTo('/courses', { replace: true })
+    }
 </script>
 <template>
     <div class="flex flex-col gap-4 w-full">
@@ -46,7 +55,7 @@
             </button>
             <div class="flex flex-col">
                 <span class="font-bold text-2xl">{{ assignments?.a_name }}</span>
-                <span class="text-sm"> {{ assignments?.a_due_date ? `กำหนดส่ง ${new Date(assignments?.a_due_date).toLocaleString() }` : 'ไม่มีกำหนดส่ง' }}</span>
+                <span class="text-sm">{{ assignments?.a_due_date ? `กำหนดส่ง ${new Date(assignments?.a_due_date).toLocaleString()}` : 'ไม่มีกำหนดส่ง' }}</span>
             </div>
         </div>
         <div v-if="(assignments?.data?.length || 0) > 0" v-for="assign in assignments?.data" class="flex md:flex-row flex-col md:justify-between border border-1 rounded-md gap-2 w-full p-4">
@@ -61,13 +70,13 @@
                 <div class="flex md:flex-row flex-row-reverse items-center gap-2">
                     <div class="flex flex-col md:items-end items-start">
                         {{ assign.s_datetime ? 'ส่งแล้ว' : 'ยังไม่ส่ง' }} {{ assign?.score ? 'ให้คะแนนแล้ว' : '' }}
-                        <span class="text-xs text-red-400" v-if="assignments?.a_due_date && assign?.s_datetime && getTimeDiff(assignments.a_due_date, assign?.s_datetime).isLate">{{ 
-                        
-                        getTimeDiff(assignments.a_due_date, assign?.s_datetime).isLate ? 'ส่งช้า' : ''
-                        
-                        }}
-                         {{ getTimeDiff(assignments.a_due_date, assign?.s_datetime)?.day ? `${getTimeDiff(assignments.a_due_date, assign?.s_datetime).day} วัน` : '' }} {{ getTimeDiff(assignments.a_due_date, assign?.s_datetime)?.hour ? `${getTimeDiff(assignments.a_due_date, assign?.s_datetime).hour} ชั่วโมง` : '' }} {{ getTimeDiff(assignments.a_due_date, assign?.s_datetime)?.minute ? `${getTimeDiff(assignments.a_due_date, assign?.s_datetime).minute} นาที` : '' }} {{ getTimeDiff(assignments.a_due_date, assign?.s_datetime)?.second ? `${getTimeDiff(assignments.a_due_date, assign?.s_datetime).second} วินาที` : '' }}
-                    </span>
+                        <span class="text-xs text-red-400" v-if="assignments?.a_due_date && assign?.s_datetime && getTimeDiff(assignments.a_due_date, assign?.s_datetime).isLate">
+                            {{ getTimeDiff(assignments.a_due_date, assign?.s_datetime).isLate ? 'ส่งช้า' : '' }}
+                            {{ getTimeDiff(assignments.a_due_date, assign?.s_datetime)?.day ? `${getTimeDiff(assignments.a_due_date, assign?.s_datetime).day} วัน` : '' }}
+                            {{ getTimeDiff(assignments.a_due_date, assign?.s_datetime)?.hour ? `${getTimeDiff(assignments.a_due_date, assign?.s_datetime).hour} ชั่วโมง` : '' }}
+                            {{ getTimeDiff(assignments.a_due_date, assign?.s_datetime)?.minute ? `${getTimeDiff(assignments.a_due_date, assign?.s_datetime).minute} นาที` : '' }}
+                            {{ getTimeDiff(assignments.a_due_date, assign?.s_datetime)?.second ? `${getTimeDiff(assignments.a_due_date, assign?.s_datetime).second} วินาที` : '' }}
+                        </span>
                     </div>
                     <div class="material-icons-outlined">{{ assign.s_datetime ? 'check_circle' : 'close' }}</div>
                 </div>

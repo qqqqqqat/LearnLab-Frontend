@@ -5,8 +5,8 @@
     const assignments = ref<GETOneSubmissionAPIResponse | null>(null)
     const assignPending = ref(true)
     const postContent = ref<string | null>('')
-    const assignmentScore = ref<number | null >(null)
-    const assignmentFeedback = ref<string>("")
+    const assignmentScore = ref<number | null>(null)
+    const assignmentFeedback = ref<string>('')
     const submitTime = ref<{ isLate: boolean; day: number; hour: number; minute: number; second: number }>()
     definePageMeta({
         layout: 'course',
@@ -35,13 +35,13 @@
 
     async function setStudentFeedback(id: number, a_id: number, u_id: number) {
         assignPending.value = true
-        await $fetch<{status: number, message: string}>('/api/courses/assignment/submit/', {
+        await $fetch<{ status: number; message: string }>('/api/courses/assignment/submit/', {
             method: 'PATCH',
             body: {
                 u_id: u_id,
                 a_id: a_id,
                 s_feedback: assignmentFeedback.value,
-                score: assignmentScore.value
+                score: assignmentScore.value,
             },
         })
             .then((res) => {
@@ -61,6 +61,8 @@
     const route = useRoute()
     if (route.query.id && route.query.a_id && route.query.u_id) {
         getOneAssignment(route.query.id, route.query.a_id, route.query.u_id)
+    } else {
+        navigateTo('/courses', { replace: true })
     }
 
     function getTimeDiff(millis: number) {
@@ -117,22 +119,30 @@
         </span>
         <hr class="mb-2" />
         <div class="flex flex-col gap-2 mb-3">
-            <div class="flex flex-row justify-between  items-center gap-x-2">
+            <div class="flex flex-row justify-between items-center gap-x-2">
                 <div class="flex flex-row items-center gap-x-2">
-                    <input type="number" v-model="assignmentScore" class="py-2 px-3 block w-24 border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" placeholder="คะแนน">
-                    <span> / {{ assignments?.data.a_score }} คะแนน</span>
+                    <input
+                        type="number"
+                        v-model="assignmentScore"
+                        class="py-2 px-3 block w-24 border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                        placeholder="คะแนน" />
+                    <span>/ {{ assignments?.data.a_score }} คะแนน</span>
                 </div>
                 <div>
                     <button
-                    @click="setStudentFeedback(route.query.id, route.query.a_id, route.query.u_id)"
-                    type="button"
-                    :disabled="assignPending || !assignmentScore"
-                    class="md:w-fit w-full justify-center transition-color duration-200 ease-in-out py-2 px-6 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-                    บันทึก
-                </button>
+                        @click="setStudentFeedback(route.query.id, route.query.a_id, route.query.u_id)"
+                        type="button"
+                        :disabled="assignPending || !assignmentScore"
+                        class="md:w-fit w-full justify-center transition-color duration-200 ease-in-out py-2 px-6 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                        บันทึก
+                    </button>
                 </div>
             </div>
-            <textarea v-model="assignmentFeedback" class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none" rows="3" placeholder="Feedback"></textarea>
+            <textarea
+                v-model="assignmentFeedback"
+                class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                rows="3"
+                placeholder="Feedback"></textarea>
         </div>
         <div class="w-full" v-if="assignments?.data?.s_content?.text">
             <span class="flex items-center gap-2 font-bold">

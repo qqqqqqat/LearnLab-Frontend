@@ -159,6 +159,8 @@
     if (route.query.id) {
         fetchCourse(route.query.id)
         fetchMember(route.query.id)
+    } else {
+        navigateTo('/courses', {replace: true})
     }
     const confirmModal = ref()
     const actionName = ref('')

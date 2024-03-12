@@ -76,6 +76,8 @@
 
     if (route.query.id) {
         fetchFile(route.query.id)
+    } else {
+        navigateTo('/courses', { replace: true })
     }
 </script>
 <template>

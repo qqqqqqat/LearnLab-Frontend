@@ -74,6 +74,8 @@
 
     if (route.query.id && route.query.q_id) {
         fetchQuiz(route.query.id, route.query.q_id)
+    } else {
+        navigateTo('/courses', {replace: true})
     }
 
 </script>

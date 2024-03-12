@@ -10,8 +10,10 @@
     const quiz = ref<QuizItems>()
     const choiceAnswer = ref()
     const fillAnswer = ref()
+    const isFetching = ref(true);
 
     async function fetchQuiz(id: number, q_id: number) {
+        isFetching.value = true
         await $fetch<QuizAPIResponse>('/api/courses/quiz/', {
             query: {
                 c_id: id,
@@ -25,8 +27,10 @@
                     quizAnswers.value.push('')
                 }
                 quiz.value = quizResponse?.value?.q_items?.[0]
+                isFetching.value = false
             })
             .catch((err) => {
+                isFetching.value = false
                 toast.error(err?.data?.message)
                 navigateTo('/mycourse', { replace: true })
             })
@@ -46,7 +50,7 @@
         })
             .then(async (Pres) => {
                 toast.update(submitQuizToast, { type: 'success', message: Pres?.message })
-                navigateTo(`/courses/quiz/?id=${route.query.id}`)
+                navigateTo(`/courses/quiz?id=${route.query.id}`)
             })
             .catch((Perr) => {
                 toast.update(submitQuizToast, { type: 'error', message: Perr?.data?.message })
@@ -55,6 +59,8 @@
 
     if (route.query.id && route.query.q_id) {
         fetchQuiz(route.query.id, route.query.q_id)
+    } else {
+        navigateTo('/courses', {replace: true})
     }
     function saveAndContinue(indx: number, type: string) {
         quizAnswers.value[indx] = type == 'CHOICE' ? choiceAnswer.value : fillAnswer.value
@@ -70,10 +76,13 @@
                     class="transition-all duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:bg-blue-100 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none">
                     <span class="material-icons-outlined">arrow_back</span>
                 </button>
-                <span class="text-4xl font-bold">ทำแบบทดสอบ: {{ quizResponse?.q_name }}</span>
+                <span class="text-4xl font-bold">แบบทดสอบ {{ quizResponse?.q_name }}</span>
             </div>
         </div>
-        <div class="flex md:flex-row flex-col gap-2">
+        <div class="flex md:flex-row flex-col gap-2" v-if="!isFetching">
+            <div class="flex md:flex-col flex-row border border-1 rounded-md md:w-16 w-full items-center gap-4 p-2">
+                <div v-for="(q, indx) in quizAnswers" class="transition-color duration-200 ease-in-out border border-1 p-4 flex justify-center items-center w-12 h-12 rounded-md" :class="q ? 'bg-blue-600 text-white' : 'bg-transparent'">{{ indx + 1 }}</div>
+            </div>
             <div class="flex flex-col flex-grow gap-4">
                 <div class="flex flex-col border border-1 rounded-md flex-grow p-4 gap-4">
                     <div class="flex flex-col gap-2">
@@ -150,7 +159,7 @@
                     </div>
                     <div class="flex flex-row justify-between items-center">
                         <button
-                            :disabled="quizIndex == 0"
+                            :disabled="quizIndex == 0 || isFetching"
                             @click="
                                 () => {
                                     saveAndContinue(quizIndex, quiz?.type)
@@ -165,11 +174,12 @@
                             "
                             type="button"
                             class="transition-color duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                            <span class="material-icons-outlined">arrow_left</span>
                             ย้อนกลับ
                         </button>
                         <button
                             v-show="quizIndex + 1 < quizResponse?.q_items.length"
-                            :disabled="quizIndex + 1 == quizResponse?.q_items.length"
+                            :disabled="quizIndex + 1 == quizResponse?.q_items.length || isFetching"
                             @click="
                                 () => {
                                     saveAndContinue(quizIndex, quiz?.type)
@@ -185,10 +195,11 @@
                             type="button"
                             class="transition-color duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
                             ไปต่อ
+                            <span class="material-icons-outlined">arrow_right</span>
                         </button>
                         <button
                             v-show="quizIndex + 1 === quizResponse?.q_items.length"
-                            :disabled="quizIndex + 1 < quizResponse?.q_items.length"
+                            :disabled="quizIndex + 1 < quizResponse?.q_items.length || isFetching"
                             @click="
                                 () => {
                                     saveAndContinue(quizIndex, quiz?.type)
@@ -197,11 +208,18 @@
                             "
                             type="button"
                             class="transition-color duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
-                            ไปต่อ
+                            <span class="material-icons-outlined">send</span>
+                            ส่ง
                         </button>
                     </div>
                 </div>
             </div>
+        </div>
+        <div v-else class="flex flex-row border border-1 rounded-md gap-2 w-full p-4">
+            <div class="animate-spin inline-block size-6 border-[3px] border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500" role="status" aria-label="loading">
+                <span class="sr-only">Loading...</span>
+            </div>
+            กำลังโหลดข้อมูล
         </div>
     </div>
 </template>

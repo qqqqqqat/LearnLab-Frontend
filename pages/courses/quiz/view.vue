@@ -33,8 +33,11 @@
         let timeRemainingDay = Math.floor(millis / (1000 * 60 * 60 * 24))
         return { isLate: !(timeRemainingDay >= 0 && timeRemainingHr >= 0 && timeRemainingMin >= 0 && timeRemainingSec >= 0), day: Math.abs(timeRemainingDay), hour: Math.abs(timeRemainingHr) % 24, minute: Math.abs(timeRemainingMin)  % 60, second: Math.abs(timeRemainingSec)  % 60 }
     }
-
-    fetchSubmission(route.query.id, route.query.q_id)
+    if (route.query.id && route.query.q_id) {
+        fetchSubmission(route.query.id, route.query.q_id)
+    } else {
+        navigateTo('/courses', {replace: true})
+    }
 </script>
 <template>
     <div class="flex flex-col gap-4 w-full">

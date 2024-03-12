@@ -114,6 +114,8 @@
     const route = useRoute()
     if (route.query.id && route.query.a_id) {
         getOneAssignment(route.query.id, route.query.a_id)
+    } else {
+        navigateTo('/courses', { replace: true })
     }
 </script>
 <template>

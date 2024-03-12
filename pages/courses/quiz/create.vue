@@ -51,6 +51,10 @@
                 toast.update(createQuizToast, { type: 'error', message: Perr?.data?.message })
             })
     }
+
+    if (!route.query.id) {
+        navigateTo('/courses', {replace: true})
+    }
 </script>
 <template>
     <div class="flex flex-col gap-4 w-full">
