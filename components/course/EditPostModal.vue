@@ -23,17 +23,21 @@
 
     const postTitle = ref<string>('')
     const postContent = ref<string>('')
-    const postShowTime = ref<string>('')
-    const postType = ref<{ title: string; type: 'ANNOUNCEMENT' | 'ASSIGNMENT' | 'QUIZ' }>({ title: 'เลือกประเภท', type: 'ANNOUNCEMENT' })
 
     const editPost = ref()
 
-    watch(()=>props.p_title, ()=>{
-        postTitle.value = props.p_title
-    })
-    watch(()=>props.p_content, ()=>{
-        postContent.value = props.p_content
-    })
+    watch(
+        () => props.p_title,
+        () => {
+            postTitle.value = props.p_title
+        }
+    )
+    watch(
+        () => props.p_content,
+        () => {
+            postContent.value = props.p_content
+        }
+    )
     function c_closeModal() {
         const { element } = HSOverlay.getInstance(editPost.value, true)
         element.close()
@@ -59,6 +63,7 @@
             p_title: postTitle.value,
             p_content: postContent.value,
         }
+
         await $fetch<{ message: string }>('/api/post/', {
             method: 'POST',
             body: payload,

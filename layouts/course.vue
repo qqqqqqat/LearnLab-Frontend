@@ -3,9 +3,9 @@
 
     const route = useRoute()
     const userRole = useUserCourseState()
-    let crs_info = ref()
-    let crs_pending = ref(true)
-
+    const crs_info = ref()
+    const crs_pending = ref(true)
+    const crs_member = ref()
     let sessionInfo = ref()
     watch(
         () => route.query.id,
@@ -32,12 +32,28 @@
     }
 
     async function fetchCourse(id: number) {
+        crs_pending.value = true
         await $fetch<CoursePageAPIPUTResponse>('/api/courses/', {
             method: 'PUT',
             body: { c_id: id },
         })
             .then((res) => {
                 crs_info.value = res
+                crs_pending.value = false
+            })
+            .catch((err) => {
+                toast.error(err?.data?.message)
+                navigateTo('/mycourse', { replace: true })
+            })
+    }
+
+    async function fetchMember(id: number) {
+        crs_pending.value = true
+        await $fetch('/api/courses/enroll/', {
+            query: { c_id: id, u_role: 'INSTRUCTOR' },
+        })
+            .then((res) => {
+                crs_member.value = res
                 crs_pending.value = false
             })
             .catch((err) => {
@@ -60,6 +76,7 @@
 
     if (route.query.id) {
         fetchCourse(route.query.id)
+        fetchMember(route.query.id)
     }
     fetchUserRoleState()
 </script>
@@ -171,6 +188,21 @@
                         class="nav-menu">
                         <span class="material-icons-outlined">quiz</span>
                         แบบทดสอบ
+                    </div>
+                    <hr />
+                    <div class="p-2 font-bold text-lg flex items-center gap-2">
+                    <span class="material-icons-outlined">people</span>
+                        ผู้สอน
+                    </div>
+                    <div class="flex flex-row p-2 gap-2 items-center" v-for="inst in crs_member">
+                        <div v-if="inst.u_avatar" class="rounded-md w-8 h-8"><img class="rounded-md aspect-square object-cover border bottom-1" :src="`/api/avatar/?u_id=${inst.u_id}`" /></div>
+                        <div class="rounded-md w-8 h-8 bg-slate-200 flex flex-col justify-center items-center text-xl select-none" v-if="!inst?.u_avatar">
+                            {{ `${inst?.u_firstname.slice(0, 1)}${inst?.u_lastname.slice(0, 1)}` }}
+                        </div>
+                        <div class="flex flex-col">
+                            <span>{{ inst?.u_firstname }} {{ inst?.u_lastname }}</span>
+                            <span class="text-xs text-slate-400 cursor-pointer"><NuxtLink :to="`mailto:${inst?.u_email}`">{{ inst?.u_email }}</NuxtLink></span>
+                        </div>
                     </div>
                 </nav>
                 <main class="flex flex-col gap-y-4 w-full">

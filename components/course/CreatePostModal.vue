@@ -16,6 +16,8 @@
     const postTitle = ref<string>('')
     const postContent = ref<string>('')
     const postShowTime = ref<string>('')
+    const postAssignID = ref<string>('')
+    const postQuizID = ref<string>('')
     const postType = ref<{ title: string; type: 'ANNOUNCEMENT' | 'ASSIGNMENT' | 'QUIZ' }>({ title: 'เลือกประเภท', type: 'ANNOUNCEMENT' })
     const uploadFiles = ref<{ name: string; file: File }[]>([])
 
@@ -34,22 +36,35 @@
     defineExpose({ c_closeModal, c_openModal })
     const emit = defineEmits(['refreshPost'])
 
-
     function getRteText(text: string) {
         postContent.value = text
     }
 
     async function uploadPost(postFile: number[]) {
-        const createPostFileToast = toast.loading('กำลังสร้างโพสต์')
+        toast.loading('กำลังสร้างโพสต์')
+        if (postAssignID.value.slice(-1) === ',') {
+            postAssignID.value = postAssignID.value.slice(0, -1);
+        }
+
+        if (postQuizID.value.slice(-1) === ',') {
+            postQuizID.value = postQuizID.value.slice(0, -1);
+        }
         let payload = {
             c_id: props.c_id,
             p_title: postTitle.value,
             p_type: postType.value.type,
             p_content: postContent.value,
-            p_item_list: { files: [], assignments: [], quizzes: [] }
+            p_item_list: { files: [], assignments: [], quizzes: [] },
         }
         if (postShowTime.value) Object.assign(payload, { p_show_time: new Date(postShowTime.value).toUTCString() })
-        if (postFile.length > 0) Object.assign(payload, { p_item_list: { files: postFile, assignments: [], quizzes: [] } })
+        
+        if (postFile.length > 0) { 
+            Object.assign(payload, { p_item_list: { files: postFile, assignments: JSON.parse(`[${postAssignID.value}]`), quizzes: JSON.parse(`[${postQuizID.value}]`) } })
+        } else {
+            Object.assign(payload, { p_item_list: { files: [], assignments: JSON.parse(`[${postAssignID.value}]`), quizzes: JSON.parse(`[${postQuizID.value}]`) } })
+        }
+        
+
         await $fetch<{ message: string }>('/api/post/', {
             method: 'PUT',
             body: payload,
@@ -57,10 +72,10 @@
             .then((Pres) => {
                 c_closeModal()
                 emit('refreshPost')
-                toast.update(createPostFileToast, { type: 'success', message: Pres?.message })
+                toast.success(Pres?.message)
             })
             .catch((Perr) => {
-                toast.update(createPostFileToast, { type: 'error', message: Perr?.data?.message })
+                toast.error(Perr?.data?.message)
             })
     }
 
@@ -68,7 +83,7 @@
         if (!uploadFiles.value.length) {
             return
         }
-        const uploadPostFileToast = toast.loading('กำลังอัพโหลดไฟล์แนบ')
+        toast.loading('กำลังอัพโหลดไฟล์แนบ')
         const formData = new FormData()
         formData.append('c_id', props.c_id)
         for (let x = 0; x < uploadFiles.value.length; x++) {
@@ -79,11 +94,11 @@
             body: formData,
         })
             .then(async (res) => {
-                await uploadPost(res.f_id);
-                toast.update(uploadPostFileToast, { type: 'success', message: res?.message })
+                await uploadPost(res.f_id)
+                toast.success(res?.message)
             })
             .catch((err) => {
-                toast.update(uploadPostFileToast, { type: 'error', message: err?.data?.message })
+                toast.error(err?.data?.message)
             })
     }
 
@@ -91,6 +106,23 @@
         const target = $event.target as HTMLInputElement
         if (target && target.files) {
             uploadFiles.value.push({ name: target.files[0].name, file: target.files[0] })
+        }
+    }
+    function onlyNumbersAndComma(event) {
+        const input = event.target
+        const key = event.key
+
+        // Check for allowed characters (numbers, comma, backspace)
+        const regex = /[0-9,]/
+        if (!regex.test(key)) {
+            event.preventDefault()
+            return
+        }
+
+        // Prevent leading comma
+        if (key === ',' && input.value === '') {
+            event.preventDefault()
+            return
         }
     }
 </script>
@@ -150,6 +182,38 @@
                     <div class="flex flex-col">
                         <!-- Floating Input -->
                     </div>
+                    <!-- Floating Input -->
+                    <div class="relative flex-grow">
+                        <input
+                            type="text"
+                            v-model="postAssignID"
+                            @keypress="onlyNumbersAndComma"
+                            id="hs-floating-crs-ass-att"
+                            placeholder="ID ของ Assignment ขั้นด้วย Comma (,)"
+                            class="peer p-4 block w-full border-gray-200 rounded-lg text-sm placeholder:text-transparent focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none focus:pt-6 focus:pb-2 [&:not(:placeholder-shown)]:pt-6 [&:not(:placeholder-shown)]:pb-2 autofill:pt-6 autofill:pb-2" />
+                        <label
+                            for="hs-floating-crs-ass-att"
+                            class="absolute top-0 start-0 p-4 h-full text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent peer-disabled:opacity-50 peer-disabled:pointer-events-none peer-focus:text-xs peer-focus:-translate-y-1.5 peer-focus:text-gray-500 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-gray-500">
+                            ID ของ Assignment
+                        </label>
+                    </div>
+                    <!-- End Floating Input -->
+                    <!-- Floating Input -->
+                    <div class="relative flex-grow">
+                        <input
+                            type="text"
+                            v-model="postQuizID"
+                            @keypress="onlyNumbersAndComma"
+                            id="hs-floating-crs-quiz-att"
+                            placeholder="ID ของ Quiz ขั้นด้วย Comma (,)"
+                            class="peer p-4 block w-full border-gray-200 rounded-lg text-sm placeholder:text-transparent focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none focus:pt-6 focus:pb-2 [&:not(:placeholder-shown)]:pt-6 [&:not(:placeholder-shown)]:pb-2 autofill:pt-6 autofill:pb-2" />
+                        <label
+                            for="hs-floating-crs-quiz-att"
+                            class="absolute top-0 start-0 p-4 h-full text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent peer-disabled:opacity-50 peer-disabled:pointer-events-none peer-focus:text-xs peer-focus:-translate-y-1.5 peer-focus:text-gray-500 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-gray-500">
+                            ID ของ Quiz
+                        </label>
+                    </div>
+                    <!-- End Floating Input -->
                     <div class="flex md:flex-row md:flex-nowrap flex-col gap-2 w-full">
                         <input @change="onFileChangedMat" ref="inputFile" type="file" hidden />
                         <!-- End Floating Input -->
@@ -193,13 +257,15 @@
                         ยกเลิก
                     </button>
                     <button
-                        @click="() => {
-                            if (uploadFiles.length) {
-                                uploadFile()
-                            } else {
-                                uploadPost([])
+                        @click="
+                            () => {
+                                if (uploadFiles.length) {
+                                    uploadFile()
+                                } else {
+                                    uploadPost([])
+                                }
                             }
-                        }"
+                        "
                         type="button"
                         class="transition-color duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
                         สร้าง
