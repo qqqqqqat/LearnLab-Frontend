@@ -50,7 +50,7 @@
     }
 
     async function loginUser() {
-        const loginToast1 = toast.loading('กำลังเข้าสู่ระบบ')
+        toast.loading('กำลังเข้าสู่ระบบ')
         await $fetch<AuthPOSTAPIResponse>('/api/auth/', {
             method: 'PUT',
             body: {
@@ -67,7 +67,7 @@
                 regis_passw.value = ''
                 regis_passw_conf.value = ''
                 regis_avatar.value = ''
-                toast.update(loginToast1, { type: 'loading', message: res?.message })
+                toast.loading(res?.message)
                 await $fetch<User>('/api/auth/').then(async (res) => {
                     userState.value = res
                     await $fetch<Avatar>('/api/auth/?image=')
@@ -77,17 +77,17 @@
                         .catch((err) => {
                             toast.error('โหลดรูปล้มเหลว')
                         })
-                    toast.update(loginToast1, { type: 'success', message: 'เข้าสู่ระบบสำเร็จ' })
+                    toast.success('เข้าสู่ระบบสำเร็จ')
                     closeModal()
                 })
             })
             .catch((err) => {
-                toast.update(loginToast1, { type: 'error', message: err.data?.message })
+                toast.error(err.data?.message)
             })
     }
 
     async function registerUser() {
-        const loginToast = toast.loading('กำลังสมัครสมาชิก')
+        toast.loading('กำลังสมัครสมาชิก')
         const formData = new FormData()
         formData.append('u_firstname', name.value)
         formData.append('u_lastname', surname.value)
@@ -114,11 +114,11 @@
                 regis_passw.value = ''
                 regis_passw_conf.value = ''
                 regis_avatar.value = ''
-                toast.update(loginToast, { type: 'success', message: 'สมัครสมาชิกสำเร็จ' })
+                toast.success('สมัครสมาชิกสำเร็จ')
                 closeModal()
             })
             .catch((err) => {
-                toast.update(loginToast, { type: 'error', message: err?.data?.message })
+                toast.error(err?.data?.message)
             })
     }
 </script>
