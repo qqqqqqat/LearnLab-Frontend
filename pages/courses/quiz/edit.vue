@@ -150,7 +150,7 @@
         <div class="flex md:flex-row flex-col gap-2">
             <div class="flex flex-col gap-2">
                 <span class="font-bold">รายการโจทย์</span>
-                <div class="flex flex-col md:w-64 w-full border border-1 rounded-md max-h-64 overflow-auto">
+                <div class="flex flex-col md:max-w-64 w-full border border-1 rounded-md max-h-64 overflow-auto">
                     <div
                         @click="
                             () => {
@@ -161,17 +161,18 @@
                                 editQuizIndex = index
                             }
                         "
-                        class="transition-all duration-300 ease-in-out flex flex-col px-4 py-2 line-clamp-1 text-ellipsis"
+                        class="transition-all duration-300 ease-in-out flex flex-col flex-nowrap px-4 py-2 min-h-10"
                         :class="index === editQuizIndex ? 'bg-blue-600 text-white' : 'cursor-pointer bg-white'"
                         v-for="(item, index) in quizItem">
-                        {{ index + 1 }}.) {{ item.title }}
+                        <span class="text-ellipsis whitespace-nowrap w-full overflow-hidden ">{{ index + 1 }}.) {{ item.title }}</span>
                     </div>
                     <div class="ease-in-out flex flex-col justify-center items-center w-full px-4 py-4 font-bold" v-if="!quizItem?.length">ยังไม่ได้เพิ่มข้อ</div>
                 </div>
             </div>
 
             <div class="flex flex-col border border-1 rounded-md flex-grow p-4">
-                <div class="flex flex-row items-center gap-2">
+                <div class="flex md:flex-row flex-col md:items-center items-start gap-2">
+                    <div class="flex flex-row items-center gap-2">
                     <button
                     v-if="editQuizIndex >= 0"
                         @click="
@@ -252,7 +253,8 @@
                         <span class="material-icons-outlined">delete</span>
                         ลบ
                     </button>
-                    <div class="flex lg:flex-row flex-col justify-end items-center">
+                    </div>
+                    <div class="flex lg:flex-row flex-col justify-end md:items-center items-start">
                         <span class="font-bold">ประเภทของข้อ</span>
                         <div class="flex items-center gap-2">
                             <label for="switch-quiz-type" class="text-sm text-gray-500 ms-3">ตัวเลือก</label>
