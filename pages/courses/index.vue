@@ -63,7 +63,7 @@
     if (userState.value?.u_role === 'STUDENT') {
         updateQuery(search.value)
     } else {
-        navigateTo('/mycorse', { replace: true })
+        navigateTo('/mycourse', { replace: true })
     }
 
     watch(currentPage, () => {
