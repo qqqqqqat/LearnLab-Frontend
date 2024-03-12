@@ -48,8 +48,8 @@
             method: 'POST',
             body: formData
         }).then(res => {
-            toast.update(createCourseToast, {type: 'success', message: res?.message})
             c_closeModal()
+            toast.update(createCourseToast, {type: 'success', message: res?.message})
             emit('refreshCourse')
         }).catch(err => {
             toast.update(createCourseToast, {type: 'error', message: err?.data?.message})

@@ -101,9 +101,8 @@
                 href="#">
                 <span class="material-icons-outlined" style="font-size: 18px">arrow_upward</span>
             </button>
-            <div class="hs-dropdown relative inline-flex">
+            <div v-if="userRole?.[route.query.id] !== 'STUDENT'" class="hs-dropdown relative inline-flex">
                 <button
-                    v-if="userRole?.[route.query.id] !== 'STUDENT'"
                     id="hs-dropdown-create-file"
                     type="button"
                     class="hs-dropdown-toggle py-3 px-4 flex-shrink-0 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">

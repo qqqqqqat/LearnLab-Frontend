@@ -45,9 +45,9 @@
             body: payload,
         })
             .then((Pres) => {
-                toast.update(createSubmissionToast, { type: 'success', message: Pres?.message })
                 c_closeModal()
                 emit('refreshAssignment')
+                toast.update(createSubmissionToast, { type: 'success', message: Pres?.message })
             })
             .catch((Perr) => {
                 toast.update(createSubmissionToast, { type: 'error', message: Perr?.data?.message })

@@ -40,11 +40,11 @@
             body: formData,
         })
             .then((res) => {
-                toast.update(createFileToast, { type: 'success', message: res?.message })
+                c_closeModal()
                 isFolderCreating.value = false
                 folderName.value = ''
                 emit('refreshFile')
-                c_closeModal()
+                toast.update(createFileToast, { type: 'success', message: res?.message })
             })
             .catch((err) => {
                 isFolderCreating.value = false
