@@ -168,7 +168,7 @@
                         class="transition-all duration-300 ease-in-out flex flex-col flex-nowrap px-4 py-2 min-h-10"
                         :class="index === editQuizIndex ? 'bg-blue-600 text-white' : 'cursor-pointer bg-white'"
                         v-for="(item, index) in quizItem">
-                        <span class="text-ellipsis whitespace-nowrap w-full overflow-hidden ">{{ index + 1 }}.) {{ item.title }}</span>
+                        <span class="text-ellipsis whitespace-nowrap w-full overflow-hidden">{{ index + 1 }}.) {{ item.title }}</span>
                     </div>
                     <div class="ease-in-out flex flex-col justify-center items-center w-full px-4 py-4 font-bold" v-if="!quizItem?.length">ยังไม่ได้เพิ่มข้อ</div>
                 </div>
