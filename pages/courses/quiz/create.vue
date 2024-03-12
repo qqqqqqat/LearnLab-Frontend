@@ -138,7 +138,7 @@
                                 editQuizIndex = index
                             }
                         "
-                        class="transition-all duration-300 ease-in-out flex flex-col px-4 py-2 line-clamp-1 text-ellipsis"
+                        class="transition-all duration-300 ease-in-out flex flex-col flex-nowrap px-4 py-2 min-h-10"
                         :class="index === editQuizIndex ? 'bg-blue-600 text-white' : 'cursor-pointer bg-white'"
                         v-for="(item, index) in quizItem">
                         <span class="text-ellipsis whitespace-nowrap w-full overflow-hidden">{{ index + 1 }}.) {{ item.title }}</span>
