@@ -41,7 +41,7 @@
     }
 
     async function uploadPost(postFile: number[]) {
-        toast.loading('กำลังสร้างโพสต์')
+        const uploadToast = toast.loading('กำลังสร้างโพสต์')
         if (postAssignID.value.slice(-1) === ',') {
             postAssignID.value = postAssignID.value.slice(0, -1);
         }
@@ -72,10 +72,16 @@
             .then((Pres) => {
                 c_closeModal()
                 emit('refreshPost')
-                toast.success(Pres?.message)
+                postTitle.value = ''
+                postContent.value = ''
+                postShowTime.value = ''
+                postAssignID.value = ''
+                postQuizID.value = ''
+                uploadFiles.value = []
+                toast.update(uploadToast, {type: 'success', message: Pres?.message})
             })
             .catch((Perr) => {
-                toast.error(Perr?.data?.message)
+                toast.update(uploadToast, {type: 'error', message: Perr?.data?.message})
             })
     }
 

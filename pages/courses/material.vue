@@ -89,7 +89,7 @@
     <div class="flex flex-col gap-2">
         <div class="flex flex-row justify-between items-center gap-4 pb-4">
             <input
-            v-if="((file_post?.length || 0) > 0)"
+                v-if="!file_pending"
                 type="text"
                 class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
                 :value="file_path"
