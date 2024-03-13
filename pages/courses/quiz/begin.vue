@@ -10,7 +10,7 @@
     const quiz = ref<QuizItems>()
     const choiceAnswer = ref()
     const fillAnswer = ref()
-    const isFetching = ref(true);
+    const isFetching = ref(true)
 
     async function fetchQuiz(id: number, q_id: number) {
         isFetching.value = true
@@ -22,16 +22,16 @@
         })
             .then((res) => {
                 quizResponse.value = res
-                if ((new Date().getTime() - new Date(quiz.q_begin_date).getTime()) >= 0) {
-                quizAnswers.value = []
-                for (let i = 0; i < quizResponse?.value?.q_items.length; i++) {
-                    quizAnswers.value.push('')
+                if (quizResponse.value && new Date().getTime() - new Date(quizResponse.value.q_begin_date).getTime() >= 0) {
+                    quizAnswers.value = []
+                    for (let i = 0; i < quizResponse?.value?.q_items.length; i++) {
+                        quizAnswers.value.push('')
+                    }
+                    quiz.value = quizResponse?.value?.q_items?.[0]
+                } else {
+                    toast.error('ยังไม่ถึงเวลาทำ')
+                    navigateTo('/mycourse', { replace: true })
                 }
-                quiz.value = quizResponse?.value?.q_items?.[0]
-            } else {
-                toast.error('ยังไม่ถึงเวลาทำ')
-                navigateTo('/mycourse', { replace: true })
-            }
                 isFetching.value = false
             })
             .catch((err) => {
@@ -65,7 +65,7 @@
     if (route.query.id && route.query.q_id) {
         fetchQuiz(route.query.id, route.query.q_id)
     } else {
-        navigateTo('/courses', {replace: true})
+        navigateTo('/courses', { replace: true })
     }
     function saveAndContinue(indx: number, type: string) {
         quizAnswers.value[indx] = type == 'CHOICE' ? choiceAnswer.value : fillAnswer.value
@@ -86,7 +86,12 @@
         </div>
         <div class="flex md:flex-row flex-col gap-2" v-if="!isFetching">
             <div class="flex md:flex-col flex-row border border-1 rounded-md md:w-16 w-full items-center gap-4 p-2">
-                <div v-for="(q, indx) in quizAnswers" class="transition-color duration-200 ease-in-out border border-1 p-4 flex justify-center items-center w-12 h-12 rounded-md" :class="q ? 'bg-blue-600 text-white' : 'bg-transparent'">{{ indx + 1 }}</div>
+                <div
+                    v-for="(q, indx) in quizAnswers"
+                    class="transition-color duration-200 ease-in-out border border-1 p-4 flex justify-center items-center w-12 h-12 rounded-md"
+                    :class="q ? 'bg-blue-600 text-white' : 'bg-transparent'">
+                    {{ indx + 1 }}
+                </div>
             </div>
             <div class="flex flex-col flex-grow gap-4">
                 <div class="flex flex-col border border-1 rounded-md flex-grow p-4 gap-4">
