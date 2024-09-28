@@ -168,7 +168,7 @@
                             </button>
                         </nav>
                     </div>
-                    <div class="flex md:flex-row flex-col justify-center items-center w-full gap-4 md:pl-8 md:pt-0 pt-8">
+                    <div class="flex md:flex-row flex-col justify-center items-center w-full gap-4 md:pl-8 md:pt-0 pt-8 relative">
                         <img src="~/assets/images/login.svg" class="w-48" />
                         <div class="grow w-full h-fit">
                             <TransitionGroup name="fade">
@@ -511,6 +511,9 @@
 
     .fade-enter-from,
     .fade-leave-to {
+        position: absolute;
+        top: 0;
+        left: 0;
         opacity: 0;
     }
 </style>
