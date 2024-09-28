@@ -14,11 +14,14 @@ watch(() => props.content, () => {
 
 const emit = defineEmits(['sendText'])
 
-function showMdEditorContent() {
-    emit('sendText', text.value);
+function showHTML(html: string) {
+    // emit('sendText', text.value);
+    setTimeout(() => {
+        emit('sendText', text.value);
+    }, 1)
 }
 </script>
 <template class="z-[10]">
     <MdEditor :preview="false" :noUploadImg="true" language="en-US" v-model="text"
-        @onHtmlChanged="showMdEditorContent" />
+        @onChange="showHTML" />
 </template>
