@@ -316,6 +316,7 @@ if (route.query.id) {
 :deep(.md-editor-preview) {
     word-break: auto-phrase !important;
     white-space: normal !important;
+    font-family: "Bai Jamjuree", 'sans-serif' !important;
 }
 
 :deep(.md-editor-preview-wrapper) {
