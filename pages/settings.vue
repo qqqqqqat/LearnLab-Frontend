@@ -50,40 +50,82 @@
             .then(async (res) => {
                 await fetchUser()
                 regis_passw.value = ''
-                toast.update(loginToast, { type: 'success', message: res?.message })
+                toast.update(loginToast, {
+                    type: 'success',
+                    message: res?.message,
+                })
             })
             .catch((err) => {
-                toast.update(loginToast, { type: 'error', message: err?.data?.message })
+                toast.update(loginToast, {
+                    type: 'error',
+                    message: err?.data?.message,
+                })
             })
     }
 </script>
 <template>
-    <div class="max-w-screen-2xl mx-auto mb-8">
-        <div class="flex flex-col items-center w-full h-full gap-y-8">
-            <h1 class="text-5xl mt-24 font-bold mb-4 font-title">ตั้งค่าผู้ใช้</h1>
-            <div class="flex md:flex-row md:items-start flex-col items-center gap-8">
-                <div class="rounded-md w-64 h-64 bg-slate-200 flex flex-col justify-center items-center text-[140px]" v-if="!avatarState?.u_avatar">
-                    {{ userState?.u_firstname ? `${userState?.u_firstname.slice(0, 1)}${userState?.u_lastname.slice(0, 1)}` : '' }}
+    <div class="mx-auto mb-8 max-w-screen-2xl">
+        <div class="flex h-full w-full flex-col items-center gap-y-8">
+            <h1 class="mb-4 mt-24 font-title text-5xl font-bold">
+                ตั้งค่าผู้ใช้
+            </h1>
+            <div
+                class="flex flex-col items-center gap-8 md:flex-row md:items-start">
+                <div
+                    class="flex h-64 w-64 flex-col items-center justify-center rounded-md bg-slate-200 text-[140px]"
+                    v-if="!avatarState?.u_avatar">
+                    {{
+                        userState?.u_firstname
+                            ? `${userState?.u_firstname.slice(0, 1)}${userState?.u_lastname.slice(0, 1)}`
+                            : ''
+                    }}
                 </div>
-                <div class="rounded-md w-64 h-64" v-else>
-                    <img class="rounded-md w-64 h-64 aspect-square object-cover" :src="`data:${avatarState?.u_avatar_mime_type};base64,${avatarState?.u_avatar}`" />
+                <div class="h-64 w-64 rounded-md" v-else>
+                    <img
+                        class="aspect-square h-64 w-64 rounded-md object-cover"
+                        :src="`data:${avatarState?.u_avatar_mime_type};base64,${avatarState?.u_avatar}`" />
                 </div>
-                <div class="flex flex-col rounded-md max-w-full md:h-64 bg-gradient-to-r from-slate-100 to-slate-50/0 gap-4 py-4 pl-8 md:pr-16 pr-8 justify-center">
-                    <span class="font-bold text-5xl">{{ userState?.u_firstname ? userState?.u_firstname : '' }} {{ userState?.u_lastname ? userState?.u_lastname : '' }}</span>
-                    <span class="text-2xl">{{ userState?.u_role ? (userState?.u_role === 'STUDENT' ? 'นักศึกษา' : 'ผู้สอน') : '' }} | {{ userState?.u_email ? userState?.u_email : '' }}</span>
+                <div
+                    class="flex max-w-full flex-col justify-center gap-4 rounded-md bg-gradient-to-r from-slate-100 to-slate-50/0 py-4 pl-8 pr-8 md:h-64 md:pr-16">
+                    <span class="text-5xl font-bold">
+                        {{
+                            userState?.u_firstname ? userState?.u_firstname : ''
+                        }}
+                        {{ userState?.u_lastname ? userState?.u_lastname : '' }}
+                    </span>
+                    <span class="text-2xl">
+                        {{
+                            userState?.u_role
+                                ? userState?.u_role === 'STUDENT'
+                                    ? 'นักศึกษา'
+                                    : 'ผู้สอน'
+                                : ''
+                        }}
+                        | {{ userState?.u_email ? userState?.u_email : '' }}
+                    </span>
                     <span class="text-2xl">{{ userState?.u_tel || '' }}</span>
-                    <span class="text-lg">สร้างบัญชีเมื่อ {{ userState?.u_created_at ? new Date(userState?.u_created_at).toLocaleString() : '' }}</span>
+                    <span class="text-lg">
+                        สร้างบัญชีเมื่อ
+                        {{
+                            userState?.u_created_at
+                                ? new Date(
+                                      userState?.u_created_at
+                                  ).toLocaleString()
+                                : ''
+                        }}
+                    </span>
                 </div>
             </div>
             <div class="relative w-72">
                 <input
                     type="text"
-                    class="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                    class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                     placeholder="ชื่อ"
                     v-model.lazy="name" />
-                <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
+                <div
+                    class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                     <svg
-                        class="flex-shrink-0 size-4 text-gray-500"
+                        class="size-4 flex-shrink-0 text-gray-500"
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
                         height="24"
@@ -102,12 +144,13 @@
             <div class="relative w-72">
                 <input
                     type="text"
-                    class="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                    class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                     placeholder="นามสกุล"
                     v-model.lazy="surname" />
-                <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
+                <div
+                    class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                     <svg
-                        class="flex-shrink-0 size-4 text-gray-500"
+                        class="size-4 flex-shrink-0 text-gray-500"
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
                         height="24"
@@ -125,12 +168,13 @@
             <div class="relative w-72">
                 <input
                     type="tel"
-                    class="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                    class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                     placeholder="หมายเลขโทรศัพท์"
                     v-model="phone" />
-                <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
+                <div
+                    class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                     <svg
-                        class="flex-shrink-0 size-4 text-gray-500"
+                        class="size-4 flex-shrink-0 text-gray-500"
                         xmlns="http://www.w3.org/2000/svg"
                         width="24"
                         height="24"
@@ -154,20 +198,21 @@
                     accept="image/*"
                     name="small-file-input"
                     id="small-file-input"
-                    class="block w-72 border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none file:bg-gray-50 file:border-0 file:me-4 file:py-2 file:px-4" />
+                    class="block w-72 rounded-lg border border-gray-200 text-sm shadow-sm file:me-4 file:border-0 file:bg-gray-50 file:px-4 file:py-2 focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" />
             </div>
-            <div class="bg-slate-200 w-72 h-[1px]"></div>
+            <div class="h-[1px] w-72 bg-slate-200"></div>
             <div class="flex flex-col gap-2">
                 <h2>กรุณาใส่รหัสเพื่อบันทึกข้อมูล</h2>
                 <div class="relative w-72">
                     <input
                         type="password"
-                        class="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                        class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                         placeholder="รหัสผ่าน"
                         v-model="regis_passw" />
-                    <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
+                    <div
+                        class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                         <svg
-                            class="flex-shrink-0 size-4 text-gray-500"
+                            class="size-4 flex-shrink-0 text-gray-500"
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
                             height="24"
@@ -177,7 +222,8 @@
                             stroke-width="2"
                             stroke-linecap="round"
                             stroke-linejoin="round">
-                            <path d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z" />
+                            <path
+                                d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z" />
                             <circle cx="16.5" cy="7.5" r=".5" />
                         </svg>
                     </div>
@@ -185,11 +231,13 @@
             </div>
 
             <button
-                class="mt-2 py-2 px-3 transition-colors duration-150 ease-in-out inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none"
+                class="mt-2 inline-flex items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
                 href="#"
                 :disabled="regis_passw?.length < 3"
                 @click="updateUser">
-                <span class="material-icons-outlined" style="font-size: 18px">save</span>
+                <span class="material-icons-outlined" style="font-size: 18px">
+                    save
+                </span>
                 บันทึกค่า
             </button>
         </div>

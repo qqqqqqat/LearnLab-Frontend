@@ -46,11 +46,17 @@
             body: formData,
         })
             .then((res) => {
-                toast.update(createCourseToast, { type: 'success', message: res?.message })
+                toast.update(createCourseToast, {
+                    type: 'success',
+                    message: res?.message,
+                })
                 fetchCourse(route.query.id)
             })
             .catch((err) => {
-                toast.update(createCourseToast, { type: 'error', message: err?.data?.message })
+                toast.update(createCourseToast, {
+                    type: 'error',
+                    message: err?.data?.message,
+                })
             })
     }
 
@@ -87,7 +93,11 @@
             })
     }
 
-    async function updateMemberRole(u_id: number, c_id: number, u_role: 'TA' | 'STUDENT') {
+    async function updateMemberRole(
+        u_id: number,
+        c_id: number,
+        u_role: 'TA' | 'STUDENT'
+    ) {
         const updateRoleToast = toast.loading('กำลังอัพเดทตำแหน่ง')
 
         await $fetch('/api/courses/enroll/', {
@@ -96,11 +106,17 @@
         })
             .then((res) => {
                 fetchMember(route.query.id)
-                toast.update(updateRoleToast, { type: 'success', message: res?.message })
+                toast.update(updateRoleToast, {
+                    type: 'success',
+                    message: res?.message,
+                })
                 crs_pending.value = false
             })
             .catch((err) => {
-                toast.update(updateRoleToast, { type: 'error', message: err?.data?.message })
+                toast.update(updateRoleToast, {
+                    type: 'error',
+                    message: err?.data?.message,
+                })
                 navigateTo('/mycourse', { replace: true })
             })
     }
@@ -115,10 +131,16 @@
             .then((res) => {
                 fetchMember(route.query.id)
                 crs_pending.value = false
-                toast.update(updateRoleToast, { type: 'success', message: res?.message })
+                toast.update(updateRoleToast, {
+                    type: 'success',
+                    message: res?.message,
+                })
             })
             .catch((err) => {
-                toast.update(updateRoleToast, { type: 'error', message: err?.data?.message })
+                toast.update(updateRoleToast, {
+                    type: 'error',
+                    message: err?.data?.message,
+                })
                 navigateTo('/mycourse', { replace: true })
             })
     }
@@ -131,7 +153,10 @@
             .then((res) => {
                 toast.success(res.message)
                 confirmModal.value.c_closeModal()
-                setTimeout(async () => navigateTo('/mycourse', { replace: true }), 1000)
+                setTimeout(
+                    async () => navigateTo('/mycourse', { replace: true }),
+                    1000
+                )
             })
             .catch((err) => {
                 toast.error(err?.data?.message)
@@ -140,10 +165,13 @@
 
     async function addMember(id: number, u_email: string) {
         isImporting.value = true
-        await $fetch<{ status: number; message: string }>('/api/courses/enroll/mail/', {
-            method: 'PUT',
-            body: { c_id: id, u_email: u_email },
-        })
+        await $fetch<{ status: number; message: string }>(
+            '/api/courses/enroll/mail/',
+            {
+                method: 'PUT',
+                body: { c_id: id, u_email: u_email },
+            }
+        )
             .then((res) => {
                 fetchMember(route.query.id)
                 inviteUserEmail.value = ''
@@ -160,7 +188,7 @@
         fetchCourse(route.query.id)
         fetchMember(route.query.id)
     } else {
-        navigateTo('/courses', {replace: true})
+        navigateTo('/courses', { replace: true })
     }
     const confirmModal = ref()
     const actionName = ref('')
@@ -168,8 +196,11 @@
     const isImporting = ref(false)
 </script>
 <template>
-    <CourseConfirmModal ref="confirmModal" :action="actionName" @do-action="deleteCourse(route.query.id)" />
-    <div class="flex flex-col gap-4 w-full">
+    <CourseConfirmModal
+        ref="confirmModal"
+        :action="actionName"
+        @do-action="deleteCourse(route.query.id)" />
+    <div class="flex w-full flex-col gap-4">
         <div><span class="text-4xl font-bold">แก้ไขคอร์ส</span></div>
         <div class="flex flex-col gap-4 px-4">
             <div class="relative">
@@ -177,11 +208,11 @@
                     type="text"
                     v-model="courseName"
                     id="hs-floating-input-text-course-1"
-                    class="peer p-4 block w-full border-gray-200 rounded-lg text-sm placeholder:text-transparent focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-non focus:pt-6 focus:pb-2 [&:not(:placeholder-shown)]:pt-6 [&:not(:placeholder-shown)]:pb-2 autofill:pt-6 autofill:pb-2"
+                    class="disabled:pointer-events-non peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6"
                     placeholder="LearnLab Course-course" />
                 <label
                     for="hs-floating-input-text-course-1"
-                    class="absolute top-0 start-0 p-4 h-full text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent peer-disabled:opacity-50 peer-disabled:pointer-events-none peer-focus:text-xs peer-focus:-translate-y-1.5 peer-focus:text-gray-500 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-gray-500">
+                    class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
                     ชื่อคอร์ส
                     <span class="text-red-600">*</span>
                 </label>
@@ -192,63 +223,77 @@
                     v-model="courseDescription"
                     id="hs-floating-textarea-desc"
                     rows="8"
-                    class="peer p-4 block w-full border-gray-200 rounded-lg text-sm placeholder:text-transparent focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none focus:pt-6 focus:pb-2 [&:not(:placeholder-shown)]:pt-6 [&:not(:placeholder-shown)]:pb-2 autofill:pt-6 autofill:pb-2"
+                    class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6"
                     placeholder="Course Description"></textarea>
                 <label
                     for="hs-floating-textarea-desc"
-                    class="absolute top-0 start-0 p-4 h-full text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent peer-disabled:opacity-50 peer-disabled:pointer-events-none peer-focus:text-xs peer-focus:-translate-y-1.5 peer-focus:text-gray-500 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-gray-500">
+                    class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
                     คำอธิบายคอร์ส
                     <span class="text-red-600">*</span>
                 </label>
             </div>
             <!-- End Floating Textarea -->
             <form>
-                <label class="text-sm mb-2">ปกคอร์ส</label>
-                <label for="small-file-input-banner" class="sr-only">ปกคอร์ส</label>
+                <label class="mb-2 text-sm">ปกคอร์ส</label>
+                <label for="small-file-input-banner" class="sr-only">
+                    ปกคอร์ส
+                </label>
                 <input
                     @change="onFileChangedBanner($event)"
                     accept="image/*"
                     type="file"
                     name="small-file-input-banner"
                     id="small-file-input-banner"
-                    class="block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none file:bg-gray-50 file:border-0 file:me-4 file:py-2 file:px-4" />
+                    class="block w-full rounded-lg border border-gray-200 text-sm shadow-sm file:me-4 file:border-0 file:bg-gray-50 file:px-4 file:py-2 focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" />
             </form>
             <div class="flex flex-row items-center gap-4">
                 <div class="flex w-20">
                     <input
                         v-model="passwordProtected"
                         type="checkbox"
-                        class="shrink-0 mt-0.5 border-gray-200 rounded text-blue-600 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                        class="mt-0.5 shrink-0 rounded border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                         id="hs-checked-checkbox"
                         checked />
-                    <label for="hs-checked-checkbox" class="text-sm text-gray-500 ms-3">มีรหัส</label>
+                    <label
+                        for="hs-checked-checkbox"
+                        class="ms-3 text-sm text-gray-500">
+                        มีรหัส
+                    </label>
                 </div>
                 <div v-if="passwordProtected" class="relative w-full">
                     <input
                         v-model="coursePassword"
                         type="password"
                         id="hs-floating-input-text"
-                        class="peer p-4 block w-full border-gray-200 rounded-lg text-sm placeholder:text-transparent focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-non focus:pt-6 focus:pb-2 [&:not(:placeholder-shown)]:pt-6 [&:not(:placeholder-shown)]:pb-2 autofill:pt-6 autofill:pb-2"
+                        class="disabled:pointer-events-non peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6"
                         placeholder="password" />
                     <label
                         for="hs-floating-input-text"
-                        class="absolute top-0 start-0 p-4 h-full text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent peer-disabled:opacity-50 peer-disabled:pointer-events-none peer-focus:text-xs peer-focus:-translate-y-1.5 peer-focus:text-gray-500 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-gray-500">
+                        class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
                         รหัสของคอร์ส
                         <span class="text-red-600">*</span>
                     </label>
                 </div>
             </div>
             <div class="flex items-center">
-                <label for="hs-basic-with-description" class="text-sm text-gray-500 me-3">สาธารณะ</label>
+                <label
+                    for="hs-basic-with-description"
+                    class="me-3 text-sm text-gray-500">
+                    สาธารณะ
+                </label>
                 <input
                     v-model="coursePrivacy"
                     type="checkbox"
                     id="hs-basic-with-description"
-                    class="relative w-[3.25rem] h-7 p-px bg-gray-100 border-transparent text-transparent rounded-full cursor-pointer transition-colors ease-in-out duration-200 focus:ring-blue-600 disabled:opacity-50 disabled:pointer-events-none checked:bg-none checked:text-blue-600 checked:border-blue-600 focus:checked:border-blue-600 before:inline-block before:size-6 before:bg-white checked:before:bg-blue-200 before:translate-x-0 checked:before:translate-x-full before:rounded-full before:shadow before:transform before:ring-0 before:transition before:ease-in-out before:duration-200" />
-                <label for="hs-basic-with-description" class="text-sm text-gray-500 ms-3">ส่วนตัว</label>
+                    class="relative h-7 w-[3.25rem] cursor-pointer rounded-full border-transparent bg-gray-100 p-px text-transparent transition-colors duration-200 ease-in-out before:inline-block before:size-6 before:translate-x-0 before:transform before:rounded-full before:bg-white before:shadow before:ring-0 before:transition before:duration-200 before:ease-in-out checked:border-blue-600 checked:bg-none checked:text-blue-600 checked:before:translate-x-full checked:before:bg-blue-200 focus:ring-blue-600 focus:checked:border-blue-600 disabled:pointer-events-none disabled:opacity-50" />
+                <label
+                    for="hs-basic-with-description"
+                    class="ms-3 text-sm text-gray-500">
+                    ส่วนตัว
+                </label>
             </div>
         </div>
-        <div class="flex justify-end items-center gap-x-2 py-3 px-4">
+        <div class="flex items-center justify-end gap-x-2 px-4 py-3">
             <button
                 @click="
                     () => {
@@ -257,20 +302,20 @@
                     }
                 "
                 type="button"
-                class="transition-color duration-200 ease-in-out py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-red-600 text-white hover:bg-red-700 disabled:opacity-50 disabled:pointer-events-none">
+                class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-red-600 px-4 py-3 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-red-700 disabled:pointer-events-none disabled:opacity-50">
                 ลบคอร์ส
             </button>
             <button
                 :disabled="!(courseName && courseDescription)"
                 @click="updateCourse()"
                 type="button"
-                class="transition-color duration-200 ease-in-out py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-4 py-3 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
                 แก้ไข
             </button>
         </div>
         <hr />
         <div>
-            <div class="flex md:flex-row flex-col justify-between mt-4 gap-4">
+            <div class="mt-4 flex flex-col justify-between gap-4 md:flex-row">
                 <span class="text-4xl font-bold">สมาชิก</span>
                 <div class="flex flex-row gap-4">
                     <div class="relative w-64">
@@ -279,11 +324,11 @@
                             :readonly="isImporting"
                             v-model="inviteUserEmail"
                             id="hs-floating-input-text-course"
-                            class="peer p-4 block w-full border-gray-200 rounded-lg text-sm placeholder:text-transparent focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-non focus:pt-6 focus:pb-2 [&:not(:placeholder-shown)]:pt-6 [&:not(:placeholder-shown)]:pb-2 autofill:pt-6 autofill:pb-2"
+                            class="disabled:pointer-events-non peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6"
                             placeholder="LearnLab Course-course" />
                         <label
                             for="hs-floating-input-text-course"
-                            class="absolute top-0 start-0 p-4 h-full text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent peer-disabled:opacity-50 peer-disabled:pointer-events-none peer-focus:text-xs peer-focus:-translate-y-1.5 peer-focus:text-gray-500 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-gray-500">
+                            class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
                             E-Mail ของผู้ที่ต้องการนำเข้าคอร์ส
                             <span class="text-red-600">*</span>
                         </label>
@@ -292,71 +337,139 @@
                         @click="addMember(route.query.id, inviteUserEmail)"
                         :disabled="isImporting && !inviteUserEmail"
                         type="button"
-                        class="transition-color duration-200 ease-in-out py-3 px-4 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                        class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-4 py-3 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
                         นำเข้า
                     </button>
                 </div>
             </div>
-            <div class="flex flex-col mt-4">
+            <div class="mt-4 flex flex-col">
                 <div class="-m-1.5 overflow-x-auto">
-                    <div class="p-1.5 min-w-full inline-block align-middle">
-                        <div class="border rounded-lg overflow-hidden">
+                    <div class="inline-block min-w-full p-1.5 align-middle">
+                        <div class="overflow-hidden rounded-lg border">
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead>
                                     <tr>
-                                        <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">รูป</th>
-                                        <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">ชื่อ</th>
-                                        <th scope="col" class="px-6 py-3 text-start text-xs font-medium text-gray-500 uppercase">ตำแหน่ง</th>
-                                        <th scope="col" class="px-6 py-3 text-end text-xs font-medium text-gray-500 uppercase">Action</th>
+                                        <th
+                                            scope="col"
+                                            class="px-6 py-3 text-start text-xs font-medium uppercase text-gray-500">
+                                            รูป
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            class="px-6 py-3 text-start text-xs font-medium uppercase text-gray-500">
+                                            ชื่อ
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            class="px-6 py-3 text-start text-xs font-medium uppercase text-gray-500">
+                                            ตำแหน่ง
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            class="px-6 py-3 text-end text-xs font-medium uppercase text-gray-500">
+                                            Action
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody class="divide-y divide-gray-200">
                                     <tr v-for="member in crs_member">
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
-                                            <div v-if="member.u_avatar" class="rounded-md w-12 h-12">
-                                                <img class="rounded-md aspect-square object-cover border bottom-1" loading="lazy" :src="`/api/avatar/?u_id=${member.u_id}`" />
+                                        <td
+                                            class="whitespace-nowrap px-6 py-4 text-sm font-medium text-gray-800">
+                                            <div
+                                                v-if="member.u_avatar"
+                                                class="h-12 w-12 rounded-md">
+                                                <img
+                                                    class="bottom-1 aspect-square rounded-md border object-cover"
+                                                    loading="lazy"
+                                                    :src="`/api/avatar/?u_id=${member.u_id}`" />
                                             </div>
-                                            <div class="rounded-md w-12 h-12 bg-slate-200 flex flex-col justify-center items-center text-2xl select-none" v-if="!member?.u_avatar">
-                                                {{ `${member?.u_firstname.slice(0, 1)}${member?.u_lastname.slice(0, 1)}` }}
+                                            <div
+                                                class="flex h-12 w-12 select-none flex-col items-center justify-center rounded-md bg-slate-200 text-2xl"
+                                                v-if="!member?.u_avatar">
+                                                {{
+                                                    `${member?.u_firstname.slice(0, 1)}${member?.u_lastname.slice(0, 1)}`
+                                                }}
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
-                                            {{ member.u_firstname }} {{ member.u_lastname }}
-                                            <p class="text-xs text-slate-400">{{ member.u_email }}</p>
+                                        <td
+                                            class="whitespace-nowrap px-6 py-4 text-sm text-gray-800">
+                                            {{ member.u_firstname }}
+                                            {{ member.u_lastname }}
+                                            <p class="text-xs text-slate-400">
+                                                {{ member.u_email }}
+                                            </p>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                                        <td
+                                            class="whitespace-nowrap px-6 py-4 text-sm text-gray-800">
                                             <span
-                                                v-if="member.u_role === 'INSTRUCTOR'"
-                                                class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-blue-600 text-white dark:bg-blue-500">
+                                                v-if="
+                                                    member.u_role ===
+                                                    'INSTRUCTOR'
+                                                "
+                                                class="inline-flex items-center gap-x-1.5 rounded-full bg-blue-600 px-3 py-1.5 text-xs font-medium text-white dark:bg-blue-500">
                                                 {{ member.u_role }}
                                             </span>
-                                            <span v-if="member.u_role === 'STUDENT'" class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-teal-500 text-white">
+                                            <span
+                                                v-if="
+                                                    member.u_role === 'STUDENT'
+                                                "
+                                                class="inline-flex items-center gap-x-1.5 rounded-full bg-teal-500 px-3 py-1.5 text-xs font-medium text-white">
                                                 {{ member.u_role }}
                                             </span>
-                                            <span v-if="member.u_role === 'TA'" class="inline-flex items-center gap-x-1.5 py-1.5 px-3 rounded-full text-xs font-medium bg-yellow-500 text-white">
+                                            <span
+                                                v-if="member.u_role === 'TA'"
+                                                class="inline-flex items-center gap-x-1.5 rounded-full bg-yellow-500 px-3 py-1.5 text-xs font-medium text-white">
                                                 {{ member.u_role }}
                                             </span>
                                         </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-end text-sm font-medium">
-                                            <div class="flex flex-row justify-end gap-4" v-if="member.u_role !== 'INSTRUCTOR' && member.u_id !== userState?.u_id">
+                                        <td
+                                            class="whitespace-nowrap px-6 py-4 text-end text-sm font-medium">
+                                            <div
+                                                class="flex flex-row justify-end gap-4"
+                                                v-if="
+                                                    member.u_role !==
+                                                        'INSTRUCTOR' &&
+                                                    member.u_id !==
+                                                        userState?.u_id
+                                                ">
                                                 <button
-                                                    v-if="member.u_role === 'STUDENT'"
+                                                    v-if="
+                                                        member.u_role ===
+                                                        'STUDENT'
+                                                    "
                                                     type="button"
-                                                    @click="updateMemberRole(member.u_id, route.query.id, 'TA')"
-                                                    class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none">
+                                                    @click="
+                                                        updateMemberRole(
+                                                            member.u_id,
+                                                            route.query.id,
+                                                            'TA'
+                                                        )
+                                                    "
+                                                    class="inline-flex items-center gap-x-2 rounded-lg border border-transparent text-sm font-semibold text-blue-600 hover:text-blue-800 disabled:pointer-events-none disabled:opacity-50">
                                                     ปรับเป็น TA
                                                 </button>
                                                 <button
                                                     v-else
                                                     type="button"
-                                                    @click="updateMemberRole(member.u_id, route.query.id, 'STUDENT')"
-                                                    class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none">
+                                                    @click="
+                                                        updateMemberRole(
+                                                            member.u_id,
+                                                            route.query.id,
+                                                            'STUDENT'
+                                                        )
+                                                    "
+                                                    class="inline-flex items-center gap-x-2 rounded-lg border border-transparent text-sm font-semibold text-blue-600 hover:text-blue-800 disabled:pointer-events-none disabled:opacity-50">
                                                     ปรับเป็น STUDENT
                                                 </button>
                                                 <button
                                                     type="button"
-                                                    @click="deleteMember(member.u_id, route.query.id)"
-                                                    class="inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-red-600 hover:text-red-800 disabled:opacity-50 disabled:pointer-events-none">
+                                                    @click="
+                                                        deleteMember(
+                                                            member.u_id,
+                                                            route.query.id
+                                                        )
+                                                    "
+                                                    class="inline-flex items-center gap-x-2 rounded-lg border border-transparent text-sm font-semibold text-red-600 hover:text-red-800 disabled:pointer-events-none disabled:opacity-50">
                                                     ลบ
                                                 </button>
                                             </div>

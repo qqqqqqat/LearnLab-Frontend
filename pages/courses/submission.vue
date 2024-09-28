@@ -36,24 +36,35 @@
         postContent.value = text
     }
     async function downloadFile(f_id: number) {
-        await navigateTo(`/api/file/?f_id=${f_id}`, { open: { target: '_blank' } })
+        await navigateTo(`/api/file/?f_id=${f_id}`, {
+            open: { target: '_blank' },
+        })
     }
 
     async function removeSubmission() {
         assignPending.value = true
         const deleteSubmissionToast = toast.loading('กำลังลบการส่งงาน')
 
-        await $fetch<{ status: number; message: string }>('/api/courses/assignment/submit/', {
-            method: 'DELETE',
-            body: { a_id: route.query.a_id },
-        })
+        await $fetch<{ status: number; message: string }>(
+            '/api/courses/assignment/submit/',
+            {
+                method: 'DELETE',
+                body: { a_id: route.query.a_id },
+            }
+        )
             .then((Pres) => {
-                toast.update(deleteSubmissionToast, { type: 'success', message: Pres?.message })
+                toast.update(deleteSubmissionToast, {
+                    type: 'success',
+                    message: Pres?.message,
+                })
                 assignPending.value = false
                 getOneAssignment(route.query.id, route.query.a_id)
             })
             .catch((Perr) => {
-                toast.update(deleteSubmissionToast, { type: 'error', message: Perr?.data?.message })
+                toast.update(deleteSubmissionToast, {
+                    type: 'error',
+                    message: Perr?.data?.message,
+                })
                 assignPending.value = false
             })
     }
@@ -66,19 +77,27 @@
             c_id: route.query.id,
             s_content: { files: [], text: '' },
         }
-        if (postFile.length > 0) Object.assign(payload.s_content, { files: postFile })
-        if (postContent.value) Object.assign(payload.s_content, { text: postContent.value })
+        if (postFile.length > 0)
+            Object.assign(payload.s_content, { files: postFile })
+        if (postContent.value)
+            Object.assign(payload.s_content, { text: postContent.value })
         await $fetch<{ message: string }>('/api/courses/assignment/submit/', {
             method: 'PUT',
             body: payload,
         })
             .then((Pres) => {
-                toast.update(createSubmissionToast, { type: 'success', message: Pres?.message })
+                toast.update(createSubmissionToast, {
+                    type: 'success',
+                    message: Pres?.message,
+                })
                 assignPending.value = false
                 getOneAssignment(route.query.id, route.query.a_id)
             })
             .catch((Perr) => {
-                toast.update(createSubmissionToast, { type: 'error', message: Perr?.data?.message })
+                toast.update(createSubmissionToast, {
+                    type: 'error',
+                    message: Perr?.data?.message,
+                })
                 assignPending.value = false
             })
     }
@@ -102,13 +121,19 @@
                 await makeSubmission(res.f_id)
             })
             .catch((err) => {
-                toast.update(uploadSubmitFileToast, { type: 'error', message: err?.data?.message })
+                toast.update(uploadSubmitFileToast, {
+                    type: 'error',
+                    message: err?.data?.message,
+                })
             })
     }
     function onFileChangedMat($event: Event) {
         const target = $event.target as HTMLInputElement
         if (target && target.files) {
-            submitFiles.value.push({ name: target.files[0].name, file: target.files[0] })
+            submitFiles.value.push({
+                name: target.files[0].name,
+                file: target.files[0],
+            })
         }
     }
 
@@ -120,25 +145,42 @@
     }
 </script>
 <template>
-    <div v-if="!assignPending" class="flex flex-col w-full">
-        <div class="flex md:flex-row flex-col md:justify-between md:items-center gap-2">
+    <div v-if="!assignPending" class="flex w-full flex-col">
+        <div
+            class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
             <div class="flex items-center gap-2">
                 <div>
                     <button
-                        @click="navigateTo(`/courses/assignment?id=${route.query.id}`)"
-                        class="transition-all duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent text-blue-600 hover:bg-blue-100 hover:text-blue-800 disabled:opacity-50 disabled:pointer-events-none">
+                        @click="
+                            navigateTo(
+                                `/courses/assignment?id=${route.query.id}`
+                            )
+                        "
+                        class="inline-flex items-center gap-x-2 rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-blue-600 transition-all duration-200 ease-in-out hover:bg-blue-100 hover:text-blue-800 disabled:pointer-events-none disabled:opacity-50">
                         <span class="material-icons-outlined">arrow_back</span>
                     </button>
                 </div>
                 <span class="text-2xl font-bold">
                     ส่งงาน : {{ assignments?.a_name }}
                     <div class="flex flex-col">
-                        <span class="text-sm text-slate-400">{{ assignments?.a_due_date ? `กำหนดส่ง ${new Date(assignments?.a_due_date).toLocaleString()}` : 'ไม่มีกำหนดส่ง' }}</span>
-                        <span class="text-sm text-slate-400">{{ assignments?.a_score ? `${assignments?.a_score} คะแนน` : 'ไม่มีคะแนน' }}</span>
+                        <span class="text-sm text-slate-400">
+                            {{
+                                assignments?.a_due_date
+                                    ? `กำหนดส่ง ${new Date(assignments?.a_due_date).toLocaleString()}`
+                                    : 'ไม่มีกำหนดส่ง'
+                            }}
+                        </span>
+                        <span class="text-sm text-slate-400">
+                            {{
+                                assignments?.a_score
+                                    ? `${assignments?.a_score} คะแนน`
+                                    : 'ไม่มีคะแนน'
+                            }}
+                        </span>
                     </div>
                 </span>
             </div>
-            <div class="md:w-fit w-full">
+            <div class="w-full md:w-fit">
                 <button
                     v-if="!assignments?.s_datetime"
                     @click="
@@ -152,7 +194,7 @@
                     "
                     type="button"
                     :disabled="assignPending"
-                    class="md:w-fit w-full justify-center transition-color duration-200 ease-in-out py-2 px-6 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                    class="transition-color inline-flex w-full items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-6 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50 md:w-fit">
                     ส่ง
                 </button>
                 <button
@@ -160,12 +202,18 @@
                     @click="removeSubmission()"
                     type="button"
                     :disabled="assignPending"
-                    class="md:w-fit w-full justify-center transition-color duration-200 ease-in-out py-2 px-6 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                    class="transition-color inline-flex w-full items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-6 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50 md:w-fit">
                     ยกเลิกการส่ง
                 </button>
-                <div class="flex flex-col justify-end items-end" v-else>
-                    <span class="text-xl">คุณได้ {{ `${assignments?.score}/${assignments?.a_score}` }} คะแนน</span>
-                    <span class="text-slate-800" v-if="assignments?.s_feedback">"{{ assignments?.s_feedback }}"</span>
+                <div class="flex flex-col items-end justify-end" v-else>
+                    <span class="text-xl">
+                        คุณได้
+                        {{ `${assignments?.score}/${assignments?.a_score}` }}
+                        คะแนน
+                    </span>
+                    <span class="text-slate-800" v-if="assignments?.s_feedback">
+                        "{{ assignments?.s_feedback }}"
+                    </span>
                 </div>
             </div>
         </div>
@@ -176,31 +224,49 @@
             </span>
             <hr class="mb-2" />
         </div>
-        <div class="flex flex-row flex-wrap gap-2" v-if="assignments?.a_files?.length">
-            <div v-for="file in assignments?.a_files" class="flex flex-row border border-1 rounded-md md:w-72 w-full p-2 mt-1">
-                <div class="flex flex-row justify-between items-center gap-2 md:w-72 w-full">
-                    <div class="flex flex-row items-center gap-2 overflow-hidden">
-                        <div class="bg-slate-100 w-8 h-8 rounded-md flex flex-shrink-0 justify-center items-center select-none">
+        <div
+            class="flex flex-row flex-wrap gap-2"
+            v-if="assignments?.a_files?.length">
+            <div
+                v-for="file in assignments?.a_files"
+                class="border-1 mt-1 flex w-full flex-row rounded-md border p-2 md:w-72">
+                <div
+                    class="flex w-full flex-row items-center justify-between gap-2 md:w-72">
+                    <div
+                        class="flex flex-row items-center gap-2 overflow-hidden">
+                        <div
+                            class="flex h-8 w-8 flex-shrink-0 select-none items-center justify-center rounded-md bg-slate-100">
                             <span class="material-icons-outlined">
                                 {{
                                     file.f_mime_type?.split('/')[0] === 'image'
                                         ? 'image'
-                                        : file.f_mime_type?.split('/')[0] === 'audio'
-                                        ? 'audio_file'
-                                        : file.f_mime_type === 'application/pdf'
-                                        ? 'description'
-                                        : file.f_mime_type?.split('/')[0] === 'video'
-                                        ? 'video_file'
-                                        : 'insert_drive_file'
+                                        : file.f_mime_type?.split('/')[0] ===
+                                            'audio'
+                                          ? 'audio_file'
+                                          : file.f_mime_type ===
+                                              'application/pdf'
+                                            ? 'description'
+                                            : file.f_mime_type?.split(
+                                                    '/'
+                                                )[0] === 'video'
+                                              ? 'video_file'
+                                              : 'insert_drive_file'
                                 }}
                             </span>
                         </div>
-                        <div class="flex flex-col md:w-48 w-10/12">
-                            <span class="text-xs whitespace-nowrap text-ellipsis overflow-hidden">{{ file.f_name }}</span>
+                        <div class="flex w-10/12 flex-col md:w-48">
+                            <span
+                                class="overflow-hidden text-ellipsis whitespace-nowrap text-xs">
+                                {{ file.f_name }}
+                            </span>
                         </div>
                     </div>
-                    <div class="flex flex-row items-center gap-2 w-fit">
-                        <span class="material-icons-outlined select-none cursor-pointer text-gray-500" @click="downloadFile(file.f_id)">download</span>
+                    <div class="flex w-fit flex-row items-center gap-2">
+                        <span
+                            class="material-icons-outlined cursor-pointer select-none text-gray-500"
+                            @click="downloadFile(file.f_id)">
+                            download
+                        </span>
                     </div>
                 </div>
             </div>
@@ -213,11 +279,17 @@
                 ข้อความ
             </span>
             <hr class="mb-2" />
-            <MdPreview v-if="assignments?.s_datetime" :model-value="postContent" />
+            <MdPreview
+                v-if="assignments?.s_datetime"
+                :model-value="postContent" />
             <RichEditor v-else @send-text="getRteText" />
         </div>
-        <div class="flex md:flex-row md:flex-nowrap flex-col gap-2 w-full">
-            <input @change="onFileChangedMat" ref="inputFile" type="file" hidden />
+        <div class="flex w-full flex-col gap-2 md:flex-row md:flex-nowrap">
+            <input
+                @change="onFileChangedMat"
+                ref="inputFile"
+                type="file"
+                hidden />
             <!-- End Floating Input -->
             <div>
                 <button
@@ -225,20 +297,31 @@
                     @click="inputFile.click()"
                     type="button"
                     :disabled="assignPending"
-                    class="transition-color duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                    class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
                     <span class="material-icons-outlined">upload_file</span>
                     เพิ่มไฟล์แนบ
                 </button>
             </div>
-            <div v-if="!assignments?.s_datetime" class="flex md:flex-row flex-col overflow-auto gap-x-4 gap-y-2">
+            <div
+                v-if="!assignments?.s_datetime"
+                class="flex flex-col gap-x-4 gap-y-2 overflow-auto md:flex-row">
                 <TransitionGroup name="fade">
-                    <div v-for="(file, index) in submitFiles" :key="index + file.name" class="flex gap-2 justify-between items-center px-2 py-1.5 rounded-md bg-blue-100 text-blue-600">
-                        <div class="flex flex-row flex-nowrap items-center gap-2 w-full overflow-hidden">
-                            <span class="material-icons-outlined select-none">insert_drive_file</span>
-                            <span class="md:w-24 w-full text-xs whitespace-nowrap text-ellipsis overflow-hidden">{{ file.name }}</span>
+                    <div
+                        v-for="(file, index) in submitFiles"
+                        :key="index + file.name"
+                        class="flex items-center justify-between gap-2 rounded-md bg-blue-100 px-2 py-1.5 text-blue-600">
+                        <div
+                            class="flex w-full flex-row flex-nowrap items-center gap-2 overflow-hidden">
+                            <span class="material-icons-outlined select-none">
+                                insert_drive_file
+                            </span>
+                            <span
+                                class="w-full overflow-hidden text-ellipsis whitespace-nowrap text-xs md:w-24">
+                                {{ file.name }}
+                            </span>
                         </div>
                         <span
-                            class="material-icons-outlined select-none cursor-pointer text-red-500"
+                            class="material-icons-outlined cursor-pointer select-none text-red-500"
                             @click="
                                 () => {
                                     if (index > -1) {
@@ -259,31 +342,51 @@
                     </span>
                     <hr class="mb-2" />
                 </div>
-                <div class="flex flex-row flex-wrap gap-2" v-if="assignments?.s_content?.files?.length">
-                    <div v-for="file in assignments?.s_content?.files" class="flex flex-row border border-1 rounded-md md:w-72 w-full p-2 mt-1">
-                        <div class="flex flex-row justify-between items-center gap-2 md:w-72 w-full">
-                            <div class="flex flex-row items-center gap-2 overflow-hidden">
-                                <div class="bg-slate-100 w-8 h-8 rounded-md flex flex-shrink-0 justify-center items-center select-none">
+                <div
+                    class="flex flex-row flex-wrap gap-2"
+                    v-if="assignments?.s_content?.files?.length">
+                    <div
+                        v-for="file in assignments?.s_content?.files"
+                        class="border-1 mt-1 flex w-full flex-row rounded-md border p-2 md:w-72">
+                        <div
+                            class="flex w-full flex-row items-center justify-between gap-2 md:w-72">
+                            <div
+                                class="flex flex-row items-center gap-2 overflow-hidden">
+                                <div
+                                    class="flex h-8 w-8 flex-shrink-0 select-none items-center justify-center rounded-md bg-slate-100">
                                     <span class="material-icons-outlined">
                                         {{
-                                            file.f_mime_type?.split('/')[0] === 'image'
+                                            file.f_mime_type?.split('/')[0] ===
+                                            'image'
                                                 ? 'image'
-                                                : file.f_mime_type?.split('/')[0] === 'audio'
-                                                ? 'audio_file'
-                                                : file.f_mime_type === 'application/pdf'
-                                                ? 'description'
-                                                : file.f_mime_type?.split('/')[0] === 'video'
-                                                ? 'video_file'
-                                                : 'insert_drive_file'
+                                                : file.f_mime_type?.split(
+                                                        '/'
+                                                    )[0] === 'audio'
+                                                  ? 'audio_file'
+                                                  : file.f_mime_type ===
+                                                      'application/pdf'
+                                                    ? 'description'
+                                                    : file.f_mime_type?.split(
+                                                            '/'
+                                                        )[0] === 'video'
+                                                      ? 'video_file'
+                                                      : 'insert_drive_file'
                                         }}
                                     </span>
                                 </div>
-                                <div class="flex flex-col md:w-48 w-10/12">
-                                    <span class="text-xs whitespace-nowrap text-ellipsis overflow-hidden">{{ file.f_name }}</span>
+                                <div class="flex w-10/12 flex-col md:w-48">
+                                    <span
+                                        class="overflow-hidden text-ellipsis whitespace-nowrap text-xs">
+                                        {{ file.f_name }}
+                                    </span>
                                 </div>
                             </div>
-                            <div class="flex flex-row items-center gap-2 w-fit">
-                                <span class="material-icons-outlined select-none cursor-pointer text-gray-500" @click="downloadFile(file.f_id)">download</span>
+                            <div class="flex w-fit flex-row items-center gap-2">
+                                <span
+                                    class="material-icons-outlined cursor-pointer select-none text-gray-500"
+                                    @click="downloadFile(file.f_id)">
+                                    download
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -291,10 +394,15 @@
             </div>
         </div>
     </div>
-    <div v-else class="flex flex-row border border-1 rounded-md gap-2 w-full p-4">
-            <div class="animate-spin inline-block size-6 border-[3px] border-current border-t-transparent text-blue-600 rounded-full dark:text-blue-500" role="status" aria-label="loading">
-                <span class="sr-only">Loading...</span>
-            </div>
-            กำลังโหลดข้อมูล
+    <div
+        v-else
+        class="border-1 flex w-full flex-row gap-2 rounded-md border p-4">
+        <div
+            class="inline-block size-6 animate-spin rounded-full border-[3px] border-current border-t-transparent text-blue-600 dark:text-blue-500"
+            role="status"
+            aria-label="loading">
+            <span class="sr-only">Loading...</span>
         </div>
+        กำลังโหลดข้อมูล
+    </div>
 </template>

@@ -1,62 +1,79 @@
 <script setup lang="ts">
-import { toast } from "@steveyuowo/vue-hot-toast";
+    import { toast } from '@steveyuowo/vue-hot-toast'
 
     const route = useRoute()
     const userState = useUserState()
     const avatarState = useAvatarState()
     const userMenu = ref(false)
-    const stripTrailingSlash = (str:string) => {
-    return str.endsWith('/') ?
-        str.slice(0, -1) :
-        str;
-};
+    const stripTrailingSlash = (str: string) => {
+        return str.endsWith('/') ? str.slice(0, -1) : str
+    }
 
     async function fetchUser() {
-        if (userState.value && avatarState.value) return; // Do not fetch if state is already set 
+        if (userState.value && avatarState.value) return // Do not fetch if state is already set
         await $fetch<User>('/api/auth/')
             .then(async (res) => {
                 userState.value = res
-                await $fetch<Avatar>('/api/auth/?image=').then(res => {
-                    avatarState.value = res
-                }).catch(err => {
-                    toast.error('โหลดรูปล้มเหลว')
-                })
+                await $fetch<Avatar>('/api/auth/?image=')
+                    .then((res) => {
+                        avatarState.value = res
+                    })
+                    .catch((err) => {
+                        toast.error('โหลดรูปล้มเหลว')
+                    })
             })
             .catch(async (err) => {
-                if (stripTrailingSlash(route.path) !== '/' && stripTrailingSlash(route.path) !== '/courses') await navigateTo('/', { replace: true })
+                if (
+                    stripTrailingSlash(route.path) !== '/' &&
+                    stripTrailingSlash(route.path) !== '/courses'
+                )
+                    await navigateTo('/', { replace: true })
             })
     }
 
     async function signOut() {
-      userMenu.value = false
-      const signoutToast = toast.loading('กำลังออกจากระบบ')
-      await $fetch<User>('/api/session/', {method: 'DELETE'})
+        userMenu.value = false
+        const signoutToast = toast.loading('กำลังออกจากระบบ')
+        await $fetch<User>('/api/session/', { method: 'DELETE' })
             .then(async (res) => {
                 userState.value = null
-                toast.update(signoutToast, {type: 'success', message: 'ออกจากระบบสำเร็จ'})
-                await navigateTo('/', {replace: true})
+                toast.update(signoutToast, {
+                    type: 'success',
+                    message: 'ออกจากระบบสำเร็จ',
+                })
+                await navigateTo('/', { replace: true })
             })
             .catch((err) => {
-              toast.update(signoutToast, {type: 'error', message: 'ออกจากระบบล้มเหลว'})
+                toast.update(signoutToast, {
+                    type: 'error',
+                    message: 'ออกจากระบบล้มเหลว',
+                })
             })
     }
-    
+
     fetchUser()
 </script>
 <template>
-    <header class="flex fixed top-0 flex-wrap transition-all duration-150 ease-in-out sm:justify-start sm:flex-nowrap z-50 w-full bg-white text-sm py-4 border border-1 select-none">
-        <nav class="max-w-screen-2xl w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between" aria-label="Global">
+    <header
+        class="border-1 fixed top-0 z-50 flex w-full select-none flex-wrap border bg-white py-4 text-sm transition-all duration-150 ease-in-out sm:flex-nowrap sm:justify-start">
+        <nav
+            class="mx-auto w-full max-w-screen-2xl px-4 sm:flex sm:items-center sm:justify-between"
+            aria-label="Global">
             <div class="flex items-center justify-between">
-                <NuxtLink class="flex-none text-xl text-blue-600 font-bold font-title" to="/">LearnLab</NuxtLink>
+                <NuxtLink
+                    class="flex-none font-title text-xl font-bold text-blue-600"
+                    to="/">
+                    LearnLab
+                </NuxtLink>
                 <div class="sm:hidden">
                     <button
                         type="button"
-                        class="hs-collapse-toggle p-2 inline-flex justify-center items-center gap-x-2 rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none"
+                        class="hs-collapse-toggle inline-flex items-center justify-center gap-x-2 rounded-lg border border-gray-200 bg-white p-2 text-gray-800 shadow-sm hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50"
                         data-hs-collapse="#navbar-collapse-with-animation"
                         aria-controls="navbar-collapse-with-animation"
                         aria-label="Toggle navigation">
                         <svg
-                            class="hs-collapse-open:hidden flex-shrink-0 size-4"
+                            class="size-4 flex-shrink-0 hs-collapse-open:hidden"
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
                             height="24"
@@ -71,7 +88,7 @@ import { toast } from "@steveyuowo/vue-hot-toast";
                             <line x1="3" x2="21" y1="18" y2="18" />
                         </svg>
                         <svg
-                            class="hs-collapse-open:block hidden flex-shrink-0 size-4"
+                            class="hidden size-4 flex-shrink-0 hs-collapse-open:block"
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
                             height="24"
@@ -87,28 +104,47 @@ import { toast } from "@steveyuowo/vue-hot-toast";
                     </button>
                 </div>
             </div>
-            <div id="navbar-collapse-with-animation" class="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:block">
-                <div class="flex flex-col gap-5 mt-5 sm:flex-row sm:items-center sm:justify-end sm:mt-0 sm:ps-5">
+            <div
+                id="navbar-collapse-with-animation"
+                class="hs-collapse hidden grow basis-full overflow-hidden transition-all duration-300 sm:block">
+                <div
+                    class="mt-5 flex flex-col gap-5 sm:mt-0 sm:flex-row sm:items-center sm:justify-end sm:ps-5">
                     <NuxtLink
                         to="/"
-                        class="transition-color duration-200 ease-in-out font-medium"
-                        :class="route.path === '/' ? 'text-blue-600 hover:text-blue-400' : 'hover:text-gray-400'"
+                        class="transition-color font-medium duration-200 ease-in-out"
+                        :class="
+                            route.path === '/'
+                                ? 'text-blue-600 hover:text-blue-400'
+                                : 'hover:text-gray-400'
+                        "
                         aria-current="page">
                         หน้าหลัก
                     </NuxtLink>
                     <NuxtLink
-                    v-if="userState?.u_role !== 'INSTRUCTOR'"
-                        class="transition-color duration-200 ease-in-out font-medium"
-                        :class="route.path === '/courses' ? 'text-blue-600 hover:text-blue-400' : 'hover:text-gray-400'"
+                        v-if="userState?.u_role !== 'INSTRUCTOR'"
+                        class="transition-color font-medium duration-200 ease-in-out"
+                        :class="
+                            route.path === '/courses'
+                                ? 'text-blue-600 hover:text-blue-400'
+                                : 'hover:text-gray-400'
+                        "
                         to="/courses"
                         aria-label="Read more our courses offering">
                         หลักสูตร
-                        <span v-if="!userState" class="inline-flex items-center gap-x-1.5 py-1 px-2 rounded-full text-xs font-medium bg-blue-100 text-blue-800">ใหม่</span>
+                        <span
+                            v-if="!userState"
+                            class="inline-flex items-center gap-x-1.5 rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-800">
+                            ใหม่
+                        </span>
                     </NuxtLink>
                     <NuxtLink
                         v-if="userState"
-                        class="transition-color duration-200 ease-in-out font-medium"
-                        :class="route.path === '/mycourse' ? 'text-blue-600 hover:text-blue-400' : 'hover:text-gray-400'"
+                        class="transition-color font-medium duration-200 ease-in-out"
+                        :class="
+                            route.path === '/mycourse'
+                                ? 'text-blue-600 hover:text-blue-400'
+                                : 'hover:text-gray-400'
+                        "
                         to="/mycourse"
                         aria-label="Read more our courses offering">
                         คอร์สเรียนของฉัน
@@ -119,29 +155,73 @@ import { toast } from "@steveyuowo/vue-hot-toast";
                             key="stateNone"
                             type="button"
                             data-hs-overlay="#hs-slide-down-animation-modal"
-                            class="py-2 px-3 md:inline-flex items-center gap-x-2 font-bold rounded-lg transition-colors duration-200 ease-in-out border border-gray-200 hover:border-blue-600 hover:text-blue-600 disabled:opacity-50 disabled:pointer-events-none">
-                            <div class="flex justify-center items-center gap-2 w-22 overflow-hidden">
-                                <span class="material-icons-outlined" style="font-size: 18px;">login</span>
+                            class="items-center gap-x-2 rounded-lg border border-gray-200 px-3 py-2 font-bold transition-colors duration-200 ease-in-out hover:border-blue-600 hover:text-blue-600 disabled:pointer-events-none disabled:opacity-50 md:inline-flex">
+                            <div
+                                class="w-22 flex items-center justify-center gap-2 overflow-hidden">
+                                <span
+                                    class="material-icons-outlined"
+                                    style="font-size: 18px">
+                                    login
+                                </span>
                                 เข้าสู่ระบบ
                             </div>
                         </button>
-                        <div key="stateLoggedIn" v-if="userState" @click="userMenu = !userMenu" class="md:px-3 flex flex-row cursor-pointer items-center gap-x-2 font-bold rounded-lg transition-colors duration-200 ease-in-out">
-                            <div class="rounded-md w-8 h-8 bg-slate-200 flex flex-col justify-center items-center text-lg select-none" v-if="!avatarState?.u_avatar">{{ `${userState?.u_firstname?.slice(0, 1)}${userState?.u_lastname?.slice(0, 1)}` }}</div>
-                            <div class="rounded-md w-8 h-8" v-else><img class="rounded-md aspect-square object-cover w-8 h-8" :src="`data:${avatarState?.u_avatar_mime_type};base64,${avatarState?.u_avatar}`" /></div>
+                        <div
+                            key="stateLoggedIn"
+                            v-if="userState"
+                            @click="userMenu = !userMenu"
+                            class="flex cursor-pointer flex-row items-center gap-x-2 rounded-lg font-bold transition-colors duration-200 ease-in-out md:px-3">
+                            <div
+                                class="flex h-8 w-8 select-none flex-col items-center justify-center rounded-md bg-slate-200 text-lg"
+                                v-if="!avatarState?.u_avatar">
+                                {{
+                                    `${userState?.u_firstname?.slice(0, 1)}${userState?.u_lastname?.slice(0, 1)}`
+                                }}
+                            </div>
+                            <div class="h-8 w-8 rounded-md" v-else>
+                                <img
+                                    class="aspect-square h-8 w-8 rounded-md object-cover"
+                                    :src="`data:${avatarState?.u_avatar_mime_type};base64,${avatarState?.u_avatar}`" />
+                            </div>
                             <div class="flex items-center">
-                                <span>{{ userState?.u_firstname }} {{ userState?.u_lastname }}</span>
-                                <span class="material-icons-outlined">arrow_drop_down</span>
+                                <span>
+                                    {{ userState?.u_firstname }}
+                                    {{ userState?.u_lastname }}
+                                </span>
+                                <span class="material-icons-outlined">
+                                    arrow_drop_down
+                                </span>
                             </div>
                         </div>
                         <Transition key="stateLoggedInName" name="fade">
-                            <div v-show="userMenu" class="absolute md:top-16 -bottom-[115px] flex flex-col border border-1 w-48 rounded-b-lg shadow-md">
+                            <div
+                                v-show="userMenu"
+                                class="border-1 absolute -bottom-[115px] flex w-48 flex-col rounded-b-lg border shadow-md md:top-16">
                                 <div class="flex flex-col rounded-b-lg">
-                                    <div @click="() => {navigateTo('/settings'); userMenu = false;}" :class="route.path === '/settings' ? 'bg-blue-600 text-white hover:bg-blue-400' : 'hover:text-gray-400 bg-white'" class="flex items-center p-4 gap-x-2 cursor-pointer hover:bg-gray-200 ">
-                                        <span class="material-icons-outlined">settings</span>
+                                    <div
+                                        @click="
+                                            () => {
+                                                navigateTo('/settings')
+                                                userMenu = false
+                                            }
+                                        "
+                                        :class="
+                                            route.path === '/settings'
+                                                ? 'bg-blue-600 text-white hover:bg-blue-400'
+                                                : 'bg-white hover:text-gray-400'
+                                        "
+                                        class="flex cursor-pointer items-center gap-x-2 p-4 hover:bg-gray-200">
+                                        <span class="material-icons-outlined">
+                                            settings
+                                        </span>
                                         ตั้งค่าผู้ใช้
                                     </div>
-                                    <div @click="signOut" class="flex items-center p-4 gap-x-2 cursor-pointer hover:bg-gray-200 bg-white text-red-600 rounded-b-lg">
-                                        <span class="material-icons-outlined">logout</span>
+                                    <div
+                                        @click="signOut"
+                                        class="flex cursor-pointer items-center gap-x-2 rounded-b-lg bg-white p-4 text-red-600 hover:bg-gray-200">
+                                        <span class="material-icons-outlined">
+                                            logout
+                                        </span>
                                         ออกจากระบบ
                                     </div>
                                 </div>

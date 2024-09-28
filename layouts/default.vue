@@ -1,6 +1,6 @@
 <template>
-  <NavigationBar />
-  <AccountModal />
-  <slot />
-  <Footer />
+    <NavigationBar />
+    <AccountModal />
+    <slot />
+    <Footer />
 </template>

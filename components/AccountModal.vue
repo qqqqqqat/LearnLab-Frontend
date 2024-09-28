@@ -21,8 +21,11 @@
 
     const modalElem = ref()
     function closeModal() {
-        const { element } = HSOverlay.getInstance(modalElem.value, true)
-        element.close()
+        const instance = HSOverlay.getInstance(modalElem.value, true)
+        if ('element' in instance) {
+            instance.element.close()
+        }
+
         email.value = ''
         password.value = ''
         name.value = ''
@@ -34,12 +37,18 @@
     }
 
     function openModal() {
-        const { element } = HSOverlay.getInstance(modalElem.value, true)
-        element.open()
+        const instance = HSOverlay.getInstance(modalElem.value, true)
+        if ('element' in instance) {
+            instance.element.open()
+        }
     }
 
     function validateEmail(s_email: string) {
-        return s_email.toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+        return s_email
+            .toLowerCase()
+            .match(
+                /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            )
     }
 
     function onFileChangedAvatar($event: Event) {
@@ -50,7 +59,7 @@
     }
 
     async function loginUser() {
-        toast.loading('กำลังเข้าสู่ระบบ')
+        const loginToast = toast.loading('กำลังเข้าสู่ระบบ')
         await $fetch<AuthPOSTAPIResponse>('/api/auth/', {
             method: 'PUT',
             body: {
@@ -67,7 +76,10 @@
                 regis_passw.value = ''
                 regis_passw_conf.value = ''
                 regis_avatar.value = ''
-                toast.loading(res?.message)
+                toast.update(loginToast, {
+                    type: 'loading',
+                    message: res?.message,
+                })
                 await $fetch<User>('/api/auth/').then(async (res) => {
                     userState.value = res
                     await $fetch<Avatar>('/api/auth/?image=')
@@ -75,14 +87,23 @@
                             avatarState.value = res
                         })
                         .catch((err) => {
-                            toast.error('โหลดรูปล้มเหลว')
+                            toast.update(loginToast, {
+                                type: 'error',
+                                message: 'โหลดรูปล้มเหลว',
+                            })
                         })
-                    toast.success('เข้าสู่ระบบสำเร็จ')
+                    toast.update(loginToast, {
+                        type: 'success',
+                        message: 'เข้าสู่ระบบสำเร็จ',
+                    })
                     closeModal()
                 })
             })
             .catch((err) => {
-                toast.error(err.data?.message)
+                toast.update(loginToast, {
+                    type: 'error',
+                    message: err?.data?.message,
+                })
             })
     }
 
@@ -123,18 +144,23 @@
     }
 </script>
 <template>
-    <div ref="modalElem" id="hs-slide-down-animation-modal" class="hs-overlay hidden size-full fixed top-0 start-0 z-[80] overflow-x-hidden overflow-y-auto pointer-events-none">
-        <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-2xl sm:w-full m-3 sm:mx-auto">
-            <div class="flex flex-col bg-white border shadow-sm rounded-md pointer-events-auto">
-                <div class="flex justify-between items-center py-3 px-4">
+    <div
+        ref="modalElem"
+        id="hs-slide-down-animation-modal"
+        class="hs-overlay pointer-events-none fixed start-0 top-0 z-[80] hidden size-full overflow-y-auto overflow-x-hidden">
+        <div
+            class="m-3 mt-0 opacity-0 transition-all ease-out hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 sm:mx-auto sm:w-full sm:max-w-2xl">
+            <div
+                class="pointer-events-auto flex flex-col rounded-md border bg-white shadow-sm">
+                <div class="flex items-center justify-between px-4 py-3">
                     <h3 class="font-bold text-gray-800">ยินดีต้อนรับ</h3>
                     <button
                         type="button"
-                        class="flex justify-center items-center size-7 text-sm font-semibold rounded-full border border-transparent text-gray-800 hover:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none"
+                        class="flex size-7 items-center justify-center rounded-full border border-transparent text-sm font-semibold text-gray-800 hover:bg-gray-100 disabled:pointer-events-none disabled:opacity-50"
                         data-hs-overlay="#hs-slide-down-animation-modal">
                         <span class="sr-only">Close</span>
                         <svg
-                            class="flex-shrink-0 size-4"
+                            class="size-4 flex-shrink-0"
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
                             height="24"
@@ -154,35 +180,50 @@
                         <nav class="-mb-0.5 flex justify-center space-x-6">
                             <button
                                 type="button"
-                                :class="activeTab === 0 ? 'font-semibold text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 border-transparent '"
+                                :class="
+                                    activeTab === 0
+                                        ? 'border-b-2 border-blue-600 font-semibold text-blue-600'
+                                        : 'border-transparent text-gray-500'
+                                "
                                 @click="activeTab = 0"
-                                class="transition-all duration-300 ease-in-out py-4 px-1 inline-flex items-center gap-x-2 text-sm whitespace-nowrap hover:text-blue-600 focus:outline-none focus:text-blue-600 disabled:opacity-50 disabled:pointer-events-none active">
+                                class="active inline-flex items-center gap-x-2 whitespace-nowrap px-1 py-4 text-sm transition-all duration-300 ease-in-out hover:text-blue-600 focus:text-blue-600 focus:outline-none disabled:pointer-events-none disabled:opacity-50">
                                 เข้าสู่ระบบ
                             </button>
                             <button
                                 type="button"
-                                :class="activeTab === 1 ? 'font-semibold text-blue-600 border-b-2 border-blue-600' : 'text-gray-500 border-transparent '"
+                                :class="
+                                    activeTab === 1
+                                        ? 'border-b-2 border-blue-600 font-semibold text-blue-600'
+                                        : 'border-transparent text-gray-500'
+                                "
                                 @click="activeTab = 1"
-                                class="transition-all duration-300 ease-in-out py-4 px-1 inline-flex items-center gap-x-2 text-sm whitespace-nowrap hover:text-blue-600 focus:outline-none focus:text-blue-600 disabled:opacity-50 disabled:pointer-events-none">
+                                class="inline-flex items-center gap-x-2 whitespace-nowrap px-1 py-4 text-sm transition-all duration-300 ease-in-out hover:text-blue-600 focus:text-blue-600 focus:outline-none disabled:pointer-events-none disabled:opacity-50">
                                 ลงทะเบียน
                             </button>
                         </nav>
                     </div>
-                    <div class="flex md:flex-row flex-col justify-center items-center w-full gap-4 md:pl-8 md:pt-0 pt-8 relative">
+                    <div
+                        class="flex w-full flex-col items-center justify-center gap-4 pt-8 md:flex-row md:pl-8 md:pt-0">
                         <img src="~/assets/images/login.svg" class="w-48" />
-                        <div class="grow w-full h-fit">
+                        <div
+                            class="relative h-fit w-full grow overflow-x-hidden">
                             <TransitionGroup name="fade">
-                                <form v-show="activeTab === 0" class="flex flex-col gap-y-8 p-8" key="login1" @submit.prevent="">
+                                <form
+                                    v-show="activeTab === 0"
+                                    class="flex flex-col gap-y-8 p-8"
+                                    key="login1"
+                                    @submit.prevent="">
                                     <div class="relative">
                                         <input
                                             type="email"
-                                            class="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                                            class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                                             placeholder="อีเมล์"
                                             name="email"
                                             v-model="email" />
-                                        <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
+                                        <div
+                                            class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
-                                                class="flex-shrink-0 size-4 text-gray-500"
+                                                class="size-4 flex-shrink-0 text-gray-500"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="24"
                                                 height="24"
@@ -192,7 +233,8 @@
                                                 stroke-width="2"
                                                 stroke-linecap="round"
                                                 stroke-linejoin="round">
-                                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                                                <path
+                                                    d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
                                                 <circle cx="12" cy="7" r="4" />
                                             </svg>
                                         </div>
@@ -200,13 +242,14 @@
                                     <div class="relative">
                                         <input
                                             type="password"
-                                            class="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                                            class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                                             placeholder="รหัสผ่าน"
                                             name="password"
                                             v-model="password" />
-                                        <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
+                                        <div
+                                            class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
-                                                class="flex-shrink-0 size-4 text-gray-500"
+                                                class="size-4 flex-shrink-0 text-gray-500"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="24"
                                                 height="24"
@@ -216,40 +259,60 @@
                                                 stroke-width="2"
                                                 stroke-linecap="round"
                                                 stroke-linejoin="round">
-                                                <path d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z" />
-                                                <circle cx="16.5" cy="7.5" r=".5" />
+                                                <path
+                                                    d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z" />
+                                                <circle
+                                                    cx="16.5"
+                                                    cy="7.5"
+                                                    r=".5" />
                                             </svg>
                                         </div>
                                     </div>
-                                    <div class="flex md:justify-end justify-center items-center gap-x-2 py-3 px-4">
+                                    <div
+                                        class="flex items-center justify-center gap-x-2 px-4 py-3 md:justify-end">
                                         <button
                                             type="button"
                                             :disabled="!(email && password)"
                                             @click="
                                                 () => {
-                                                    if (validateEmail(email) && password.length > 4) {
+                                                    if (
+                                                        validateEmail(email) &&
+                                                        password.length > 4
+                                                    ) {
                                                         loginUser()
-                                                    } else if (!validateEmail(regis_email)) {
-                                                        toast.error('อีเมล์ผิดรูปแบบ')
+                                                    } else if (
+                                                        !validateEmail(
+                                                            regis_email
+                                                        )
+                                                    ) {
+                                                        toast.error(
+                                                            'อีเมล์ผิดรูปแบบ'
+                                                        )
                                                     } else {
-                                                        toast.error('กรุณากรอกข้อมูลให้ครบ')
+                                                        toast.error(
+                                                            'กรุณากรอกข้อมูลให้ครบ'
+                                                        )
                                                     }
                                                 }
                                             "
-                                            class="transition-color duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                                            class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
                                             เข้าสู่ระบบ
                                         </button>
                                     </div>
                                 </form>
-                                <form v-show="activeTab === 1" class="flex flex-col gap-y-8 p-8" key="regis1" @submit.prevent="">
+                                <form
+                                    v-show="activeTab === 1"
+                                    class="flex flex-col gap-y-8 p-8"
+                                    key="regis1"
+                                    @submit.prevent="">
                                     <div class="hs-dropdown relative">
                                         <button
                                             id="hs-dropdown-position"
                                             type="button"
-                                            class="hs-dropdown-toggle py-3 px-4 inline-flex justify-between w-full items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none">
+                                            class="hs-dropdown-toggle inline-flex w-full items-center justify-between gap-x-2 rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50">
                                             {{ position.title }}
                                             <svg
-                                                class="hs-dropdown-open:rotate-180 size-4 transition duration-150 ease-in-out"
+                                                class="size-4 transition duration-150 ease-in-out hs-dropdown-open:rotate-180"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="24"
                                                 height="24"
@@ -264,16 +327,26 @@
                                         </button>
 
                                         <div
-                                            class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden w-64 z-[100] bg-white shadow-md rounded-lg p-2 mt-2 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
+                                            class="hs-dropdown-menu duration z-[100] mt-2 hidden w-64 rounded-lg bg-white p-2 opacity-0 shadow-md transition-[opacity,margin] before:absolute before:-top-4 before:start-0 before:h-4 before:w-full after:absolute after:-bottom-4 after:start-0 after:h-4 after:w-full hs-dropdown-open:opacity-100"
                                             aria-labelledby="hs-dropdown-position">
                                             <a
-                                                class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                @click="position = { title: 'ผู้เรียน', role: 'STUDENT' }">
+                                                class="flex items-center gap-x-3.5 rounded-lg px-3 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                                                @click="
+                                                    position = {
+                                                        title: 'ผู้เรียน',
+                                                        role: 'STUDENT',
+                                                    }
+                                                ">
                                                 ผู้เรียน
                                             </a>
                                             <a
-                                                class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                @click="position = { title: 'ผู้สอน', role: 'INSTRUCTOR' }">
+                                                class="flex items-center gap-x-3.5 rounded-lg px-3 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                                                @click="
+                                                    position = {
+                                                        title: 'ผู้สอน',
+                                                        role: 'INSTRUCTOR',
+                                                    }
+                                                ">
                                                 ผู้สอน
                                             </a>
                                         </div>
@@ -282,10 +355,10 @@
                                         <button
                                             id="hs-dropdown-gender"
                                             type="button"
-                                            class="hs-dropdown-toggle py-3 px-4 inline-flex justify-between w-full items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none">
+                                            class="hs-dropdown-toggle inline-flex w-full items-center justify-between gap-x-2 rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm font-medium text-gray-800 shadow-sm hover:bg-gray-50 disabled:pointer-events-none disabled:opacity-50">
                                             {{ gender.title }}
                                             <svg
-                                                class="hs-dropdown-open:rotate-180 size-4 transition duration-150 ease-in-out"
+                                                class="size-4 transition duration-150 ease-in-out hs-dropdown-open:rotate-180"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="24"
                                                 height="24"
@@ -300,16 +373,26 @@
                                         </button>
 
                                         <div
-                                            class="hs-dropdown-menu transition-[opacity,margin] duration hs-dropdown-open:opacity-100 opacity-0 hidden w-64 z-[100] bg-white shadow-md rounded-lg p-2 mt-2 after:h-4 after:absolute after:-bottom-4 after:start-0 after:w-full before:h-4 before:absolute before:-top-4 before:start-0 before:w-full"
+                                            class="hs-dropdown-menu duration z-[100] mt-2 hidden w-64 rounded-lg bg-white p-2 opacity-0 shadow-md transition-[opacity,margin] before:absolute before:-top-4 before:start-0 before:h-4 before:w-full after:absolute after:-bottom-4 after:start-0 after:h-4 after:w-full hs-dropdown-open:opacity-100"
                                             aria-labelledby="hs-dropdown-gender">
                                             <a
-                                                class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                @click="gender = { title: 'ชาย', role: 'MALE' }">
+                                                class="flex items-center gap-x-3.5 rounded-lg px-3 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                                                @click="
+                                                    gender = {
+                                                        title: 'ชาย',
+                                                        role: 'MALE',
+                                                    }
+                                                ">
                                                 ชาย
                                             </a>
                                             <a
-                                                class="flex items-center gap-x-3.5 py-2 px-3 rounded-lg text-sm text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100"
-                                                @click="gender = { title: 'หญิง', role: 'FEMALE' }">
+                                                class="flex items-center gap-x-3.5 rounded-lg px-3 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
+                                                @click="
+                                                    gender = {
+                                                        title: 'หญิง',
+                                                        role: 'FEMALE',
+                                                    }
+                                                ">
                                                 หญิง
                                             </a>
                                         </div>
@@ -317,12 +400,13 @@
                                     <div class="relative">
                                         <input
                                             type="text"
-                                            class="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                                            class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                                             placeholder="ชื่อ"
                                             v-model.lazy="name" />
-                                        <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
+                                        <div
+                                            class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
-                                                class="flex-shrink-0 size-4 text-gray-500"
+                                                class="size-4 flex-shrink-0 text-gray-500"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="24"
                                                 height="24"
@@ -332,7 +416,8 @@
                                                 stroke-width="2"
                                                 stroke-linecap="round"
                                                 stroke-linejoin="round">
-                                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                                                <path
+                                                    d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
                                                 <circle cx="12" cy="7" r="4" />
                                             </svg>
                                         </div>
@@ -341,12 +426,13 @@
                                     <div class="relative">
                                         <input
                                             type="text"
-                                            class="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                                            class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                                             placeholder="นามสกุล"
                                             v-model.lazy="surname" />
-                                        <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
+                                        <div
+                                            class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
-                                                class="flex-shrink-0 size-4 text-gray-500"
+                                                class="size-4 flex-shrink-0 text-gray-500"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="24"
                                                 height="24"
@@ -356,7 +442,8 @@
                                                 stroke-width="2"
                                                 stroke-linecap="round"
                                                 stroke-linejoin="round">
-                                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                                                <path
+                                                    d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
                                                 <circle cx="12" cy="7" r="4" />
                                             </svg>
                                         </div>
@@ -364,12 +451,13 @@
                                     <div class="relative">
                                         <input
                                             type="email"
-                                            class="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                                            class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                                             placeholder="อีเมล์"
                                             v-model="regis_email" />
-                                        <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
+                                        <div
+                                            class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
-                                                class="flex-shrink-0 size-4 text-gray-500"
+                                                class="size-4 flex-shrink-0 text-gray-500"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="24"
                                                 height="24"
@@ -379,7 +467,8 @@
                                                 stroke-width="2"
                                                 stroke-linecap="round"
                                                 stroke-linejoin="round">
-                                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                                                <path
+                                                    d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
                                                 <circle cx="12" cy="7" r="4" />
                                             </svg>
                                         </div>
@@ -387,12 +476,13 @@
                                     <div class="relative">
                                         <input
                                             type="tel"
-                                            class="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                                            class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                                             placeholder="หมายเลขโทรศัพท์"
                                             v-model="phone" />
-                                        <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
+                                        <div
+                                            class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
-                                                class="flex-shrink-0 size-4 text-gray-500"
+                                                class="size-4 flex-shrink-0 text-gray-500"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="24"
                                                 height="24"
@@ -402,7 +492,8 @@
                                                 stroke-width="2"
                                                 stroke-linecap="round"
                                                 stroke-linejoin="round">
-                                                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                                                <path
+                                                    d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
                                                 <circle cx="12" cy="7" r="4" />
                                             </svg>
                                         </div>
@@ -410,12 +501,13 @@
                                     <div class="relative">
                                         <input
                                             type="password"
-                                            class="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                                            class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                                             placeholder="รหัสผ่าน"
                                             v-model="regis_passw" />
-                                        <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
+                                        <div
+                                            class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
-                                                class="flex-shrink-0 size-4 text-gray-500"
+                                                class="size-4 flex-shrink-0 text-gray-500"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="24"
                                                 height="24"
@@ -425,20 +517,25 @@
                                                 stroke-width="2"
                                                 stroke-linecap="round"
                                                 stroke-linejoin="round">
-                                                <path d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z" />
-                                                <circle cx="16.5" cy="7.5" r=".5" />
+                                                <path
+                                                    d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z" />
+                                                <circle
+                                                    cx="16.5"
+                                                    cy="7.5"
+                                                    r=".5" />
                                             </svg>
                                         </div>
                                     </div>
                                     <div class="relative">
                                         <input
                                             type="password"
-                                            class="peer py-3 px-4 ps-11 block w-full bg-gray-100 border-transparent rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none"
+                                            class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                                             placeholder="ยืนยันรหัสผ่าน"
                                             v-model="regis_passw_conf" />
-                                        <div class="absolute inset-y-0 start-0 flex items-center pointer-events-none ps-4 peer-disabled:opacity-50 peer-disabled:pointer-events-none">
+                                        <div
+                                            class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
-                                                class="flex-shrink-0 size-4 text-gray-500"
+                                                class="size-4 flex-shrink-0 text-gray-500"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 width="24"
                                                 height="24"
@@ -448,47 +545,102 @@
                                                 stroke-width="2"
                                                 stroke-linecap="round"
                                                 stroke-linejoin="round">
-                                                <path d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z" />
-                                                <circle cx="16.5" cy="7.5" r=".5" />
+                                                <path
+                                                    d="M2 18v3c0 .6.4 1 1 1h4v-3h3v-3h2l1.4-1.4a6.5 6.5 0 1 0-4-4Z" />
+                                                <circle
+                                                    cx="16.5"
+                                                    cy="7.5"
+                                                    r=".5" />
                                             </svg>
                                         </div>
                                     </div>
                                     <div>
                                         <div class="pb-2">รูปโปรไฟล์</div>
-                                        <label for="small-file-input" class="sr-only">เลือกไฟล์</label>
+                                        <label
+                                            for="small-file-input"
+                                            class="sr-only">
+                                            เลือกไฟล์
+                                        </label>
                                         <input
                                             type="file"
-                                            @change="onFileChangedAvatar($event)"
+                                            @change="
+                                                onFileChangedAvatar($event)
+                                            "
                                             accept="image/*"
                                             name="small-file-input"
                                             id="small-file-input"
-                                            class="block w-full border border-gray-200 shadow-sm rounded-lg text-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none file:bg-gray-50 file:border-0 file:me-4 file:py-2 file:px-4" />
+                                            class="block w-full rounded-lg border border-gray-200 text-sm shadow-sm file:me-4 file:border-0 file:bg-gray-50 file:px-4 file:py-2 focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" />
                                     </div>
 
-                                    <div class="flex md:justify-end justify-center items-center gap-x-2 py-3 px-4">
+                                    <div
+                                        class="flex items-center justify-center gap-x-2 px-4 py-3 md:justify-end">
                                         <button
                                             type="button"
-                                            :disabled="!(regis_passw === regis_passw_conf && phone.length === 10 && name && surname && regis_passw.length > 4)"
+                                            :disabled="
+                                                !(
+                                                    regis_passw ===
+                                                        regis_passw_conf &&
+                                                    phone.length === 10 &&
+                                                    name &&
+                                                    surname &&
+                                                    regis_passw.length > 4
+                                                )
+                                            "
                                             @click="
                                                 () => {
-                                                    if (validateEmail(regis_email) && regis_passw === regis_passw_conf && phone.length === 10 && name && surname && regis_passw.length > 4) {
+                                                    if (
+                                                        validateEmail(
+                                                            regis_email
+                                                        ) &&
+                                                        regis_passw ===
+                                                            regis_passw_conf &&
+                                                        phone.length === 10 &&
+                                                        name &&
+                                                        surname &&
+                                                        regis_passw.length > 4
+                                                    ) {
                                                         registerUser()
-                                                    } else if (egis_passw.length <= 4) {
-                                                        toast.error('รหัสต้องยาวกว่า 4 ตัวอักษร')
-                                                    } else if (regis_passw !== regis_passw_conf) {
-                                                        toast.error('รหัสและยืนยันรหัสผ่านไม่ตรงกัน')
-                                                    } else if (!(phone.length === 10)) {
-                                                        toast.error('เบอร์โทรศัพท์ไม่ถูกต้อง')
-                                                    } else if (!(name && surname)) {
-                                                        toast.error('กรุณาใส่ชื่อและนามสกุล')
-                                                    } else if (!validateEmail(regis_email)) {
-                                                        toast.error('อีเมล์ผิดรูปแบบ')
+                                                    } else if (
+                                                        regis_passw.length <= 4
+                                                    ) {
+                                                        toast.error(
+                                                            'รหัสต้องยาวกว่า 4 ตัวอักษร'
+                                                        )
+                                                    } else if (
+                                                        regis_passw !==
+                                                        regis_passw_conf
+                                                    ) {
+                                                        toast.error(
+                                                            'รหัสและยืนยันรหัสผ่านไม่ตรงกัน'
+                                                        )
+                                                    } else if (
+                                                        !(phone.length === 10)
+                                                    ) {
+                                                        toast.error(
+                                                            'เบอร์โทรศัพท์ไม่ถูกต้อง'
+                                                        )
+                                                    } else if (
+                                                        !(name && surname)
+                                                    ) {
+                                                        toast.error(
+                                                            'กรุณาใส่ชื่อและนามสกุล'
+                                                        )
+                                                    } else if (
+                                                        !validateEmail(
+                                                            regis_email
+                                                        )
+                                                    ) {
+                                                        toast.error(
+                                                            'อีเมล์ผิดรูปแบบ'
+                                                        )
                                                     } else {
-                                                        toast.error('กรุณากรอกข้อมูลให้ครบ')
+                                                        toast.error(
+                                                            'กรุณากรอกข้อมูลให้ครบ'
+                                                        )
                                                     }
                                                 }
                                             "
-                                            class="transition-color duration-200 ease-in-out py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none">
+                                            class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
                                             ลงทะเบียน
                                         </button>
                                     </div>
@@ -505,7 +657,7 @@
 <style scoped>
     .fade-enter-active,
     .fade-leave-active {
-        height: inherit;
+        transform: translateX(20px);
         transition: opacity 0.25s ease;
     }
 
