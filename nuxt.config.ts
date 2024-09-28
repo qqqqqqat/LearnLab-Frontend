@@ -4,6 +4,7 @@ export default defineNuxtConfig({
   modules: ["@nuxtjs/tailwindcss"],
   plugins: ["~/plugins/preline.client.ts"],
   ssr: false,
+
   app: {
     head: {
         charset: 'utf-8',
@@ -40,9 +41,12 @@ export default defineNuxtConfig({
         ],
     },
   },
+
   nitro: {
     routeRules: {
         '/api/**': {proxy: process.env.BACKEND_URL ? `http://${process.env.BACKEND_URL}/api/**` : 'http://localhost:8000/api/**'}, // For dev
     },
 },
+
+  compatibilityDate: '2024-09-28',
 })
