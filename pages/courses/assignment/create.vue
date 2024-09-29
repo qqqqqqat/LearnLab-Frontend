@@ -55,12 +55,25 @@
         if (!assignmentFile.value.length) {
             return
         }
+
+        const courseId =
+            typeof route.query.id === 'string' ? route.query.id : null // Extract courseId
+
+        if (!courseId) {
+            // Handle the case where courseId is not a string (e.g., display an error)
+            toast.error('Course ID is not available.')
+            console.error('Course ID is not available.')
+            return
+        }
+
         const uploadAssignmentFileToast = toast.loading('กำลังอัพโหลดไฟล์แนบ')
         const formData = new FormData()
-        formData.append('c_id', route.query.id)
+
+        formData.append('c_id', courseId) // Use courseId here
         for (let x = 0; x < assignmentFile.value.length; x++) {
             formData.append('f_data[]', assignmentFile.value[x].file)
         }
+
         await $fetch<{ f_id: number[]; message: string }>('/api/file/post/', {
             method: 'POST',
             body: formData,

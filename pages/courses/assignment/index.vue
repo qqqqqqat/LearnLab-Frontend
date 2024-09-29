@@ -4,13 +4,16 @@
     })
     import HSOverlay from '@preline/overlay'
     import { toast } from '@steveyuowo/vue-hot-toast'
+    import type { LocationQueryValue } from 'vue-router'
     const delName = ref()
     const delID = ref()
     const userRole = useUserCourseState()
     const route = useRoute()
     const assignments = ref()
     const assignPending = ref(true)
-    async function fetchAssignment(id: number) {
+    async function fetchAssignment(
+        id: LocationQueryValue | LocationQueryValue[]
+    ) {
         assignPending.value = true
         await $fetch('/api/courses/assignment/', {
             query: {
@@ -30,7 +33,7 @@
     async function deleteAssignment(a_id: number) {
         const deleteAssignmentToast = toast.loading('กำลังลบงานมอบหมาย')
 
-        await $fetch('/api/courses/assignment/', {
+        await $fetch<AssignmentApiResponse>('/api/courses/assignment/', {
             method: 'DELETE',
             body: {
                 a_id: a_id,
@@ -54,10 +57,13 @@
             })
     }
 
-    async function editAssignment(a_id: number) {
+    async function editAssignment(a_id: number | null) {
+        if (!a_id) {
+            return
+        }
         const deleteAssignmentToast = toast.loading('กำลังลบงานมอบหมาย')
 
-        await $fetch('/api/courses/assignment/', {
+        await $fetch<AssignmentApiResponse>('/api/courses/assignment/', {
             method: 'PATCH',
             body: {
                 a_id: a_id,
@@ -84,16 +90,58 @@
             })
     }
 
-    async function openAssignment(a_id: number) {
-        if (userRole?.value?.[route.query.id] === 'STUDENT') {
-            await navigateTo(
-                `/courses/submission?a_id=${a_id}&id=${route.query.id}`
-            )
+    const getAssignmentLink = (a_id: number) => {
+        const studentId =
+            typeof route.query.id === 'string' ? route.query.id : null
+        if (studentId && userRole?.value?.[studentId] === 'STUDENT') {
+            return `/courses/submission?a_id=${a_id}&id=${studentId}`
         } else {
-            await navigateTo(
-                `/courses/assignment/view?a_id=${a_id}&id=${route.query.id}`
-            )
+            return `/courses/assignment/view?a_id=${a_id}&id=${studentId || route.query.id}`
         }
+    }
+
+    const getButtonText = (assign: any) => {
+        // Replace 'any' with the actual type of 'assign'
+        const studentId =
+            typeof route.query.id === 'string' ? route.query.id : null // Extract studentId here
+        return studentId && userRole?.value?.[studentId] === 'STUDENT' // Use studentId for indexing
+            ? assign?.s_datetime
+                ? 'ดูงาน'
+                : 'ส่งงาน'
+            : 'ดูงาน'
+    }
+
+    const getButtonIcon = (assign: any) => {
+        // Replace 'any' with the actual type of 'assign'
+        const studentId =
+            typeof route.query.id === 'string' ? route.query.id : null // Extract studentId here
+        return studentId && userRole?.value?.[studentId] === 'STUDENT' // Use studentId for indexing
+            ? assign?.s_datetime
+                ? 'remove_red_eye'
+                : 'send'
+            : 'remove_red_eye'
+    }
+
+    const isUserNotStudent = computed(() => {
+        const studentId =
+            typeof route.query.id === 'string' ? route.query.id : null
+        return !(studentId && userRole?.value?.[studentId] === 'STUDENT')
+    })
+
+    const openEditModal = (assign: any) => {
+        // Replace 'any' with actual type
+        eAID.value = assign.a_id
+        eName.value = assign.a_name
+        eDueDate.value = assign.a_due_date
+        eScore.value = assign.a_score
+        e_openModal()
+    }
+
+    const openDeleteModal = (assign: any) => {
+        // Replace 'any' with actual type
+        delName.value = assign.a_name
+        delID.value = assign.a_id
+        c_openModal()
     }
 
     if (route.query.id) {
@@ -290,20 +338,14 @@
     <div class="flex w-full flex-col gap-4">
         <div class="flex flex-row items-center justify-between gap-4">
             <div></div>
-            <button
-                v-if="
-                    userRole?.[route.query.id] !== 'STUDENT' && !assignPending
-                "
-                @click="
-                    navigateTo(
-                        `/courses/assignment/create?id=${route.query.id}`
-                    )
-                "
+            <NuxtLink
+                v-if="isUserNotStudent && !assignPending"
+                :to="`/courses/assignment/create?id=${route.query.id}`"
                 type="button"
-                class="inline-flex flex-shrink-0 items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+                class="inline-flex flex-shrink-0 items-center justify-center gap-x-2 rounded-lg select-none border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
                 <span class="material-icons-outlined">add</span>
                 เพิ่มงานมอบหมายในคอร์ส
-            </button>
+            </NuxtLink>
         </div>
         <div
             v-if="(assignments?.length || 0) > 0"
@@ -332,7 +374,7 @@
                     class="flex flex-row flex-nowrap items-center gap-2 text-xl font-bold">
                     <span
                         class="flex items-center justify-center rounded-full bg-blue-500 px-2 py-1 text-xs font-normal text-white"
-                        v-if="userRole?.[route.query.id] !== 'STUDENT'">
+                        v-if="isUserNotStudent">
                         ID: {{ assign?.a_id }}
                     </span>
                     {{ assign.a_name }}
@@ -340,52 +382,25 @@
             </div>
             <div class="flex items-center gap-2">
                 <span
-                    @click="
-                        () => {
-                            eAID = assign.a_id
-                            eName = assign.a_name
-                            eDueDate = assign.a_due_date
-                            eScore = assign.a_score
-                            e_openModal()
-                        }
-                    "
-                    v-if="userRole?.[route.query.id] !== 'STUDENT'"
+                    v-if="isUserNotStudent"
+                    @click="openEditModal(assign)"
                     class="material-icons-outlined cursor-pointer select-none hover:text-blue-600">
                     edit
                 </span>
                 <span
-                    v-if="userRole?.[route.query.id] !== 'STUDENT'"
-                    @click="
-                        () => {
-                            delName = assign.a_name
-                            delID = assign.a_id
-                            c_openModal()
-                        }
-                    "
+                    v-if="isUserNotStudent"
+                    @click="openDeleteModal(assign)"
                     class="material-icons-outlined cursor-pointer select-none hover:text-rose-600">
                     delete
                 </span>
-                <button
-                    type="button"
-                    @click="openAssignment(assign.a_id)"
+                <NuxtLink
+                    :to="getAssignmentLink(assign.a_id)"
                     class="inline-flex flex-shrink-0 select-none items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
-                    {{
-                        userRole?.[route.query.id] === 'STUDENT'
-                            ? assign?.s_datetime
-                                ? 'ดูงาน'
-                                : 'ส่งงาน'
-                            : 'ดูงาน'
-                    }}
+                    {{ getButtonText(assign) }}
                     <span class="material-icons-outlined select-none">
-                        {{
-                            userRole?.[route.query.id] === 'STUDENT'
-                                ? assign?.s_datetime
-                                    ? 'remove_red_eye'
-                                    : 'send'
-                                : 'remove_red_eye'
-                        }}
+                        {{ getButtonIcon(assign) }}
                     </span>
-                </button>
+                </NuxtLink>
             </div>
         </div>
         <div

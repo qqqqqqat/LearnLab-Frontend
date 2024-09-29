@@ -2,9 +2,19 @@
     import { toast } from '@steveyuowo/vue-hot-toast'
     const userState = useUserState()
     const avatarState = useAvatarState()
-    const name = ref<string | undefined>(userState.value?.u_firstname)
-    const surname = ref<string | undefined>(userState.value?.u_lastname)
-    const phone = ref<string | undefined>(userState.value?.u_tel)
+    const name = ref<string | undefined>()
+    const surname = ref<string | undefined>()
+    const phone = ref<string | undefined>()
+
+    watch(
+        userState,
+        (newUserState) => {
+            name.value = newUserState?.u_firstname
+            surname.value = newUserState?.u_lastname
+            phone.value = newUserState?.u_tel
+        },
+        { immediate: true }
+    )
 
     const regis_passw = ref<string>('')
     const regis_avatar = ref()
@@ -121,7 +131,7 @@
                     type="text"
                     class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                     placeholder="ชื่อ"
-                    v-model.lazy="name" />
+                    v-model="name" />
                 <div
                     class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                     <svg
@@ -146,7 +156,7 @@
                     type="text"
                     class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                     placeholder="นามสกุล"
-                    v-model.lazy="surname" />
+                    v-model="surname" />
                 <div
                     class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                     <svg

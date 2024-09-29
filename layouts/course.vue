@@ -1,6 +1,10 @@
 <script setup lang="ts">
     import { toast } from '@steveyuowo/vue-hot-toast'
 
+    useSeoMeta({
+        title: 'LearnLab: Course Page',
+        description: 'Course page',
+    })
     const route = useRoute()
     const userRole = useUserCourseState()
     const crs_info = ref()
@@ -87,12 +91,12 @@
     <div class="mx-auto mt-20 max-w-screen-2xl">
         <div class="flex flex-col gap-4 px-4 pb-16">
             <div class="relative flex gap-x-4">
-                <button
-                    @click="navigateTo('/mycourse')"
+                <NuxtLink
+                    to="/mycourse"
                     class="inline-flex items-center gap-x-2 rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-blue-600 transition-all duration-200 ease-in-out hover:bg-blue-100 hover:text-blue-800 disabled:pointer-events-none disabled:opacity-50">
                     <span class="material-icons-outlined">home</span>
                     กลับหน้าคอร์ส
-                </button>
+                </NuxtLink>
                 <div class="flex items-center">
                     Courses
                     <span class="material-icons-outlined">chevron_right</span>
@@ -119,15 +123,12 @@
                     v-if="userRole?.[route.query.id] === 'INSTRUCTOR'"
                     class="absolute right-0">
                     <div class="flex flex-row pr-2 pt-2">
-                        <button
-                            @click="
-                                navigateTo(`/courses/edit?id=${route.query.id}`)
-                            "
-                            type="button"
+                        <NuxtLink
+                            :to="`/courses/edit?id=${route.query.id}`"
                             class="transition-color inline-flex items-center gap-x-2 rounded-lg px-3 py-2 text-sm font-semibold text-white drop-shadow-[0_0_8px_rgba(0,0,0,1)] duration-200 ease-in-out hover:text-blue-300 disabled:pointer-events-none disabled:opacity-50">
                             <span class="material-icons-outlined">edit</span>
                             แก้ไข
-                        </button>
+                        </NuxtLink>
                     </div>
                 </div>
                 <div
@@ -167,13 +168,8 @@
             <div class="flex flex-col gap-4 md:flex-row">
                 <nav
                     class="border-1 flex h-fit w-full flex-col rounded-lg border shadow-sm md:w-64">
-                    <div
-                        @click="
-                            navigateTo({
-                                path: '/courses/view',
-                                query: { id: route.query.id },
-                            })
-                        "
+                    <NuxtLink
+                        :to="`/courses/view?id=${route.query.id}`"
                         :class="
                             route.path === '/courses/view'
                                 ? 'bg-blue-600 text-white hover:bg-blue-700'
@@ -182,14 +178,9 @@
                         class="nav-menu">
                         <span class="material-icons-outlined">home</span>
                         หน้าหลัก
-                    </div>
-                    <div
-                        @click="
-                            navigateTo({
-                                path: '/courses/material',
-                                query: { id: route.query.id },
-                            })
-                        "
+                    </NuxtLink>
+                    <NuxtLink
+                        :to="`/courses/material?id=${route.query.id}`"
                         :class="
                             route.path === '/courses/material'
                                 ? 'bg-blue-600 text-white hover:bg-blue-700'
@@ -198,14 +189,9 @@
                         class="nav-menu">
                         <span class="material-icons-outlined">menu_book</span>
                         เนื้อหาการสอน
-                    </div>
-                    <div
-                        @click="
-                            navigateTo({
-                                path: '/courses/assignment',
-                                query: { id: route.query.id },
-                            })
-                        "
+                    </NuxtLink>
+                    <NuxtLink
+                        :to="`/courses/assignment?id=${route.query.id}`"
                         :class="
                             route.path === '/courses/assignment'
                                 ? 'bg-blue-600 text-white hover:bg-blue-700'
@@ -214,14 +200,9 @@
                         class="nav-menu">
                         <span class="material-icons-outlined">edit_note</span>
                         งานมอบหมาย
-                    </div>
-                    <div
-                        @click="
-                            navigateTo({
-                                path: '/courses/quiz',
-                                query: { id: route.query.id },
-                            })
-                        "
+                    </NuxtLink>
+                    <NuxtLink
+                        :to="`/courses/quiz?id=${route.query.id}`"
                         :class="
                             route.path === '/courses/quiz'
                                 ? 'bg-blue-600 text-white hover:bg-blue-700'
@@ -230,7 +211,7 @@
                         class="nav-menu">
                         <span class="material-icons-outlined">quiz</span>
                         แบบทดสอบ
-                    </div>
+                    </NuxtLink>
                     <hr />
                     <div class="flex items-center gap-2 p-2 text-lg font-bold">
                         <span class="material-icons-outlined">people</span>

@@ -46,7 +46,9 @@ declare global {
             | 'เข้าร่วมคอร์สล้มเหลว'
             | 'เข้าร่วมคอร์สสำเร็จ'
     }
-
+    interface AssignmentApiResponse {
+        message: string
+    }
     type EnrolledCourse = number[]
 
     interface PostGETAPIResponse {

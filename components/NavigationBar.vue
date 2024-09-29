@@ -198,10 +198,10 @@
                                 v-show="userMenu"
                                 class="border-1 absolute -bottom-[115px] flex w-48 flex-col rounded-b-lg border shadow-md md:top-16">
                                 <div class="flex flex-col rounded-b-lg">
-                                    <div
+                                    <NuxtLink
+                                        to="/settings"
                                         @click="
                                             () => {
-                                                navigateTo('/settings')
                                                 userMenu = false
                                             }
                                         "
@@ -215,7 +215,7 @@
                                             settings
                                         </span>
                                         ตั้งค่าผู้ใช้
-                                    </div>
+                                    </NuxtLink>
                                     <div
                                         @click="signOut"
                                         class="flex cursor-pointer items-center gap-x-2 rounded-b-lg bg-white p-4 text-red-600 hover:bg-gray-200">

@@ -79,11 +79,11 @@
     <div class="flex w-full flex-col gap-4">
         <div class="flex flex-col justify-between gap-2 sm:w-full sm:flex-row">
             <div class="flex flex-row gap-2">
-                <button
-                    @click="navigateTo(`/courses/quiz/?id=${route.query.id}`)"
+                <NuxtLink
+                    :to="`/courses/quiz/?id=${route.query.id}`"
                     class="inline-flex items-center gap-x-2 rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-blue-600 transition-all duration-200 ease-in-out hover:bg-blue-100 hover:text-blue-800 disabled:pointer-events-none disabled:opacity-50">
                     <span class="material-icons-outlined">arrow_back</span>
-                </button>
+                </NuxtLink>
                 <span class="text-4xl font-bold">เพิ่มแบบทดสอบ</span>
             </div>
             <div class="flex justify-end">

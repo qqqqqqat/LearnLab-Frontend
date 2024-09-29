@@ -173,14 +173,13 @@
             v-show="!quizPending"
             class="flex flex-row items-center justify-between gap-4">
             <div></div>
-            <button
+            <NuxtLink
                 v-if="userRole?.[route.query.id] === 'INSTRUCTOR'"
-                @click="navigateTo(`/courses/quiz/create?id=${route.query.id}`)"
-                type="button"
+                :to="`/courses/quiz/create?id=${route.query.id}`"
                 class="inline-flex flex-shrink-0 items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
                 <span class="material-icons-outlined">add</span>
                 สร้างแบบทดสอบ
-            </button>
+            </NuxtLink>
         </div>
         <div
             v-if="(quizs?.length || 0) > 0"
