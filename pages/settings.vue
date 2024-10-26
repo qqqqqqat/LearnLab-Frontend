@@ -82,18 +82,18 @@
             <div
                 class="flex flex-col items-center gap-8 md:flex-row md:items-start">
                 <div
-                    class="flex h-64 w-64 flex-col items-center justify-center rounded-md bg-slate-200 text-[140px]"
-                    v-if="!avatarState?.u_avatar">
+                    v-if="!avatarState?.u_avatar"
+                    class="flex h-64 w-64 flex-col items-center justify-center rounded-md bg-slate-200 text-[140px]">
                     {{
                         userState?.u_firstname
                             ? `${userState?.u_firstname.slice(0, 1)}${userState?.u_lastname.slice(0, 1)}`
                             : ''
                     }}
                 </div>
-                <div class="h-64 w-64 rounded-md" v-else>
+                <div v-else class="h-64 w-64 rounded-md">
                     <img
                         class="aspect-square h-64 w-64 rounded-md object-cover"
-                        :src="`data:${avatarState?.u_avatar_mime_type};base64,${avatarState?.u_avatar}`" />
+                        :src="`data:${avatarState?.u_avatar_mime_type};base64,${avatarState?.u_avatar}`" >
                 </div>
                 <div
                     class="flex max-w-full flex-col justify-center gap-4 rounded-md bg-gradient-to-r from-slate-100 to-slate-50/0 py-4 pl-8 pr-8 md:h-64 md:pr-16">
@@ -128,10 +128,10 @@
             </div>
             <div class="relative w-72">
                 <input
+                    v-model="name"
                     type="text"
                     class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                    placeholder="ชื่อ"
-                    v-model="name" />
+                    placeholder="ชื่อ" >
                 <div
                     class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                     <svg
@@ -153,10 +153,10 @@
 
             <div class="relative w-72">
                 <input
+                    v-model="surname"
                     type="text"
                     class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                    placeholder="นามสกุล"
-                    v-model="surname" />
+                    placeholder="นามสกุล" >
                 <div
                     class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                     <svg
@@ -177,10 +177,10 @@
             </div>
             <div class="relative w-72">
                 <input
+                    v-model="phone"
                     type="tel"
                     class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                    placeholder="หมายเลขโทรศัพท์"
-                    v-model="phone" />
+                    placeholder="หมายเลขโทรศัพท์" >
                 <div
                     class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                     <svg
@@ -203,22 +203,22 @@
                 <div class="pb-2">รูปโปรไฟล์</div>
                 <label for="small-file-input" class="sr-only">เลือกไฟล์</label>
                 <input
+                    id="small-file-input"
                     type="file"
-                    @change="onFileChangedAvatar($event)"
                     accept="image/*"
                     name="small-file-input"
-                    id="small-file-input"
-                    class="block w-72 rounded-lg border border-gray-200 text-sm shadow-sm file:me-4 file:border-0 file:bg-gray-50 file:px-4 file:py-2 focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" />
+                    class="block w-72 rounded-lg border border-gray-200 text-sm shadow-sm file:me-4 file:border-0 file:bg-gray-50 file:px-4 file:py-2 focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
+                    @change="onFileChangedAvatar($event)" >
             </div>
-            <div class="h-[1px] w-72 bg-slate-200"></div>
+            <div class="h-[1px] w-72 bg-slate-200"/>
             <div class="flex flex-col gap-2">
                 <h2>กรุณาใส่รหัสเพื่อบันทึกข้อมูล</h2>
                 <div class="relative w-72">
                     <input
+                        v-model="regis_passw"
                         type="password"
                         class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                        placeholder="รหัสผ่าน"
-                        v-model="regis_passw" />
+                        placeholder="รหัสผ่าน" >
                     <div
                         class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                         <svg

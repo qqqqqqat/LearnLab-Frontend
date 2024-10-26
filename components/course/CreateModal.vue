@@ -69,8 +69,8 @@
 </script>
 <template>
     <div
-        ref="createModal"
         id="create-course-modal"
+        ref="createModal"
         class="hs-overlay pointer-events-none fixed start-0 top-0 z-[80] hidden size-full overflow-y-auto overflow-x-hidden opacity-0 transition-all hs-overlay-open:opacity-100 hs-overlay-open:duration-500">
         <div
             class="m-3 opacity-0 transition-all hs-overlay-open:opacity-100 hs-overlay-open:duration-500 sm:mx-auto sm:w-full sm:max-w-lg">
@@ -103,11 +103,11 @@
                 <div class="flex flex-col gap-4 overflow-y-auto p-4">
                     <div class="relative">
                         <input
-                            type="text"
-                            v-model="courseName"
                             id="hs-floating-input-text-course"
+                            v-model="courseName"
+                            type="text"
                             class="disabled:pointer-events-non peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6"
-                            placeholder="LearnLab Course-course" />
+                            placeholder="LearnLab Course-course" >
                         <label
                             for="hs-floating-input-text"
                             class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -118,10 +118,10 @@
                     <!-- Floating Textarea -->
                     <div class="relative">
                         <textarea
-                            v-model="courseDescription"
                             id="hs-floating-textarea-desc"
+                            v-model="courseDescription"
                             class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6"
-                            placeholder="Course Description"></textarea>
+                            placeholder="Course Description"/>
                         <label
                             for="hs-floating-textarea-desc"
                             class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -136,21 +136,21 @@
                             ปกคอร์ส
                         </label>
                         <input
-                            @change="onFileChangedBanner($event)"
+                            id="small-file-input-banner"
                             type="file"
                             accept="image/*"
                             name="small-file-input-banner"
-                            id="small-file-input-banner"
-                            class="block w-full rounded-lg border border-gray-200 text-sm shadow-sm file:me-4 file:border-0 file:bg-gray-50 file:px-4 file:py-2 focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" />
+                            class="block w-full rounded-lg border border-gray-200 text-sm shadow-sm file:me-4 file:border-0 file:bg-gray-50 file:px-4 file:py-2 focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
+                            @change="onFileChangedBanner($event)" >
                     </form>
                     <div class="flex flex-row items-center gap-4">
                         <div class="flex w-20">
                             <input
+                                id="hs-checked-checkbox"
                                 v-model="passwordProtected"
                                 type="checkbox"
                                 class="mt-0.5 shrink-0 rounded border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                                id="hs-checked-checkbox"
-                                checked />
+                                checked >
                             <label
                                 for="hs-checked-checkbox"
                                 class="ms-3 text-sm text-gray-500">
@@ -159,11 +159,11 @@
                         </div>
                         <div v-if="passwordProtected" class="relative w-full">
                             <input
+                                id="hs-floating-input-text"
                                 v-model="coursePassword"
                                 type="password"
-                                id="hs-floating-input-text"
                                 class="disabled:pointer-events-non peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6"
-                                placeholder="password" />
+                                placeholder="password" >
                             <label
                                 for="hs-floating-input-text"
                                 class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -179,10 +179,10 @@
                             สาธารณะ
                         </label>
                         <input
+                            id="hs-basic-with-description"
                             v-model="coursePrivacy"
                             type="checkbox"
-                            id="hs-basic-with-description"
-                            class="relative h-7 w-[3.25rem] cursor-pointer rounded-full border-transparent bg-gray-100 p-px text-transparent transition-colors duration-200 ease-in-out before:inline-block before:size-6 before:translate-x-0 before:transform before:rounded-full before:bg-white before:shadow before:ring-0 before:transition before:duration-200 before:ease-in-out checked:border-blue-600 checked:bg-none checked:text-blue-600 checked:before:translate-x-full checked:before:bg-blue-200 focus:ring-blue-600 focus:checked:border-blue-600 disabled:pointer-events-none disabled:opacity-50" />
+                            class="relative h-7 w-[3.25rem] cursor-pointer rounded-full border-transparent bg-gray-100 p-px text-transparent transition-colors duration-200 ease-in-out before:inline-block before:size-6 before:translate-x-0 before:transform before:rounded-full before:bg-white before:shadow before:ring-0 before:transition before:duration-200 before:ease-in-out checked:border-blue-600 checked:bg-none checked:text-blue-600 checked:before:translate-x-full checked:before:bg-blue-200 focus:ring-blue-600 focus:checked:border-blue-600 disabled:pointer-events-none disabled:opacity-50" >
                         <label
                             for="hs-basic-with-description"
                             class="ms-3 text-sm text-gray-500">
@@ -199,9 +199,9 @@
                     </button>
                     <button
                         :disabled="!(courseName && courseDescription)"
-                        @click="createCourse()"
                         type="button"
-                        class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+                        class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
+                        @click="createCourse()">
                         สร้าง
                     </button>
                 </div>

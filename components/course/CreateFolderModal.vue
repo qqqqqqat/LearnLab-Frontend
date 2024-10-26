@@ -66,8 +66,8 @@
 </script>
 <template>
     <div
-        ref="creteFolderlModal"
         id="create-folder-modal"
+        ref="creteFolderlModal"
         class="hs-overlay pointer-events-none fixed start-0 top-0 z-[80] hidden size-full overflow-y-auto overflow-x-hidden opacity-0 transition-all hs-overlay-open:opacity-100 hs-overlay-open:duration-500">
         <div
             class="m-3 opacity-0 transition-all hs-overlay-open:opacity-100 hs-overlay-open:duration-500 sm:mx-auto sm:w-full sm:max-w-lg">
@@ -104,11 +104,11 @@
                     </div>
                     <div class="relative">
                         <input
-                            type="text"
-                            v-model="folderName"
                             id="hs-floating-input-text-course"
+                            v-model="folderName"
+                            type="text"
                             class="disabled:pointer-events-non peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6"
-                            placeholder="LearnLab Course-course" />
+                            placeholder="LearnLab Course-course" >
                         <label
                             for="hs-floating-input-text"
                             class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -126,9 +126,9 @@
                     </button>
                     <button
                         type="button"
-                        @click="uploadFile()"
                         :disabled="!folderName || isFolderCreating"
-                        class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+                        class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
+                        @click="uploadFile()">
                         สร้าง
                     </button>
                 </div>

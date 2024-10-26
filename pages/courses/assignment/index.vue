@@ -1,10 +1,10 @@
 <script setup lang="ts">
-    definePageMeta({
-        layout: 'course',
-    })
     import HSOverlay from '@preline/overlay'
     import { toast } from '@steveyuowo/vue-hot-toast'
     import type { LocationQueryValue } from 'vue-router'
+    definePageMeta({
+        layout: 'course',
+    })
     const delName = ref()
     const delID = ref()
     const userRole = useUserCourseState()
@@ -187,8 +187,8 @@
 </script>
 <template>
     <div
-        ref="deleteModal"
         id="assignment-delete-confirm-modal"
+        ref="deleteModal"
         class="hs-overlay pointer-events-none fixed start-0 top-0 z-[80] hidden size-full overflow-y-auto overflow-x-hidden opacity-0 transition-all hs-overlay-open:opacity-100 hs-overlay-open:duration-500">
         <div
             class="m-3 opacity-0 transition-all hs-overlay-open:opacity-100 hs-overlay-open:duration-500 sm:mx-auto sm:w-full sm:max-w-lg">
@@ -232,8 +232,8 @@
                     </button>
                     <button
                         type="button"
-                        @click="deleteAssignment(delID)"
-                        class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+                        class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
+                        @click="deleteAssignment(delID)">
                         ใช่
                     </button>
                 </div>
@@ -242,8 +242,8 @@
     </div>
 
     <div
-        ref="editModal"
         id="assignment-edit-modal"
+        ref="editModal"
         class="hs-overlay pointer-events-none fixed start-0 top-0 z-[80] hidden size-full overflow-y-auto overflow-x-hidden opacity-0 transition-all hs-overlay-open:opacity-100 hs-overlay-open:duration-500">
         <div
             class="m-3 opacity-0 transition-all hs-overlay-open:opacity-100 hs-overlay-open:duration-500 sm:mx-auto sm:w-full sm:max-w-lg">
@@ -276,11 +276,11 @@
                 <div class="flex flex-col gap-4 p-6">
                     <div class="relative flex-grow">
                         <input
-                            type="text"
-                            v-model="eName"
                             id="hs-floating-crs-name"
+                            v-model="eName"
+                            type="text"
                             placeholder="หัวข้อโพสต์"
-                            class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
+                            class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" >
                         <label
                             for="hs-floating-crs-name"
                             class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -290,11 +290,11 @@
                     </div>
                     <div class="relative flex-grow">
                         <input
-                            type="number"
-                            v-model="eScore"
                             id="hs-floating-crs-name"
+                            v-model="eScore"
+                            type="number"
                             placeholder="หัวข้อโพสต์"
-                            class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
+                            class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" >
                         <label
                             for="hs-floating-crs-name"
                             class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -304,11 +304,11 @@
                     </div>
                     <div class="relative flex-grow">
                         <input
-                            type="datetime-local"
-                            v-model="eDueDate"
                             id="hs-floating-crs-name"
+                            v-model="eDueDate"
+                            type="datetime-local"
                             placeholder="หัวข้อโพสต์"
-                            class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
+                            class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" >
                         <label
                             for="hs-floating-crs-name"
                             class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -326,8 +326,8 @@
                     </button>
                     <button
                         type="button"
-                        @click="editAssignment(eAID)"
-                        class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+                        class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
+                        @click="editAssignment(eAID)">
                         บันทึก
                     </button>
                 </div>
@@ -337,7 +337,7 @@
 
     <div class="flex w-full flex-col gap-4">
         <div class="flex flex-row items-center justify-between gap-4">
-            <div></div>
+            <div/>
             <NuxtLink
                 v-if="isUserNotStudent && !assignPending"
                 :to="`/courses/assignment/create?id=${route.query.id}`"
@@ -348,8 +348,8 @@
             </NuxtLink>
         </div>
         <div
-            v-if="(assignments?.length || 0) > 0"
             v-for="assign in assignments"
+            v-if="(assignments?.length || 0) > 0"
             class="border-1 flex w-full flex-row justify-between gap-2 rounded-md border p-4">
             <div>
                 <div class="flex w-full flex-wrap items-center gap-4">
@@ -373,8 +373,8 @@
                 <div
                     class="flex flex-row flex-nowrap items-center gap-2 text-xl font-bold">
                     <span
-                        class="flex items-center justify-center rounded-full bg-blue-500 px-2 py-1 text-xs font-normal text-white"
-                        v-if="isUserNotStudent">
+                        v-if="isUserNotStudent"
+                        class="flex items-center justify-center rounded-full bg-blue-500 px-2 py-1 text-xs font-normal text-white">
                         ID: {{ assign?.a_id }}
                     </span>
                     {{ assign.a_name }}
@@ -383,14 +383,14 @@
             <div class="flex items-center gap-2">
                 <span
                     v-if="isUserNotStudent"
-                    @click="openEditModal(assign)"
-                    class="material-icons-outlined cursor-pointer select-none hover:text-blue-600">
+                    class="material-icons-outlined cursor-pointer select-none hover:text-blue-600"
+                    @click="openEditModal(assign)">
                     edit
                 </span>
                 <span
                     v-if="isUserNotStudent"
-                    @click="openDeleteModal(assign)"
-                    class="material-icons-outlined cursor-pointer select-none hover:text-rose-600">
+                    class="material-icons-outlined cursor-pointer select-none hover:text-rose-600"
+                    @click="openDeleteModal(assign)">
                     delete
                 </span>
                 <NuxtLink
@@ -406,7 +406,7 @@
         <div
             v-else-if="!assignPending && (assignments?.data?.length || 0) === 0"
             class="border-1 flex w-full flex-col items-center gap-2 rounded-md border p-4 md:flex-row">
-            <img class="w-48 p-4" src="/images/exam.svg" />
+            <img class="w-48 p-4" src="/images/exam.svg" >
             <span class="text-3xl font-bold">ยังไม่มีงานมอบหมายในคอร์สนี้</span>
         </div>
         <div

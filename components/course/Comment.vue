@@ -44,7 +44,7 @@
     async function sendComment() {
         isSending.value = true
         const sendCommentToast = toast.loading('กำลังส่งคอมเมนต์')
-        let payload = {
+        const payload = {
             p_receiver: props.p_id,
             c_id: props.c_id,
             m_content: comment.value,
@@ -76,7 +76,7 @@
     async function deleteComment(m_id: number) {
         isSending.value = true
         const sendCommentToast = toast.loading('กำลังลบคอมเมนต์')
-        let payload = {
+        const payload = {
             m_id: m_id,
         }
         await $fetch<{ status: number; message: string }>('/api/message/', {
@@ -128,11 +128,11 @@
     <div class="flex flex-row gap-2">
         <div class="relative flex-grow">
             <input
-                type="text"
-                v-model="comment"
                 id="hs-floating-comment-crs"
+                v-model="comment"
+                type="text"
                 placeholder="หัวข้อโพสต์"
-                class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
+                class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" >
             <label
                 for="hs-floating-comment-crs"
                 class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -146,15 +146,15 @@
         <button
             type="button"
             :disabled="!comment || isSending || isCommentLoading"
-            @click="sendComment()"
-            class="transition-color inline-flex w-16 items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+            class="transition-color inline-flex w-16 items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
+            @click="sendComment()">
             <span class="material-icons-outlined no-underline">send</span>
         </button>
     </div>
     <div
+        v-for="comment in commentStore"
         v-if="!isCommentLoading"
         v-show="visibility"
-        v-for="comment in commentStore"
         class="flex flex-col gap-2">
         <div
             class="transition-color border-1 ml-4 flex flex-col gap-1 rounded-md border px-4 py-2 duration-200 ease-in-out"
@@ -192,8 +192,8 @@
                 </div>
                 <div
                     v-if="comment.m_sender === userState?.u_id"
-                    @click="deleteComment(comment.m_id)"
-                    class="inline-flex cursor-pointer items-center text-xs hover:underline">
+                    class="inline-flex cursor-pointer items-center text-xs hover:underline"
+                    @click="deleteComment(comment.m_id)">
                     <span
                         class="material-icons-outlined no-underline"
                         style="font-size: 20px">
@@ -241,8 +241,8 @@
                 </div>
                 <div
                     v-if="replies.m_sender === userState?.u_id"
-                    @click="deleteComment(replies.m_id)"
-                    class="inline-flex cursor-pointer items-center text-xs hover:underline">
+                    class="inline-flex cursor-pointer items-center text-xs hover:underline"
+                    @click="deleteComment(replies.m_id)">
                     <span
                         class="material-icons-outlined no-underline"
                         style="font-size: 20px">

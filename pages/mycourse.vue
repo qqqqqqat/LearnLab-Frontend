@@ -101,20 +101,20 @@
                                 </label>
                                 <div class="flex">
                                     <input
+                                        id="hs-trailing-button-add-on-with-icon"
                                         v-model="search"
                                         type="text"
-                                        id="hs-trailing-button-add-on-with-icon"
                                         name="hs-trailing-button-add-on-with-icon"
-                                        class="border-1 block w-full rounded-s-lg border border-gray-200 px-4 py-3 text-sm shadow-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" />
+                                        class="border-1 block w-full rounded-s-lg border border-gray-200 px-4 py-3 text-sm shadow-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" >
                                     <button
+                                        type="button"
+                                        class="inline-flex h-[2.875rem] w-[2.875rem] flex-shrink-0 items-center justify-center gap-x-2 rounded-e-md border border-transparent bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
                                         @click="
                                             () => {
                                                 currentPage = 1
                                                 updateQuery(search)
                                             }
-                                        "
-                                        type="button"
-                                        class="inline-flex h-[2.875rem] w-[2.875rem] flex-shrink-0 items-center justify-center gap-x-2 rounded-e-md border border-transparent bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+                                        ">
                                         <svg
                                             class="size-4 flex-shrink-0"
                                             xmlns="http://www.w3.org/2000/svg"
@@ -208,7 +208,7 @@
                                         สร้างคอร์ส
                                     </button>
                                 </div>
-                                <div></div>
+                                <div/>
                             </div>
                         </div>
                     </div>
@@ -218,24 +218,24 @@
                     :class="!courses?.data.length ? 'border-1 border' : ''">
                     <TransitionGroup name="fade">
                         <div
-                            v-if="pending"
                             v-for="crs in 9"
+                            v-if="pending"
                             :key="`crs${crs}`"
                             class="flex items-center justify-center rounded-xl">
                             <div
                                 class="flex w-80 flex-col rounded-xl border bg-white shadow-sm">
                                 <div
-                                    class="aspect-[17/9] max-h-96 w-full max-w-96 animate-pulse rounded-t-xl bg-gray-200 object-cover"></div>
+                                    class="aspect-[17/9] max-h-96 w-full max-w-96 animate-pulse rounded-t-xl bg-gray-200 object-cover"/>
                                 <div class="p-4 md:p-5">
                                     <h3 class="text-lg font-bold text-gray-800">
                                         <span
-                                            class="block size-6 w-full rounded-full bg-gray-200"></span>
+                                            class="block size-6 w-full rounded-full bg-gray-200"/>
                                     </h3>
                                     <p class="mt-2 text-gray-500">
                                         <span
-                                            class="mb-2 block size-3 w-full rounded-full bg-gray-200"></span>
+                                            class="mb-2 block size-3 w-full rounded-full bg-gray-200"/>
                                         <span
-                                            class="mb-2 block size-3 w-full rounded-full bg-gray-200"></span>
+                                            class="mb-2 block size-3 w-full rounded-full bg-gray-200"/>
                                     </p>
                                     <div
                                         class="flex flex-row items-end justify-between">
@@ -245,14 +245,14 @@
                                             disabled>
                                             ดูคอร์ส
                                         </button>
-                                        <div></div>
+                                        <div/>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div
-                            v-else
                             v-for="crs in courses?.data"
+                            v-else
                             class="flex items-center justify-center rounded-xl">
                             <div
                                 class="flex w-80 flex-col rounded-xl border bg-white shadow-sm">
@@ -264,7 +264,7 @@
                                             ? `/api/courses/banner/?c_id=${crs.c_id}`
                                             : '/images/CourseBannerDefault.svg'
                                     "
-                                    alt="Image Description" />
+                                    alt="Image Description" >
                                 <div class="p-4 md:p-5">
                                     <h3
                                         class="line-clamp-1 text-lg font-bold text-gray-800">
@@ -302,36 +302,36 @@
                     </TransitionGroup>
 
                     <div
-                        class="col-span-3 flex flex-col items-center justify-center pb-96 pt-16"
-                        v-if="!courses?.data.length && !pending && !search">
+                        v-if="!courses?.data.length && !pending && !search"
+                        class="col-span-3 flex flex-col items-center justify-center pb-96 pt-16">
                         <h1
-                            class="text-xl"
-                            v-if="userState?.u_role === 'STUDENT'">
+                            v-if="userState?.u_role === 'STUDENT'"
+                            class="text-xl">
                             คุณไม่ได้เป็นสมาชิกของคอร์สใด ๆ
                         </h1>
                         <button
+                            v-if="userState?.u_role === 'STUDENT'"
                             class="mt-2 inline-flex items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
                             href="#"
-                            v-if="userState?.u_role === 'STUDENT'"
                             @click="navigateTo('/courses')">
                             ไปดูคอร์ส
                         </button>
                         <h1
-                            class="text-xl"
-                            v-if="userState?.u_role === 'INSTRUCTOR'">
+                            v-if="userState?.u_role === 'INSTRUCTOR'"
+                            class="text-xl">
                             คุณไม่ได้เป็นผู้จัดการคอร์สใด ๆ
                         </h1>
                         <button
+                            v-if="userState?.u_role === 'INSTRUCTOR'"
                             class="mt-2 inline-flex items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
                             href="#"
-                            @click="createCourseModal.c_openModal()"
-                            v-if="userState?.u_role === 'INSTRUCTOR'">
+                            @click="createCourseModal.c_openModal()">
                             สร้างคอร์ส
                         </button>
                     </div>
                     <div
-                        class="col-span-3 flex items-center justify-center pb-96 pt-16"
-                        v-if="!courses?.data.length && !pending && search">
+                        v-if="!courses?.data.length && !pending && search"
+                        class="col-span-3 flex items-center justify-center pb-96 pt-16">
                         <h1 class="text-xl">ไม่พบคำค้นหานั้น</h1>
                     </div>
                 </div>
@@ -340,15 +340,15 @@
             <nav class="mt-8 flex items-center gap-x-1">
                 <button
                     type="button"
+                    :disabled="currentPage === 1"
+                    class="inline-flex min-h-[38px] min-w-[38px] items-center justify-center gap-x-2 rounded-lg px-2.5 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none disabled:pointer-events-none disabled:opacity-50"
                     @click="
                         () => {
                             if (currentPage > 1) {
                                 currentPage--
                             }
                         }
-                    "
-                    :disabled="currentPage === 1"
-                    class="inline-flex min-h-[38px] min-w-[38px] items-center justify-center gap-x-2 rounded-lg px-2.5 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none disabled:pointer-events-none disabled:opacity-50">
+                    ">
                     <svg
                         class="size-3.5 flex-shrink-0"
                         xmlns="http://www.w3.org/2000/svg"
@@ -369,7 +369,7 @@
                         v-model="currentPage"
                         type="number"
                         :oninput="`this.value = (this.value >= ${totalPages}) ? ${totalPages} : Math.abs(this.value)`"
-                        class="flex min-h-[38px] w-16 min-w-[38px] items-center justify-center rounded-lg border border-gray-200 px-3 py-2 text-center text-sm text-gray-800 focus:bg-gray-50 focus:outline-none disabled:pointer-events-none disabled:opacity-50" />
+                        class="flex min-h-[38px] w-16 min-w-[38px] items-center justify-center rounded-lg border border-gray-200 px-3 py-2 text-center text-sm text-gray-800 focus:bg-gray-50 focus:outline-none disabled:pointer-events-none disabled:opacity-50" >
                     <span
                         class="flex min-h-[38px] items-center justify-center px-1.5 py-2 text-sm text-gray-500">
                         จาก
@@ -381,15 +381,15 @@
                 </div>
                 <button
                     type="button"
+                    :disabled="currentPage === totalPages"
+                    class="inline-flex min-h-[38px] min-w-[38px] items-center justify-center gap-x-2 rounded-lg px-2.5 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none disabled:pointer-events-none disabled:opacity-50"
                     @click="
                         () => {
                             if (currentPage < totalPages) {
                                 currentPage++
                             }
                         }
-                    "
-                    :disabled="currentPage === totalPages"
-                    class="inline-flex min-h-[38px] min-w-[38px] items-center justify-center gap-x-2 rounded-lg px-2.5 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none disabled:pointer-events-none disabled:opacity-50">
+                    ">
                     <span aria-hidden="true" class="sr-only">Next</span>
                     <svg
                         class="size-3.5 flex-shrink-0"

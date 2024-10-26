@@ -86,7 +86,7 @@
                         .then((res) => {
                             avatarState.value = res
                         })
-                        .catch((err) => {
+                        .catch((_err) => {
                             toast.update(loginToast, {
                                 type: 'error',
                                 message: 'โหลดรูปล้มเหลว',
@@ -126,7 +126,7 @@
             method: 'POST',
             body: formData,
         })
-            .then(async (res) => {
+            .then(async (_res) => {
                 email.value = ''
                 password.value = ''
                 name.value = ''
@@ -145,8 +145,8 @@
 </script>
 <template>
     <div
-        ref="modalElem"
         id="hs-slide-down-animation-modal"
+        ref="modalElem"
         class="hs-overlay pointer-events-none fixed start-0 top-0 z-[80] hidden size-full overflow-y-auto overflow-x-hidden">
         <div
             class="m-3 mt-0 opacity-0 transition-all ease-out hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 sm:mx-auto sm:w-full sm:max-w-2xl">
@@ -185,8 +185,8 @@
                                         ? 'border-b-2 border-blue-600 font-semibold text-blue-600'
                                         : 'border-transparent text-gray-500'
                                 "
-                                @click="activeTab = 0"
-                                class="active inline-flex items-center gap-x-2 whitespace-nowrap px-1 py-4 text-sm transition-all duration-300 ease-in-out hover:text-blue-600 focus:text-blue-600 focus:outline-none disabled:pointer-events-none disabled:opacity-50">
+                                class="active inline-flex items-center gap-x-2 whitespace-nowrap px-1 py-4 text-sm transition-all duration-300 ease-in-out hover:text-blue-600 focus:text-blue-600 focus:outline-none disabled:pointer-events-none disabled:opacity-50"
+                                @click="activeTab = 0">
                                 เข้าสู่ระบบ
                             </button>
                             <button
@@ -196,30 +196,30 @@
                                         ? 'border-b-2 border-blue-600 font-semibold text-blue-600'
                                         : 'border-transparent text-gray-500'
                                 "
-                                @click="activeTab = 1"
-                                class="inline-flex items-center gap-x-2 whitespace-nowrap px-1 py-4 text-sm transition-all duration-300 ease-in-out hover:text-blue-600 focus:text-blue-600 focus:outline-none disabled:pointer-events-none disabled:opacity-50">
+                                class="inline-flex items-center gap-x-2 whitespace-nowrap px-1 py-4 text-sm transition-all duration-300 ease-in-out hover:text-blue-600 focus:text-blue-600 focus:outline-none disabled:pointer-events-none disabled:opacity-50"
+                                @click="activeTab = 1">
                                 ลงทะเบียน
                             </button>
                         </nav>
                     </div>
                     <div
                         class="flex w-full flex-col items-center justify-center gap-4 pt-8 md:flex-row md:pl-8 md:pt-0">
-                        <img src="~/assets/images/login.svg" class="w-48" />
+                        <img src="~/assets/images/login.svg" class="w-48" >
                         <div
                             class="relative h-fit w-full grow overflow-x-hidden">
                             <TransitionGroup name="fade">
                                 <form
                                     v-show="activeTab === 0"
-                                    class="flex flex-col gap-y-8 p-8"
                                     key="login1"
+                                    class="flex flex-col gap-y-8 p-8"
                                     @submit.prevent="">
                                     <div class="relative">
                                         <input
+                                            v-model="email"
                                             type="email"
                                             class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                                             placeholder="อีเมล์"
-                                            name="email"
-                                            v-model="email" />
+                                            name="email" >
                                         <div
                                             class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
@@ -241,11 +241,11 @@
                                     </div>
                                     <div class="relative">
                                         <input
+                                            v-model="password"
                                             type="password"
                                             class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                                             placeholder="รหัสผ่าน"
-                                            name="password"
-                                            v-model="password" />
+                                            name="password" >
                                         <div
                                             class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
@@ -273,6 +273,7 @@
                                         <button
                                             type="button"
                                             :disabled="!(email && password)"
+                                            class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
                                             @click="
                                                 () => {
                                                     if (
@@ -294,16 +295,15 @@
                                                         )
                                                     }
                                                 }
-                                            "
-                                            class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+                                            ">
                                             เข้าสู่ระบบ
                                         </button>
                                     </div>
                                 </form>
                                 <form
                                     v-show="activeTab === 1"
-                                    class="flex flex-col gap-y-8 p-8"
                                     key="regis1"
+                                    class="flex flex-col gap-y-8 p-8"
                                     @submit.prevent="">
                                     <div class="hs-dropdown relative">
                                         <button
@@ -399,10 +399,10 @@
                                     </div>
                                     <div class="relative">
                                         <input
+                                            v-model.lazy="name"
                                             type="text"
                                             class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                                            placeholder="ชื่อ"
-                                            v-model.lazy="name" />
+                                            placeholder="ชื่อ" >
                                         <div
                                             class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
@@ -425,10 +425,10 @@
 
                                     <div class="relative">
                                         <input
+                                            v-model.lazy="surname"
                                             type="text"
                                             class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                                            placeholder="นามสกุล"
-                                            v-model.lazy="surname" />
+                                            placeholder="นามสกุล" >
                                         <div
                                             class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
@@ -450,10 +450,10 @@
                                     </div>
                                     <div class="relative">
                                         <input
+                                            v-model="regis_email"
                                             type="email"
                                             class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                                            placeholder="อีเมล์"
-                                            v-model="regis_email" />
+                                            placeholder="อีเมล์" >
                                         <div
                                             class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
@@ -475,10 +475,10 @@
                                     </div>
                                     <div class="relative">
                                         <input
+                                            v-model="phone"
                                             type="tel"
                                             class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                                            placeholder="หมายเลขโทรศัพท์"
-                                            v-model="phone" />
+                                            placeholder="หมายเลขโทรศัพท์" >
                                         <div
                                             class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
@@ -500,10 +500,10 @@
                                     </div>
                                     <div class="relative">
                                         <input
+                                            v-model="regis_passw"
                                             type="password"
                                             class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                                            placeholder="รหัสผ่าน"
-                                            v-model="regis_passw" />
+                                            placeholder="รหัสผ่าน" >
                                         <div
                                             class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
@@ -528,10 +528,10 @@
                                     </div>
                                     <div class="relative">
                                         <input
+                                            v-model="regis_passw_conf"
                                             type="password"
                                             class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                                            placeholder="ยืนยันรหัสผ่าน"
-                                            v-model="regis_passw_conf" />
+                                            placeholder="ยืนยันรหัสผ่าน" >
                                         <div
                                             class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
@@ -562,14 +562,14 @@
                                             เลือกไฟล์
                                         </label>
                                         <input
+                                            id="small-file-input"
                                             type="file"
-                                            @change="
-                                                onFileChangedAvatar($event)
-                                            "
                                             accept="image/*"
                                             name="small-file-input"
-                                            id="small-file-input"
-                                            class="block w-full rounded-lg border border-gray-200 text-sm shadow-sm file:me-4 file:border-0 file:bg-gray-50 file:px-4 file:py-2 focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" />
+                                            class="block w-full rounded-lg border border-gray-200 text-sm shadow-sm file:me-4 file:border-0 file:bg-gray-50 file:px-4 file:py-2 focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
+                                            @change="
+                                                onFileChangedAvatar($event)
+                                            " >
                                     </div>
 
                                     <div
@@ -586,6 +586,7 @@
                                                     regis_passw.length > 4
                                                 )
                                             "
+                                            class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
                                             @click="
                                                 () => {
                                                     if (
@@ -639,8 +640,7 @@
                                                         )
                                                     }
                                                 }
-                                            "
-                                            class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+                                            ">
                                             ลงทะเบียน
                                         </button>
                                     </div>

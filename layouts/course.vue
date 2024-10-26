@@ -10,7 +10,7 @@
     const crs_info = ref()
     const crs_pending = ref(true)
     const crs_member = ref()
-    let sessionInfo = ref()
+    const sessionInfo = ref()
     watch(
         () => route.query.id,
         async (id) => {
@@ -107,18 +107,18 @@
             </div>
             <div class="relative flex">
                 <img
+                    ref="bannerImage"
                     class="h-full max-h-96 min-h-56 w-full rounded-xl object-cover object-[0%_50%]"
                     loading="lazy"
-                    ref="bannerImage"
                     :src="
                         crs_info?.c_banner
                             ? `/api/courses/banner/?c_id=${crs_info?.c_id}`
                             : '/images/CourseBannerDefault.svg'
                     "
                     alt="Image Description"
-                    @error="handleBrokenImage" />
+                    @error="handleBrokenImage" >
                 <div
-                    class="absolute h-full w-full rounded-xl bg-gradient-to-b from-slate-50/0 from-50% to-zinc-900 sm:from-70%"></div>
+                    class="absolute h-full w-full rounded-xl bg-gradient-to-b from-slate-50/0 from-50% to-zinc-900 sm:from-70%"/>
                 <div
                     v-if="userRole?.[route.query.id] === 'INSTRUCTOR'"
                     class="absolute right-0">
@@ -158,11 +158,11 @@
                     v-else
                     class="absolute bottom-5 left-5 flex w-full animate-pulse flex-col gap-2">
                     <span class="text-4xl font-bold text-white">
-                        <h3 class="h-8 w-[200px] rounded-full bg-white"></h3>
+                        <h3 class="h-8 w-[200px] rounded-full bg-white"/>
                     </span>
                     <span
                         class="bottom-0 h-3 max-h-10 w-full rounded-full bg-white text-sm font-light text-white"
-                        style="width: 90%"></span>
+                        style="width: 90%"/>
                 </div>
             </div>
             <div class="flex flex-col gap-4 md:flex-row">
@@ -212,22 +212,22 @@
                         <span class="material-icons-outlined">quiz</span>
                         แบบทดสอบ
                     </NuxtLink>
-                    <hr />
+                    <hr >
                     <div class="flex items-center gap-2 p-2 text-lg font-bold">
                         <span class="material-icons-outlined">people</span>
                         ผู้สอน
                     </div>
                     <div
-                        class="flex flex-row items-center gap-2 p-2"
-                        v-for="inst in crs_member">
+                        v-for="inst in crs_member"
+                        class="flex flex-row items-center gap-2 p-2">
                         <div v-if="inst.u_avatar" class="h-8 w-8 rounded-md">
                             <img
                                 class="bottom-1 aspect-square rounded-md border object-cover"
-                                :src="`/api/avatar/?u_id=${inst.u_id}`" />
+                                :src="`/api/avatar/?u_id=${inst.u_id}`" >
                         </div>
                         <div
-                            class="flex h-8 w-8 select-none flex-col items-center justify-center rounded-md bg-slate-200 text-xl"
-                            v-if="!inst?.u_avatar">
+                            v-if="!inst?.u_avatar"
+                            class="flex h-8 w-8 select-none flex-col items-center justify-center rounded-md bg-slate-200 text-xl">
                             {{
                                 `${inst?.u_firstname.slice(0, 1)}${inst?.u_lastname.slice(0, 1)}`
                             }}

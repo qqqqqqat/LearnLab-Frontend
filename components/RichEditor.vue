@@ -26,9 +26,9 @@
 </script>
 <template class="z-[10]">
     <MdEditor
-        :preview="false"
-        :noUploadImg="true"
-        language="en-US"
         v-model="text"
-        @onChange="showHTML" />
+        :preview="false"
+        :no-upload-img="true"
+        language="en-US"
+        @on-change="showHTML" />
 </template>

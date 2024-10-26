@@ -1,8 +1,8 @@
 <script setup lang="ts">
+    import { toast } from '@steveyuowo/vue-hot-toast'
     definePageMeta({
         layout: 'course',
     })
-    import { toast } from '@steveyuowo/vue-hot-toast'
 
     const crs_pending = ref(true)
     const assignments = ref<SubmissionGETApiResponse | null>()
@@ -33,10 +33,10 @@
     function getTimeDiff(due_date: string, submit_date: string) {
         const millis =
             new Date(due_date).getTime() - new Date(submit_date).getTime()
-        let timeRemainingSec = Math.floor(millis / 1000)
-        let timeRemainingMin = Math.floor(millis / (1000 * 60))
-        let timeRemainingHr = Math.floor(millis / (1000 * 60 * 60))
-        let timeRemainingDay = Math.floor(millis / (1000 * 60 * 60 * 24))
+        const timeRemainingSec = Math.floor(millis / 1000)
+        const timeRemainingMin = Math.floor(millis / (1000 * 60))
+        const timeRemainingHr = Math.floor(millis / (1000 * 60 * 60))
+        const timeRemainingDay = Math.floor(millis / (1000 * 60 * 60 * 24))
         return {
             isLate: !(
                 timeRemainingDay >= 0 &&
@@ -60,8 +60,8 @@
     <div class="flex w-full flex-col gap-4">
         <div class="flex flex-row items-center gap-2">
             <button
-                @click="navigateTo(`/courses/assignment?id=${route.query.id}`)"
-                class="inline-flex items-center gap-x-2 rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-blue-600 transition-all duration-200 ease-in-out hover:bg-blue-100 hover:text-blue-800 disabled:pointer-events-none disabled:opacity-50">
+                class="inline-flex items-center gap-x-2 rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-blue-600 transition-all duration-200 ease-in-out hover:bg-blue-100 hover:text-blue-800 disabled:pointer-events-none disabled:opacity-50"
+                @click="navigateTo(`/courses/assignment?id=${route.query.id}`)">
                 <span class="material-icons-outlined">arrow_back</span>
             </button>
             <div class="flex flex-col">
@@ -78,18 +78,18 @@
             </div>
         </div>
         <div
-            v-if="(assignments?.data?.length || 0) > 0"
             v-for="assign in assignments?.data"
+            v-if="(assignments?.data?.length || 0) > 0"
             class="border-1 flex w-full flex-col gap-2 rounded-md border p-4 md:flex-row md:justify-between">
             <div class="flex items-center gap-2">
                 <div v-if="assign.u_avatar" class="h-12 w-12 rounded-md">
                     <img
                         class="bottom-1 aspect-square rounded-md border object-cover"
-                        :src="`/api/avatar/?u_id=${assign.u_id}`" />
+                        :src="`/api/avatar/?u_id=${assign.u_id}`" >
                 </div>
                 <div
-                    class="flex h-12 w-12 select-none flex-col items-center justify-center rounded-md bg-slate-200 text-2xl"
-                    v-if="!assign?.u_avatar">
+                    v-if="!assign?.u_avatar"
+                    class="flex h-12 w-12 select-none flex-col items-center justify-center rounded-md bg-slate-200 text-2xl">
                     {{
                         `${assign?.u_firstname.slice(0, 1)}${assign?.u_lastname.slice(0, 1)}`
                     }}
@@ -106,7 +106,6 @@
                         {{ assign.s_datetime ? 'ส่งแล้ว' : 'ยังไม่ส่ง' }}
                         {{ assign?.score ? 'ให้คะแนนแล้ว' : '' }}
                         <span
-                            class="text-xs text-red-400"
                             v-if="
                                 assignments?.a_due_date &&
                                 assign?.s_datetime &&
@@ -114,7 +113,8 @@
                                     assignments.a_due_date,
                                     assign?.s_datetime
                                 ).isLate
-                            ">
+                            "
+                            class="text-xs text-red-400">
                             {{
                                 getTimeDiff(
                                     assignments.a_due_date,
@@ -163,9 +163,9 @@
                 </div>
                 <button
                     type="button"
-                    @click="openAssignment(assign.a_id, assign.u_id)"
                     :disabled="!assign.s_datetime"
-                    class="inline-flex flex-shrink-0 items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+                    class="inline-flex flex-shrink-0 items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
+                    @click="openAssignment(assign.a_id, assign.u_id)">
                     ดูงาน
                     <span class="material-icons-outlined">remove_red_eye</span>
                 </button>
@@ -174,7 +174,7 @@
         <div
             v-else-if="!crs_pending && (assignments?.data?.length || 0) === 0"
             class="border-1 flex w-full flex-col items-center gap-2 rounded-md border p-4 md:flex-row">
-            <img class="w-64" src="~/assets/images/content.svg" />
+            <img class="w-64" src="~/assets/images/content.svg" >
             <span class="text-3xl font-bold">ยังไม่มีการส่งงาน</span>
         </div>
         <div

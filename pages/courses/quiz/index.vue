@@ -1,9 +1,9 @@
 <script setup lang="ts">
+    import HSOverlay from '@preline/overlay'
+    import { toast } from '@steveyuowo/vue-hot-toast'
     definePageMeta({
         layout: 'course',
     })
-    import HSOverlay from '@preline/overlay'
-    import { toast } from '@steveyuowo/vue-hot-toast'
     const delQuizName = ref()
     const delQuizId = ref()
     const userRole = useUserCourseState()
@@ -91,10 +91,10 @@
     function getTimeDiff(due_date: string, submit_date: string) {
         const millis =
             new Date(due_date).getTime() - new Date(submit_date).getTime()
-        let timeRemainingSec = Math.floor(millis / 1000)
-        let timeRemainingMin = Math.floor(millis / (1000 * 60))
-        let timeRemainingHr = Math.floor(millis / (1000 * 60 * 60))
-        let timeRemainingDay = Math.floor(millis / (1000 * 60 * 60 * 24))
+        const timeRemainingSec = Math.floor(millis / 1000)
+        const timeRemainingMin = Math.floor(millis / (1000 * 60))
+        const timeRemainingHr = Math.floor(millis / (1000 * 60 * 60))
+        const timeRemainingDay = Math.floor(millis / (1000 * 60 * 60 * 24))
         return {
             isLate: !(
                 timeRemainingDay >= 0 &&
@@ -113,8 +113,8 @@
 </script>
 <template>
     <div
-        ref="quizDeleteModal"
         id="quiz-delete-confirm"
+        ref="quizDeleteModal"
         class="hs-overlay pointer-events-none fixed start-0 top-0 z-[80] hidden size-full overflow-y-auto overflow-x-hidden opacity-0 transition-all hs-overlay-open:opacity-100 hs-overlay-open:duration-500">
         <div
             class="m-3 opacity-0 transition-all hs-overlay-open:opacity-100 hs-overlay-open:duration-500 sm:mx-auto sm:w-full sm:max-w-lg">
@@ -159,8 +159,8 @@
                     </button>
                     <button
                         type="button"
-                        @click="deleteQuiz(delQuizId)"
-                        class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-rose-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-rose-700 disabled:pointer-events-none disabled:opacity-50">
+                        class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-rose-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-rose-700 disabled:pointer-events-none disabled:opacity-50"
+                        @click="deleteQuiz(delQuizId)">
                         ใช่
                     </button>
                 </div>
@@ -172,7 +172,7 @@
         <div
             v-show="!quizPending"
             class="flex flex-row items-center justify-between gap-4">
-            <div></div>
+            <div/>
             <NuxtLink
                 v-if="userRole?.[route.query.id] === 'INSTRUCTOR'"
                 :to="`/courses/quiz/create?id=${route.query.id}`"
@@ -182,8 +182,8 @@
             </NuxtLink>
         </div>
         <div
-            v-if="(quizs?.length || 0) > 0"
             v-for="quiz in quizs"
+            v-if="(quizs?.length || 0) > 0"
             class="border-1 flex w-full flex-row justify-between gap-2 rounded-md border p-4">
             <div>
                 <div class="flex w-full flex-wrap items-center gap-4">
@@ -207,8 +207,8 @@
                 <div
                     class="flex flex-row flex-nowrap items-center gap-2 text-xl font-bold">
                     <span
-                        class="flex items-center justify-center rounded-full bg-blue-500 px-2 py-1 text-xs font-normal text-white"
-                        v-if="userRole?.[route.query.id] !== 'STUDENT'">
+                        v-if="userRole?.[route.query.id] !== 'STUDENT'"
+                        class="flex items-center justify-center rounded-full bg-blue-500 px-2 py-1 text-xs font-normal text-white">
                         ID: {{ quiz?.q_id }}
                     </span>
                     {{ quiz.q_name }}
@@ -217,29 +217,28 @@
             <div class="flex items-center gap-2">
                 <span
                     v-if="userRole?.[route.query.id] !== 'STUDENT'"
+                    class="material-icons-outlined cursor-pointer select-none hover:text-blue-600"
                     @click="
                         navigateTo(
                             `/courses/quiz/edit?id=${route.query.id}&q_id=${quiz.q_id}`
                         )
-                    "
-                    class="material-icons-outlined cursor-pointer select-none hover:text-blue-600">
+                    ">
                     edit
                 </span>
                 <span
+                    v-if="userRole?.[route.query.id] !== 'STUDENT'"
+                    class="material-icons-outlined cursor-pointer select-none hover:text-rose-600"
                     @click="
                         () => {
                             delQuizName = quiz.q_name
                             delQuizId = quiz.q_id
                             d_openModal()
                         }
-                    "
-                    v-if="userRole?.[route.query.id] !== 'STUDENT'"
-                    class="material-icons-outlined cursor-pointer select-none hover:text-rose-600">
+                    ">
                     delete
                 </span>
                 <button
                     v-if="!quiz.s_datetime"
-                    @click="goToQuiz(quiz.q_id)"
                     :disabled="
                         quiz.q_begin_date
                             ? new Date().getTime() -
@@ -248,7 +247,8 @@
                             : false
                     "
                     type="button"
-                    class="inline-flex flex-shrink-0 select-none items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+                    class="inline-flex flex-shrink-0 select-none items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
+                    @click="goToQuiz(quiz.q_id)">
                     <span class="material-icons-outlined select-none">
                         remove_red_eye
                     </span>
@@ -275,24 +275,24 @@
                             : ''
                     }}
                     <span
-                        class="text-sm text-slate-400"
                         v-if="
                             quiz?.q_due_date &&
                             quiz?.s_datetime &&
                             !getTimeDiff(quiz.q_due_date, quiz?.s_datetime)
                                 .isLate
-                        ">
+                        "
+                        class="text-sm text-slate-400">
                         ส่งมาเวลา
                         {{ new Date(quiz?.s_datetime).toLocaleString() }}
                     </span>
                     <span
-                        class="text-xs text-red-400"
                         v-if="
                             quiz?.q_due_date &&
                             quiz?.s_datetime &&
                             getTimeDiff(quiz.q_due_date, quiz?.s_datetime)
                                 .isLate
-                        ">
+                        "
+                        class="text-xs text-red-400">
                         {{
                             getTimeDiff(quiz.q_due_date, quiz?.s_datetime)
                                 .isLate
@@ -328,7 +328,7 @@
         <div
             v-else-if="!quizPending && (quizs?.data?.length || 0) === 0"
             class="border-1 flex w-full flex-col items-center gap-2 rounded-md border p-4 md:flex-row">
-            <img class="w-48 p-4" src="/images/exam.svg" />
+            <img class="w-48 p-4" src="/images/exam.svg" >
             <span class="text-3xl font-bold">ยังไม่มีแบบทดสอบในคอร์สนี้</span>
         </div>
         <div

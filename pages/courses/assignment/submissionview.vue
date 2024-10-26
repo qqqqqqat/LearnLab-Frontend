@@ -83,10 +83,10 @@
     }
 
     function getTimeDiff(millis: number) {
-        let timeRemainingSec = Math.floor(millis / 1000)
-        let timeRemainingMin = Math.floor(millis / (1000 * 60))
-        let timeRemainingHr = Math.floor(millis / (1000 * 60 * 60))
-        let timeRemainingDay = Math.floor(millis / (1000 * 60 * 60 * 24))
+        const timeRemainingSec = Math.floor(millis / 1000)
+        const timeRemainingMin = Math.floor(millis / (1000 * 60))
+        const timeRemainingHr = Math.floor(millis / (1000 * 60 * 60))
+        const timeRemainingDay = Math.floor(millis / (1000 * 60 * 60 * 24))
         return {
             isLate: !(
                 timeRemainingDay >= 0 &&
@@ -108,12 +108,12 @@
             <div class="flex items-start gap-2">
                 <div>
                     <button
+                        class="inline-flex items-center gap-x-2 rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-blue-600 transition-all duration-200 ease-in-out hover:bg-blue-100 hover:text-blue-800 disabled:pointer-events-none disabled:opacity-50"
                         @click="
                             navigateTo(
                                 `/courses/assignment/view?id=${route.query.id}&a_id=${route.query.a_id}`
                             )
-                        "
-                        class="inline-flex items-center gap-x-2 rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-blue-600 transition-all duration-200 ease-in-out hover:bg-blue-100 hover:text-blue-800 disabled:pointer-events-none disabled:opacity-50">
+                        ">
                         <span class="material-icons-outlined">arrow_back</span>
                     </button>
                 </div>
@@ -138,7 +138,7 @@
                             }}
                         </span>
                     </div>
-                    <hr class="my-2" />
+                    <hr class="my-2" >
                     <div class="flex flex-col font-normal">
                         <span class="text-sm text-slate-400">
                             ส่งมาเวลา
@@ -149,6 +149,10 @@
                             }}
                         </span>
                         <span
+                            v-if="
+                                assignments?.data?.a_due_date &&
+                                assignments?.data.s_datetime
+                            "
                             class="text-xs"
                             :class="
                                 getTimeDiff(
@@ -161,10 +165,6 @@
                                 ).isLate
                                     ? 'text-red-00'
                                     : 'text-emerald-500'
-                            "
-                            v-if="
-                                assignments?.data?.a_due_date &&
-                                assignments?.data.s_datetime
                             ">
                             {{
                                 getTimeDiff(
@@ -205,29 +205,29 @@
             <span class="material-icons-outlined select-none">feedback</span>
             Feedback
         </span>
-        <hr class="mb-2" />
+        <hr class="mb-2" >
         <div class="mb-3 flex flex-col gap-2">
             <div class="flex flex-row items-center justify-between gap-x-2">
                 <div class="flex flex-row items-center gap-x-2">
                     <input
-                        type="number"
                         v-model="assignmentScore"
+                        type="number"
                         class="block w-24 rounded-lg border-gray-200 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                        placeholder="คะแนน" />
+                        placeholder="คะแนน" >
                     <span>/ {{ assignments?.data.a_score }} คะแนน</span>
                 </div>
                 <div>
                     <button
+                        type="button"
+                        :disabled="assignPending || !assignmentScore"
+                        class="transition-color inline-flex w-full items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-6 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50 md:w-fit"
                         @click="
                             setStudentFeedback(
                                 route.query.id,
                                 route.query.a_id,
                                 route.query.u_id
                             )
-                        "
-                        type="button"
-                        :disabled="assignPending || !assignmentScore"
-                        class="transition-color inline-flex w-full items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-6 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50 md:w-fit">
+                        ">
                         บันทึก
                     </button>
                 </div>
@@ -236,33 +236,33 @@
                 v-model="assignmentFeedback"
                 class="block w-full rounded-lg border-gray-200 px-4 py-3 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                 rows="3"
-                placeholder="Feedback"></textarea>
+                placeholder="Feedback"/>
         </div>
-        <div class="w-full" v-if="assignments?.data?.s_content?.text">
+        <div v-if="assignments?.data?.s_content?.text" class="w-full">
             <span class="flex items-center gap-2 font-bold">
                 <span class="material-icons-outlined select-none">article</span>
                 ข้อความจากนักเรียน
             </span>
-            <hr class="mb-2" />
+            <hr class="mb-2" >
             <MdPreview
                 language="en-US"
-                :modelValue="assignments?.data?.s_content?.text" />
+                :model-value="assignments?.data?.s_content?.text" />
         </div>
-        <div class="mt-4" v-if="assignments?.data?.s_content?.files.length">
+        <div v-if="assignments?.data?.s_content?.files.length" class="mt-4">
             <span class="flex items-center gap-2 font-bold">
                 <span class="material-icons-outlined select-none">
                     attach_file
                 </span>
                 ไฟล์จากนักเรียน
             </span>
-            <hr class="mb-2" />
+            <hr class="mb-2" >
         </div>
         <div
-            class="flex flex-col gap-x-4 gap-y-2 overflow-auto md:flex-row"
-            v-if="assignments?.data?.s_content?.files.length">
+            v-if="assignments?.data?.s_content?.files.length"
+            class="flex flex-col gap-x-4 gap-y-2 overflow-auto md:flex-row">
             <div
-                class="flex flex-row flex-wrap gap-2"
-                v-if="assignments?.data?.s_content?.files">
+                v-if="assignments?.data?.s_content?.files"
+                class="flex flex-row flex-wrap gap-2">
                 <div
                     v-for="file in assignments?.data?.s_content?.files"
                     class="border-1 mt-1 flex w-full flex-row rounded-md border p-2 md:w-72">

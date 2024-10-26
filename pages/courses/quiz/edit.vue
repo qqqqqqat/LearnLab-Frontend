@@ -11,7 +11,7 @@
     const tempQuizItem = ref<{
         title: string
         type: 'CHOICE' | 'FILL'
-        choice?: string | undefined[]
+        choice?: string | string[]
         correct: string
     }>({ title: '', type: 'CHOICE', choice: ['', '', '', ''], correct: '' })
     const quizItem = ref<
@@ -67,7 +67,7 @@
 
     async function uploadQuiz() {
         const createQuizToast = toast.loading('กำลังบันทึกแบบทดสอบ')
-        let payload = {
+        const payload = {
             q_id: route.query.q_id,
             c_id: route.query.id,
             q_name: quizName.value,
@@ -106,8 +106,8 @@
         <div class="flex flex-col justify-between gap-2 sm:w-full sm:flex-row">
             <div class="flex flex-row gap-2">
                 <button
-                    @click="navigateTo(`/courses/quiz?id=${route.query.id}`)"
-                    class="inline-flex items-center gap-x-2 rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-blue-600 transition-all duration-200 ease-in-out hover:bg-blue-100 hover:text-blue-800 disabled:pointer-events-none disabled:opacity-50">
+                    class="inline-flex items-center gap-x-2 rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-blue-600 transition-all duration-200 ease-in-out hover:bg-blue-100 hover:text-blue-800 disabled:pointer-events-none disabled:opacity-50"
+                    @click="navigateTo(`/courses/quiz?id=${route.query.id}`)">
                     <span class="material-icons-outlined">arrow_back</span>
                 </button>
                 <span class="text-4xl font-bold">
@@ -116,12 +116,12 @@
             </div>
             <div class="flex justify-end">
                 <button
-                    @click="uploadQuiz"
                     :disabled="
                         !(quizName && quizItem.length > 0) || quizLoading
                     "
                     type="button"
-                    class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+                    class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
+                    @click="uploadQuiz">
                     บันทึก
                 </button>
             </div>
@@ -129,11 +129,11 @@
         <div v-show="!quizLoading" class="flex flex-col gap-4 md:flex-row">
             <div class="relative flex-grow">
                 <input
-                    type="text"
-                    v-model="quizName"
                     id="hs-floating-crs-name"
+                    v-model="quizName"
+                    type="text"
                     placeholder="หัวข้อโพสต์"
-                    class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
+                    class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" >
                 <label
                     for="hs-floating-crs-name"
                     class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -146,11 +146,11 @@
         <div v-show="!quizLoading" class="flex flex-col gap-4 md:flex-row">
             <div class="relative flex-grow">
                 <input
-                    type="datetime-local"
-                    v-model="beginDate"
                     id="hs-floating-quiz-begin"
+                    v-model="beginDate"
+                    type="datetime-local"
                     placeholder="เวลาเริ่มทำแบบทดสอบ"
-                    class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
+                    class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" >
                 <label
                     for="hs-floating-quiz-begin"
                     class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -159,11 +159,11 @@
             </div>
             <div class="relative flex-grow">
                 <input
-                    type="datetime-local"
-                    v-model="dueDate"
                     id="hs-floating-quiz-duedate"
+                    v-model="dueDate"
+                    type="datetime-local"
                     placeholder="เวลาเริ่มทำแบบทดสอบ"
-                    class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
+                    class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" >
                 <label
                     for="hs-floating-quiz-duedate"
                     class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -174,13 +174,20 @@
         <span v-show="!quizLoading" class="mt-4 text-4xl font-bold">
             แก้ไขโจทย์
         </span>
-        <hr v-show="!quizLoading" />
+        <hr v-show="!quizLoading" >
         <div v-show="!quizLoading" class="flex flex-col gap-2 md:flex-row">
             <div class="flex flex-col gap-2">
                 <span class="font-bold">รายการโจทย์</span>
                 <div
                     class="border-1 flex max-h-64 w-full flex-col overflow-auto rounded-md border md:max-w-64">
                     <div
+                        v-for="(item, index) in quizItem"
+                        class="flex min-h-10 flex-col flex-nowrap px-4 py-2 transition-all duration-300 ease-in-out"
+                        :class="
+                            index === editQuizIndex
+                                ? 'bg-blue-600 text-white'
+                                : 'cursor-pointer bg-white'
+                        "
                         @click="
                             () => {
                                 if (quizTypeTemp !== (item.type === 'FILL')) {
@@ -191,22 +198,15 @@
                                 )
                                 editQuizIndex = index
                             }
-                        "
-                        class="flex min-h-10 flex-col flex-nowrap px-4 py-2 transition-all duration-300 ease-in-out"
-                        :class="
-                            index === editQuizIndex
-                                ? 'bg-blue-600 text-white'
-                                : 'cursor-pointer bg-white'
-                        "
-                        v-for="(item, index) in quizItem">
+                        ">
                         <span
                             class="w-full overflow-hidden text-ellipsis whitespace-nowrap">
                             {{ index + 1 }}.) {{ item.title }}
                         </span>
                     </div>
                     <div
-                        class="flex w-full flex-col items-center justify-center px-4 py-4 font-bold ease-in-out"
-                        v-if="!quizItem?.length">
+                        v-if="!quizItem?.length"
+                        class="flex w-full flex-col items-center justify-center px-4 py-4 font-bold ease-in-out">
                         ยังไม่ได้เพิ่มข้อ
                     </div>
                 </div>
@@ -218,6 +218,8 @@
                     <div class="flex flex-row items-center gap-2">
                         <button
                             v-if="editQuizIndex >= 0"
+                            type="button"
+                            class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
                             @click="
                                 () => {
                                     editQuizIndex = -1
@@ -226,9 +228,7 @@
                                     if (tempQuizItem.type === 'CHOICE')
                                         tempQuizItem.choice = []
                                 }
-                            "
-                            type="button"
-                            class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+                            ">
                             <span class="material-icons-outlined">logout</span>
                             เลิกแก้ไข
                         </button>
@@ -246,6 +246,8 @@
                                         : true)
                                 )
                             "
+                            type="button"
+                            class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
                             @click="
                                 () => {
                                     quizItem.push(
@@ -257,9 +259,7 @@
                                         tempQuizItem.choice = []
                                     editQuizIndex = -1
                                 }
-                            "
-                            type="button"
-                            class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+                            ">
                             <span class="material-icons-outlined">add</span>
                             เพิ่มข้อ
                         </button>
@@ -277,6 +277,8 @@
                                         : true)
                                 )
                             "
+                            type="button"
+                            class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
                             @click="
                                 () => {
                                     quizItem[editQuizIndex] = JSON.parse(
@@ -288,14 +290,14 @@
                                         tempQuizItem.choice = []
                                     editQuizIndex = -1
                                 }
-                            "
-                            type="button"
-                            class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+                            ">
                             <span class="material-icons-outlined">save</span>
                             บันทึก
                         </button>
                         <button
                             v-if="editQuizIndex >= 0"
+                            type="button"
+                            class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
                             @click="
                                 () => {
                                     if (editQuizIndex > -1) {
@@ -308,9 +310,7 @@
                                         tempQuizItem.choice = []
                                     editQuizIndex = -1
                                 }
-                            "
-                            type="button"
-                            class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+                            ">
                             <span class="material-icons-outlined">delete</span>
                             ลบ
                         </button>
@@ -325,11 +325,11 @@
                                 ตัวเลือก
                             </label>
                             <input
-                                :disabled="editQuizIndex >= 0"
-                                v-model="quizTypeTemp"
-                                type="checkbox"
                                 id="switch-quiz-type"
-                                class="relative h-7 w-[3.25rem] cursor-pointer rounded-full border-transparent bg-gray-100 p-px text-transparent transition-colors duration-200 ease-in-out before:inline-block before:size-6 before:translate-x-0 before:transform before:rounded-full before:bg-white before:shadow before:ring-0 before:transition before:duration-200 before:ease-in-out checked:border-blue-600 checked:bg-none checked:text-blue-600 checked:before:translate-x-full checked:before:bg-blue-200 focus:ring-blue-600 focus:checked:border-blue-600 disabled:pointer-events-none disabled:opacity-50" />
+                                v-model="quizTypeTemp"
+                                :disabled="editQuizIndex >= 0"
+                                type="checkbox"
+                                class="relative h-7 w-[3.25rem] cursor-pointer rounded-full border-transparent bg-gray-100 p-px text-transparent transition-colors duration-200 ease-in-out before:inline-block before:size-6 before:translate-x-0 before:transform before:rounded-full before:bg-white before:shadow before:ring-0 before:transition before:duration-200 before:ease-in-out checked:border-blue-600 checked:bg-none checked:text-blue-600 checked:before:translate-x-full checked:before:bg-blue-200 focus:ring-blue-600 focus:checked:border-blue-600 disabled:pointer-events-none disabled:opacity-50" >
                             <label
                                 for="switch-quiz-type"
                                 class="ms-3 text-sm text-gray-500">
@@ -345,11 +345,11 @@
                     <!-- Floating Input -->
                     <div class="relative flex-grow">
                         <input
-                            type="text"
-                            v-model="tempQuizItem.title"
                             id="problem-title"
+                            v-model="tempQuizItem.title"
+                            type="text"
                             placeholder="โจทย์"
-                            class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
+                            class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" >
                         <label
                             for="problem-title"
                             class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -358,15 +358,15 @@
                         </label>
                     </div>
                     <!-- End Floating Input -->
-                    <div class="flex flex-col gap-2" v-if="quizTypeTemp">
+                    <div v-if="quizTypeTemp" class="flex flex-col gap-2">
                         <!-- Floating Input -->
                         <div class="relative flex-grow">
                             <input
-                                type="text"
-                                v-model="tempQuizItem.correct"
                                 id="problem-key"
+                                v-model="tempQuizItem.correct"
+                                type="text"
                                 placeholder="คำตอบที่ถูก"
-                                class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
+                                class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" >
                             <label
                                 for="problem-key"
                                 class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -376,23 +376,23 @@
                         </div>
                         <!-- End Floating Input -->
                     </div>
-                    <div class="flex flex-col gap-2" v-else>
+                    <div v-else class="flex flex-col gap-2">
                         <!-- Floating Input -->
                         <div class="flex items-center gap-4">
                             <input
-                                type="radio"
+                                id="hs-radio-vertical-group-1"
                                 v-model="tempQuizItem.correct"
+                                type="radio"
                                 value="1"
                                 name="hs-radio-vertical-group"
-                                class="mt-0.5 shrink-0 rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                                id="hs-radio-vertical-group-1" />
+                                class="mt-0.5 shrink-0 rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" >
                             <div class="relative flex-grow">
                                 <input
-                                    type="text"
-                                    v-model="tempQuizItem.choice[0]"
                                     id="problem-c1"
+                                    v-model="tempQuizItem.choice[0]"
+                                    type="text"
                                     placeholder="คำตอบที่ถูก"
-                                    class="peer block w-full cursor-pointer rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
+                                    class="peer block w-full cursor-pointer rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" >
                                 <label
                                     for="problem-c1"
                                     class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -405,19 +405,19 @@
                         <!-- Floating Input -->
                         <div class="flex items-center gap-4">
                             <input
-                                type="radio"
+                                id="hs-radio-vertical-group-2"
                                 v-model="tempQuizItem.correct"
+                                type="radio"
                                 value="2"
                                 name="hs-radio-vertical-group"
-                                class="mt-0.5 shrink-0 rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                                id="hs-radio-vertical-group-2" />
+                                class="mt-0.5 shrink-0 rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" >
                             <div class="relative flex-grow">
                                 <input
-                                    type="text"
-                                    v-model="tempQuizItem.choice[1]"
                                     id="problem-c2"
+                                    v-model="tempQuizItem.choice[1]"
+                                    type="text"
                                     placeholder="คำตอบที่ถูก"
-                                    class="peer block w-full cursor-pointer rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
+                                    class="peer block w-full cursor-pointer rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" >
                                 <label
                                     for="problem-c2"
                                     class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -430,19 +430,19 @@
                         <!-- Floating Input -->
                         <div class="flex items-center gap-4">
                             <input
-                                type="radio"
+                                id="hs-radio-vertical-group-3"
                                 v-model="tempQuizItem.correct"
+                                type="radio"
                                 value="3"
                                 name="hs-radio-vertical-group"
-                                class="mt-0.5 shrink-0 cursor-pointer rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                                id="hs-radio-vertical-group-3" />
+                                class="mt-0.5 shrink-0 cursor-pointer rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" >
                             <div class="relative flex-grow">
                                 <input
-                                    type="text"
-                                    v-model="tempQuizItem.choice[2]"
                                     id="problem-c3"
+                                    v-model="tempQuizItem.choice[2]"
+                                    type="text"
                                     placeholder="คำตอบที่ถูก"
-                                    class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
+                                    class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" >
                                 <label
                                     for="problem-c3"
                                     class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -455,19 +455,19 @@
                         <!-- Floating Input -->
                         <div class="flex items-center gap-4">
                             <input
-                                type="radio"
+                                id="hs-radio-vertical-group-4"
                                 v-model="tempQuizItem.correct"
+                                type="radio"
                                 value="4"
                                 name="hs-radio-vertical-group"
-                                class="mt-0.5 shrink-0 cursor-pointer rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                                id="hs-radio-vertical-group-4" />
+                                class="mt-0.5 shrink-0 cursor-pointer rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" >
                             <div class="relative flex-grow">
                                 <input
-                                    type="text"
                                     id="problem-c4"
                                     v-model="tempQuizItem.choice[3]"
+                                    type="text"
                                     placeholder="คำตอบที่ถูก"
-                                    class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
+                                    class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" >
                                 <label
                                     for="problem-c4"
                                     class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">

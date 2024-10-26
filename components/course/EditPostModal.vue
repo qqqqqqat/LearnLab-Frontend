@@ -61,7 +61,7 @@
 
     async function updatePost() {
         const updatePostToast = toast.loading('กำลังสร้างโพสต์')
-        let payload = {
+        const payload = {
             c_id: props.c_id,
             p_id: props.p_id,
             p_title: postTitle.value,
@@ -90,8 +90,8 @@
 </script>
 <template>
     <div
-        ref="editPost"
         id="edit-post-modal"
+        ref="editPost"
         class="hs-overlay pointer-events-none fixed start-0 top-0 z-[80] hidden size-full overflow-y-auto overflow-x-hidden opacity-0 transition-all hs-overlay-open:opacity-100 hs-overlay-open:duration-500">
         <div
             class="m-3 opacity-0 transition-all hs-overlay-open:opacity-100 hs-overlay-open:duration-500 sm:mx-auto sm:w-full sm:max-w-screen-xl">
@@ -126,11 +126,11 @@
                         <!-- Floating Input -->
                         <div class="relative flex-grow">
                             <input
-                                type="text"
-                                v-model="postTitle"
                                 id="hs-floating-crs-name-edit"
+                                v-model="postTitle"
+                                type="text"
                                 placeholder="หัวข้อโพสต์"
-                                class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
+                                class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" >
                             <label
                                 for="hs-floating-crs-name-edit"
                                 class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -155,13 +155,13 @@
                         ยกเลิก
                     </button>
                     <button
+                        type="button"
+                        class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
                         @click="
                             () => {
                                 updatePost()
                             }
-                        "
-                        type="button"
-                        class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+                        ">
                         แก้ไข
                     </button>
                 </div>

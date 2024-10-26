@@ -22,9 +22,9 @@
                 </span>
                 <span class="mb-4">
                     ภาคเรียนที่ 1 ปีการศึกษา 2567
-                    <br />
+                    <br >
                     คณะเทคโนโลยีสารสนเทศ
-                    <br />
+                    <br >
                     สถาบันเทคโนโลยีพระจอมเกล้าเจ้าคุณทหารลาดกระบัง
                 </span>
             </div>
@@ -32,7 +32,7 @@
                 <div class="flex flex-col gap-y-1">
                     <span class="font-bold">จัดทำโดย</span>
                     <div
-                        class="h-[2px] w-full bg-gradient-to-r from-white to-white/0"></div>
+                        class="h-[2px] w-full bg-gradient-to-r from-white to-white/0"/>
                     <ul>
                         <li v-for="name in devname">{{ name }}</li>
                     </ul>

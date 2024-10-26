@@ -18,11 +18,11 @@
                     .then((res) => {
                         avatarState.value = res
                     })
-                    .catch((err) => {
+                    .catch((_err) => {
                         toast.error('โหลดรูปล้มเหลว')
                     })
             })
-            .catch(async (err) => {
+            .catch(async (_err) => {
                 if (
                     stripTrailingSlash(route.path) !== '/' &&
                     stripTrailingSlash(route.path) !== '/courses'
@@ -167,21 +167,21 @@
                             </div>
                         </button>
                         <div
-                            key="stateLoggedIn"
                             v-if="userState"
-                            @click="userMenu = !userMenu"
-                            class="flex cursor-pointer flex-row items-center gap-x-2 rounded-lg font-bold transition-colors duration-200 ease-in-out md:px-3">
+                            key="stateLoggedIn"
+                            class="flex cursor-pointer flex-row items-center gap-x-2 rounded-lg font-bold transition-colors duration-200 ease-in-out md:px-3"
+                            @click="userMenu = !userMenu">
                             <div
-                                class="flex h-8 w-8 select-none flex-col items-center justify-center rounded-md bg-slate-200 text-lg"
-                                v-if="!avatarState?.u_avatar">
+                                v-if="!avatarState?.u_avatar"
+                                class="flex h-8 w-8 select-none flex-col items-center justify-center rounded-md bg-slate-200 text-lg">
                                 {{
                                     `${userState?.u_firstname?.slice(0, 1)}${userState?.u_lastname?.slice(0, 1)}`
                                 }}
                             </div>
-                            <div class="h-8 w-8 rounded-md" v-else>
+                            <div v-else class="h-8 w-8 rounded-md">
                                 <img
                                     class="aspect-square h-8 w-8 rounded-md object-cover"
-                                    :src="`data:${avatarState?.u_avatar_mime_type};base64,${avatarState?.u_avatar}`" />
+                                    :src="`data:${avatarState?.u_avatar_mime_type};base64,${avatarState?.u_avatar}`" >
                             </div>
                             <div class="flex items-center">
                                 <span>
@@ -200,25 +200,25 @@
                                 <div class="flex flex-col rounded-b-lg">
                                     <NuxtLink
                                         to="/settings"
-                                        @click="
-                                            () => {
-                                                userMenu = false
-                                            }
-                                        "
                                         :class="
                                             route.path === '/settings'
                                                 ? 'bg-blue-600 text-white hover:bg-blue-400'
                                                 : 'bg-white hover:text-gray-400'
                                         "
-                                        class="flex cursor-pointer items-center gap-x-2 p-4 hover:bg-gray-200">
+                                        class="flex cursor-pointer items-center gap-x-2 p-4 hover:bg-gray-200"
+                                        @click="
+                                            () => {
+                                                userMenu = false
+                                            }
+                                        ">
                                         <span class="material-icons-outlined">
                                             settings
                                         </span>
                                         ตั้งค่าผู้ใช้
                                     </NuxtLink>
                                     <div
-                                        @click="signOut"
-                                        class="flex cursor-pointer items-center gap-x-2 rounded-b-lg bg-white p-4 text-red-600 hover:bg-gray-200">
+                                        class="flex cursor-pointer items-center gap-x-2 rounded-b-lg bg-white p-4 text-red-600 hover:bg-gray-200"
+                                        @click="signOut">
                                         <span class="material-icons-outlined">
                                             logout
                                         </span>

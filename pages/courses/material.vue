@@ -91,19 +91,19 @@
 </script>
 <template>
     <LazyCourseCreateFolderModal
+        ref="createFolderModal"
         :f_path="file_path"
         :c_id="route.query.id"
-        ref="createFolderModal"
         @refresh-file="fetchFile(route.query.id)" />
     <LazyCourseUploadFileModal
+        ref="uploadFileModal"
         :f_path="file_path"
         :c_id="route.query.id"
-        ref="uploadFileModal"
         @refresh-file="fetchFile(route.query.id)" />
     <LazyCourseDeleteFileConfirmModal
+        ref="deleteConfirmModal"
         :f_name="delFileName"
         :f_path="delFilePath"
-        ref="deleteConfirmModal"
         :f_id="delFileID"
         :f_type="delFileType"
         @delete-file="deleteFile" />
@@ -116,12 +116,12 @@
                 class="block w-full rounded-lg border-gray-200 px-4 py-3 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                 :value="file_path"
                 placeholder="Readonly input"
-                readonly />
+                readonly >
             <button
                 v-if="file_path !== '/'"
-                @click="traverseFile(goUpDirectory(file_path))"
                 class="inline-flex flex-shrink-0 items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-3 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
-                href="#">
+                href="#"
+                @click="traverseFile(goUpDirectory(file_path))">
                 <span class="material-icons-outlined" style="font-size: 18px">
                     arrow_upward
                 </span>
@@ -171,8 +171,8 @@
             </div>
         </div>
         <div
-            v-if="(file_post?.length || 0) > 0"
             v-for="file in file_post"
+            v-if="(file_post?.length || 0) > 0"
             class="border-1 flex w-full flex-col rounded-md border p-2"
             :class="
                 file.f_type === 'FOLDER'
@@ -230,17 +230,17 @@
                 </div>
                 <div class="flex w-fit flex-row items-center gap-2">
                     <span
-                        class="material-icons-outlined cursor-pointer select-none text-gray-500"
                         v-if="file.f_type === 'FILE'"
+                        class="material-icons-outlined cursor-pointer select-none text-gray-500"
                         @click="downloadFile(file.f_id)">
                         download
                     </span>
                     <span
-                        class="material-icons-outlined cursor-pointer select-none text-red-500"
                         v-if="
                             file.f_privacy === 'PUBLIC' &&
                             userRole?.[route.query.id] !== 'STUDENT'
                         "
+                        class="material-icons-outlined cursor-pointer select-none text-red-500"
                         @click="
                             () => {
                                 delFileName = file.f_name
@@ -258,7 +258,7 @@
         <div
             v-else-if="!file_pending && (file_post?.length || 0) === 0"
             class="border-1 flex w-full flex-col items-center gap-2 rounded-md border p-4 md:flex-row">
-            <img class="w-48 p-8" src="~/assets/images/nofile.svg" />
+            <img class="w-48 p-8" src="~/assets/images/nofile.svg" >
             <span class="text-3xl font-bold">
                 {{
                     file_path === '/'

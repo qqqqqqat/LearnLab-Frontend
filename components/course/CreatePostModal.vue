@@ -56,7 +56,7 @@
         if (postQuizID.value.slice(-1) === ',') {
             postQuizID.value = postQuizID.value.slice(0, -1)
         }
-        let payload = {
+        const payload = {
             c_id: props.c_id,
             p_title: postTitle.value,
             p_type: postType.value.type,
@@ -168,8 +168,8 @@
 </script>
 <template>
     <div
-        ref="createCourseModal"
         id="create-post-modal"
+        ref="createCourseModal"
         class="hs-overlay pointer-events-none fixed start-0 top-0 z-[80] hidden size-full overflow-y-auto overflow-x-hidden opacity-0 transition-all hs-overlay-open:opacity-100 hs-overlay-open:duration-500">
         <div
             class="m-3 opacity-0 transition-all hs-overlay-open:opacity-100 hs-overlay-open:duration-500 sm:mx-auto sm:w-full sm:max-w-screen-xl">
@@ -204,11 +204,11 @@
                         <!-- Floating Input -->
                         <div class="relative flex-grow">
                             <input
-                                type="text"
-                                v-model="postTitle"
                                 id="hs-floating-crs-name"
+                                v-model="postTitle"
+                                type="text"
                                 placeholder="หัวข้อโพสต์"
-                                class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
+                                class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" >
                             <label
                                 for="hs-floating-crs-name"
                                 class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -228,12 +228,12 @@
                     <!-- Floating Input -->
                     <div class="relative flex-grow">
                         <input
-                            type="text"
-                            v-model="postAssignID"
-                            @keypress="onlyNumbersAndComma"
                             id="hs-floating-crs-ass-att"
+                            v-model="postAssignID"
+                            type="text"
                             placeholder="ID ของ Assignment ขั้นด้วย Comma (,)"
-                            class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
+                            class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6"
+                            @keypress="onlyNumbersAndComma" >
                         <label
                             for="hs-floating-crs-ass-att"
                             class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -244,12 +244,12 @@
                     <!-- Floating Input -->
                     <div class="relative flex-grow">
                         <input
-                            type="text"
-                            v-model="postQuizID"
-                            @keypress="onlyNumbersAndComma"
                             id="hs-floating-crs-quiz-att"
+                            v-model="postQuizID"
+                            type="text"
                             placeholder="ID ของ Quiz ขั้นด้วย Comma (,)"
-                            class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
+                            class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6"
+                            @keypress="onlyNumbersAndComma" >
                         <label
                             for="hs-floating-crs-quiz-att"
                             class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -260,16 +260,16 @@
                     <div
                         class="flex w-full flex-col gap-2 md:flex-row md:flex-nowrap">
                         <input
-                            @change="onFileChangedMat"
                             ref="inputFile"
                             type="file"
-                            hidden />
+                            hidden
+                            @change="onFileChangedMat" >
                         <!-- End Floating Input -->
                         <div>
                             <button
-                                @click="inputFile.click()"
                                 type="button"
-                                class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+                                class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
+                                @click="inputFile.click()">
                                 <span class="material-icons-outlined">
                                     upload_file
                                 </span>
@@ -318,6 +318,8 @@
                         ยกเลิก
                     </button>
                     <button
+                        type="button"
+                        class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
                         @click="
                             () => {
                                 if (uploadFiles.length) {
@@ -326,9 +328,7 @@
                                     uploadPost([])
                                 }
                             }
-                        "
-                        type="button"
-                        class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+                        ">
                         สร้าง
                     </button>
                 </div>

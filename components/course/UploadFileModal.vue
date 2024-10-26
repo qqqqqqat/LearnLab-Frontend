@@ -72,8 +72,8 @@
 </script>
 <template>
     <div
-        ref="uploadMaterialModal"
         id="upload-material-modal"
+        ref="uploadMaterialModal"
         class="hs-overlay pointer-events-none fixed start-0 top-0 z-[80] hidden size-full overflow-y-auto overflow-x-hidden opacity-0 transition-all hs-overlay-open:opacity-100 hs-overlay-open:duration-500">
         <div
             class="m-3 opacity-0 transition-all hs-overlay-open:opacity-100 hs-overlay-open:duration-500 sm:mx-auto sm:w-full sm:max-w-lg">
@@ -113,11 +113,11 @@
                             อัพโหลดไฟล์
                         </label>
                         <input
-                            @change="onFileChangedBanner($event)"
+                            id="small-file-input-banner"
                             type="file"
                             name="small-file-input-banner"
-                            id="small-file-input-banner"
-                            class="block w-full rounded-lg border border-gray-200 text-sm shadow-sm file:me-4 file:border-0 file:bg-gray-50 file:px-4 file:py-2 focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" />
+                            class="block w-full rounded-lg border border-gray-200 text-sm shadow-sm file:me-4 file:border-0 file:bg-gray-50 file:px-4 file:py-2 focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
+                            @change="onFileChangedBanner($event)" >
                     </form>
                 </div>
                 <div class="flex items-center justify-end gap-x-2 px-4 py-3">
@@ -129,9 +129,9 @@
                     </button>
                     <button
                         type="button"
-                        @click="uploadFile()"
                         :disabled="!uploadMaterial || isFileUploading"
-                        class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+                        class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
+                        @click="uploadFile()">
                         อัพโหลด
                     </button>
                 </div>

@@ -139,28 +139,28 @@
         <div
             v-show="!crs_pending"
             class="flex flex-row items-center justify-between gap-4">
-            <div></div>
+            <div/>
             <div>
                 <button
                     type="button"
-                    @click="unenroll.c_openModal()"
-                    class="mr-2 inline-flex flex-shrink-0 items-center justify-center gap-x-2 rounded-lg border border-transparent bg-red-600 px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-red-700 disabled:pointer-events-none disabled:opacity-50">
+                    class="mr-2 inline-flex flex-shrink-0 items-center justify-center gap-x-2 rounded-lg border border-transparent bg-red-600 px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-red-700 disabled:pointer-events-none disabled:opacity-50"
+                    @click="unenroll.c_openModal()">
                     <span class="material-icons-outlined">remove</span>
                     ออกจากคอร์ส
                 </button>
                 <button
                     v-if="userRole?.[route.query.id] !== 'STUDENT'"
                     type="button"
-                    @click="postModal.c_openModal"
-                    class="inline-flex flex-shrink-0 items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+                    class="inline-flex flex-shrink-0 items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
+                    @click="postModal.c_openModal">
                     <span class="material-icons-outlined">add</span>
                     เพิ่มโพสต์ในคอร์ส
                 </button>
             </div>
         </div>
         <div
-            v-if="(crs_post?.data.length || 0) > 0"
             v-for="post in crs_post?.data"
+            v-if="(crs_post?.data.length || 0) > 0"
             class="border-1 flex w-full flex-col gap-2 rounded-md border p-4">
             <div
                 class="flex w-full flex-wrap items-center justify-between gap-4">
@@ -168,11 +168,11 @@
                     <div v-if="post.u_avatar" class="h-12 w-12 rounded-md">
                         <img
                             class="bottom-1 aspect-square rounded-md border object-cover"
-                            :src="`/api/avatar/?u_id=${post.u_id}`" />
+                            :src="`/api/avatar/?u_id=${post.u_id}`" >
                     </div>
                     <div
-                        class="flex h-12 w-12 select-none flex-col items-center justify-center rounded-md bg-slate-200 text-2xl"
-                        v-if="!post?.u_avatar">
+                        v-if="!post?.u_avatar"
+                        class="flex h-12 w-12 select-none flex-col items-center justify-center rounded-md bg-slate-200 text-2xl">
                         {{
                             `${post?.u_firstname.slice(0, 1)}${post?.u_lastname.slice(0, 1)}`
                         }}
@@ -207,7 +207,7 @@
                             class="inline-flex items-center gap-x-2 rounded-md bg-emerald-100 px-2 py-1 text-sm font-medium text-emerald-800">
                             งานมอบหมาย
                         </span>
-                        <div class="flex flex-row flex-wrap"></div>
+                        <div class="flex flex-row flex-wrap"/>
                     </div>
                     <div
                         v-else-if="post.p_type === 'QUIZ'"
@@ -216,11 +216,13 @@
                             class="inline-flex items-center gap-x-2 rounded-md bg-orange-100 px-2 py-1 text-sm font-medium text-orange-800">
                             แบบทดสอบ
                         </span>
-                        <div class="flex flex-row flex-wrap"></div>
+                        <div class="flex flex-row flex-wrap"/>
                     </div>
                 </div>
-                <div class="flex gap-2" v-if="userState?.u_id === post?.u_id">
+                <div v-if="userState?.u_id === post?.u_id" class="flex gap-2">
                     <button
+                        type="button"
+                        class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-gray-200 px-2 py-1 text-sm font-semibold text-gray-500 duration-200 ease-in-out hover:border-blue-600 hover:text-blue-600 disabled:pointer-events-none disabled:opacity-50"
                         @click="
                             () => {
                                 editPostId = post.p_id
@@ -228,34 +230,32 @@
                                 editPostContent = post.p_content
                                 editPostModal.c_openModal()
                             }
-                        "
-                        type="button"
-                        class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-gray-200 px-2 py-1 text-sm font-semibold text-gray-500 duration-200 ease-in-out hover:border-blue-600 hover:text-blue-600 disabled:pointer-events-none disabled:opacity-50">
+                        ">
                         <span class="material-icons-outlined">edit</span>
                     </button>
                     <button
+                        type="button"
+                        class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-gray-200 px-2 py-1 text-sm font-semibold text-gray-500 duration-200 ease-in-out hover:border-rose-600 hover:text-rose-600 disabled:pointer-events-none disabled:opacity-50"
                         @click="
                             () => {
                                 delPostId = post.p_id
                                 delPostConfirm.c_openModal()
                             }
-                        "
-                        type="button"
-                        class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-gray-200 px-2 py-1 text-sm font-semibold text-gray-500 duration-200 ease-in-out hover:border-rose-600 hover:text-rose-600 disabled:pointer-events-none disabled:opacity-50">
+                        ">
                         <span class="material-icons-outlined">delete</span>
                     </button>
                 </div>
             </div>
             <div class="text-xl font-black">{{ post.p_title }}</div>
             <div v-if="post.p_content">
-                <MdPreview language="en-US" :modelValue="post.p_content" />
+                <MdPreview language="en-US" :model-value="post.p_content" />
             </div>
-            <div class="flex flex-col" v-if="post.p_item_list.files.length">
+            <div v-if="post.p_item_list.files.length" class="flex flex-col">
                 <span class="flex items-center gap-2 font-bold">
                     <span class="material-icons-outlined">attach_file</span>
                     ไฟล์แนบ
                 </span>
-                <hr class="mb-2" />
+                <hr class="mb-2" >
                 <div class="flex flex-row flex-wrap gap-2">
                     <div
                         v-for="file in post?.p_item_list?.files"
@@ -304,12 +304,12 @@
                     </div>
                 </div>
             </div>
-            <div class="flex flex-col" v-if="post.p_item_list.quizzes.length">
+            <div v-if="post.p_item_list.quizzes.length" class="flex flex-col">
                 <span class="flex items-center gap-2 font-bold">
                     <span class="material-icons-outlined">quiz</span>
                     แบบทดสอบ
                 </span>
-                <hr class="mb-2" />
+                <hr class="mb-2" >
                 <div class="flex flex-row flex-wrap gap-2">
                     <div
                         v-for="quiz in post?.p_item_list?.quizzes"
@@ -338,8 +338,8 @@
                                         }}
                                     </span>
                                     <span
-                                        class="whitespace-nowrap text-xs text-slate-400"
-                                        v-if="quiz.q_time_limit">
+                                        v-if="quiz.q_time_limit"
+                                        class="whitespace-nowrap text-xs text-slate-400">
                                         {{
                                             quiz.q_time_limit
                                                 ? `จำกัดเวลาทำ ${quiz.q_time_limit} นาที`
@@ -360,13 +360,13 @@
                 </div>
             </div>
             <div
-                class="flex flex-col"
-                v-if="post.p_item_list.assignments.length">
+                v-if="post.p_item_list.assignments.length"
+                class="flex flex-col">
                 <span class="flex items-center gap-2 font-bold">
                     <span class="material-icons-outlined">assignment</span>
                     งานมอบหมาย
                 </span>
-                <hr class="mb-2" />
+                <hr class="mb-2" >
                 <div class="flex flex-row flex-wrap gap-2">
                     <div
                         v-for="assign in post?.p_item_list?.assignments"
@@ -395,8 +395,8 @@
                                         }}
                                     </span>
                                     <span
-                                        class="whitespace-nowrap text-xs text-slate-400"
-                                        v-if="assign.a_score">
+                                        v-if="assign.a_score"
+                                        class="whitespace-nowrap text-xs text-slate-400">
                                         {{ assign.a_score }} คะแนน
                                     </span>
                                 </div>
@@ -429,7 +429,7 @@
                     </div>
                 </div>
             </div>
-            <hr />
+            <hr >
             <div class="flex flex-col gap-4">
                 <div class="flex flex-col gap-2">
                     <span class="text-xl font-bold">Comments</span>
@@ -440,7 +440,7 @@
         <div
             v-else-if="!crs_pending && (crs_post?.data.length || 0) === 0"
             class="border-1 flex w-full flex-col items-center gap-2 rounded-md border p-4 md:flex-row">
-            <img class="w-64" src="~/assets/images/content.svg" />
+            <img class="w-64" src="~/assets/images/content.svg" >
             <span class="text-3xl font-bold">ยังไม่มีโพสต์ในคอร์สนี้</span>
         </div>
         <div

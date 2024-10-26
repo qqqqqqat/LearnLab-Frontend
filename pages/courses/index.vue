@@ -107,8 +107,8 @@
 
     async function joinCourse() {
         const joinToast = toast.loading('กำลังเข้าร่วมคอร์ส')
-        let crspayload = { c_id: modalCourseID.value }
-        if (modalLockedCourse)
+        const crspayload = { c_id: modalCourseID.value }
+        if (modalLockedCourse.value)
             Object.assign(crspayload, { c_password: crspassword.value })
         await $fetch<JoinCoursePOSTAPIResponse>('/api/courses/enroll/', {
             method: 'POST',
@@ -134,7 +134,7 @@
 
     async function findCourse() {
         const joinCodeToast = toast.loading('กำลังเข้าร่วมคอร์ส')
-        let payload = { c_code: crscode.value }
+        const payload = { c_code: crscode.value }
         await $fetch('/api/courses/enroll/', {
             method: 'PUT',
             body: payload,
@@ -219,12 +219,12 @@
                                 : `คุณกำลังจะเข้าร่วมคอร์ส ${modalCourseName} คุณแน่ใจหรือไม่ว่าต้องการเข้าหรือไม่`
                         }}
                     </p>
-                    <div class="relative" v-if="modalLockedCourse">
+                    <div v-if="modalLockedCourse" class="relative">
                         <input
+                            v-model="crspassword"
                             type="password"
                             class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                            v-model="crspassword"
-                            placeholder="ใส่รหัส" />
+                            placeholder="ใส่รหัส" >
                         <div
                             class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                             <svg
@@ -255,8 +255,8 @@
                     </button>
                     <button
                         type="button"
-                        @click="joinCourse"
-                        class="inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50">
+                        class="inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:opacity-50"
+                        @click="joinCourse">
                         เข้าร่วม
                     </button>
                 </div>
@@ -284,20 +284,20 @@
                                 </label>
                                 <div class="flex">
                                     <input
+                                        id="hs-trailing-button-add-on-with-icon"
                                         v-model="search"
                                         type="text"
-                                        id="hs-trailing-button-add-on-with-icon"
                                         name="hs-trailing-button-add-on-with-icon"
-                                        class="border-1 block w-full rounded-s-lg border border-gray-200 px-4 py-3 text-sm shadow-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" />
+                                        class="border-1 block w-full rounded-s-lg border border-gray-200 px-4 py-3 text-sm shadow-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" >
                                     <button
+                                        type="button"
+                                        class="inline-flex h-[2.875rem] w-[2.875rem] flex-shrink-0 items-center justify-center gap-x-2 rounded-e-md border border-transparent bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
                                         @click="
                                             () => {
                                                 currentPage = 1
                                                 updateQuery(search)
                                             }
-                                        "
-                                        type="button"
-                                        class="inline-flex h-[2.875rem] w-[2.875rem] flex-shrink-0 items-center justify-center gap-x-2 rounded-e-md border border-transparent bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+                                        ">
                                         <svg
                                             class="size-4 flex-shrink-0"
                                             xmlns="http://www.w3.org/2000/svg"
@@ -378,33 +378,33 @@
                                 </div>
                             </div>
                             <hr
-                                class="mb-2 mt-4 block md:hidden xl:block"
-                                v-if="userState" />
+                                v-if="userState"
+                                class="mb-2 mt-4 block md:hidden xl:block" >
                             <div
-                                class="hidden h-20 w-[2px] rounded-full bg-slate-200 md:block xl:hidden"
-                                v-if="userState"></div>
+                                v-if="userState"
+                                class="hidden h-20 w-[2px] rounded-full bg-slate-200 md:block xl:hidden"/>
                             <div class="flex flex-col">
                                 <TransitionGroup name="fade">
                                     <span
-                                        class="w-full text-left text-lg"
+                                        v-if="userState"
                                         key="enterCourseWithCodeLabel"
-                                        v-if="userState">
+                                        class="w-full text-left text-lg">
                                         เข้าคอร์สด้วยรหัส
                                     </span>
                                     <div
-                                        class="flex flex-row justify-between gap-x-2"
+                                        v-if="userState"
                                         key="enterCourseWithCode"
-                                        v-if="userState">
+                                        class="flex flex-row justify-between gap-x-2">
                                         <input
-                                            type="text"
                                             v-model="crscode"
+                                            type="text"
                                             class="block w-40 rounded-lg border-gray-200 px-4 py-3 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                                            placeholder="รหัสคอร์ส" />
+                                            placeholder="รหัสคอร์ส" >
                                         <button
                                             type="button"
-                                            @click="findCourse()"
                                             :disabled="!(crscode.length === 8)"
-                                            class="inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
+                                            class="inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
+                                            @click="findCourse()">
                                             <span
                                                 class="material-icons-outlined"
                                                 style="font-size: 18px">
@@ -423,24 +423,24 @@
                     :class="!courses?.data.length ? 'border-1 border' : ''">
                     <TransitionGroup name="fade">
                         <div
-                            v-if="pending"
                             v-for="crs in 9"
+                            v-if="pending"
                             :key="`crs${crs}`"
                             class="flex items-center justify-center rounded-xl">
                             <div
                                 class="flex w-80 flex-col rounded-xl border bg-white shadow-sm">
                                 <div
-                                    class="aspect-[17/9] max-h-96 w-full max-w-96 animate-pulse rounded-t-xl bg-gray-200 object-cover"></div>
+                                    class="aspect-[17/9] max-h-96 w-full max-w-96 animate-pulse rounded-t-xl bg-gray-200 object-cover"/>
                                 <div class="p-4 md:p-5">
                                     <h3 class="text-lg font-bold text-gray-800">
                                         <span
-                                            class="block size-6 w-full rounded-full bg-gray-200"></span>
+                                            class="block size-6 w-full rounded-full bg-gray-200"/>
                                     </h3>
                                     <p class="mt-2 text-gray-500">
                                         <span
-                                            class="mb-2 block size-3 w-full rounded-full bg-gray-200"></span>
+                                            class="mb-2 block size-3 w-full rounded-full bg-gray-200"/>
                                         <span
-                                            class="mb-2 block size-3 w-full rounded-full bg-gray-200"></span>
+                                            class="mb-2 block size-3 w-full rounded-full bg-gray-200"/>
                                     </p>
                                     <div
                                         class="flex flex-row items-end justify-between">
@@ -450,14 +450,14 @@
                                             disabled>
                                             ดูคอร์ส
                                         </button>
-                                        <div></div>
+                                        <div/>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div
-                            v-else
                             v-for="crs in courses?.data"
+                            v-else
                             class="flex items-center justify-center rounded-xl">
                             <div
                                 class="flex w-80 flex-col rounded-xl border bg-white shadow-sm">
@@ -469,7 +469,7 @@
                                             ? `/api/courses/banner/?c_id=${crs.c_id}`
                                             : '/images/CourseBannerDefault.svg'
                                     "
-                                    alt="Image Description" />
+                                    alt="Image Description" >
                                 <div class="p-4 md:p-5">
                                     <h3
                                         class="line-clamp-1 text-lg font-bold text-gray-800">
@@ -541,8 +541,8 @@
                     </TransitionGroup>
 
                     <div
-                        class="col-span-3 flex items-center justify-center pb-96 pt-16"
-                        v-if="!courses?.data.length && !pending">
+                        v-if="!courses?.data.length && !pending"
+                        class="col-span-3 flex items-center justify-center pb-96 pt-16">
                         <h1 class="text-xl">ไม่พบคำค้นหานั้น</h1>
                     </div>
                 </div>
@@ -551,15 +551,15 @@
             <nav class="mt-8 flex items-center gap-x-1">
                 <button
                     type="button"
+                    :disabled="currentPage === 1"
+                    class="inline-flex min-h-[38px] min-w-[38px] items-center justify-center gap-x-2 rounded-lg px-2.5 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none disabled:pointer-events-none disabled:opacity-50"
                     @click="
                         () => {
                             if (currentPage > 1) {
                                 currentPage--
                             }
                         }
-                    "
-                    :disabled="currentPage === 1"
-                    class="inline-flex min-h-[38px] min-w-[38px] items-center justify-center gap-x-2 rounded-lg px-2.5 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none disabled:pointer-events-none disabled:opacity-50">
+                    ">
                     <svg
                         class="size-3.5 flex-shrink-0"
                         xmlns="http://www.w3.org/2000/svg"
@@ -580,7 +580,7 @@
                         v-model="currentPage"
                         type="number"
                         :oninput="`this.value = (this.value >= ${totalPages}) ? ${totalPages} : Math.abs(this.value)`"
-                        class="flex min-h-[38px] w-16 min-w-[38px] items-center justify-center rounded-lg border border-gray-200 px-3 py-2 text-center text-sm text-gray-800 focus:bg-gray-50 focus:outline-none disabled:pointer-events-none disabled:opacity-50" />
+                        class="flex min-h-[38px] w-16 min-w-[38px] items-center justify-center rounded-lg border border-gray-200 px-3 py-2 text-center text-sm text-gray-800 focus:bg-gray-50 focus:outline-none disabled:pointer-events-none disabled:opacity-50" >
                     <span
                         class="flex min-h-[38px] items-center justify-center px-1.5 py-2 text-sm text-gray-500">
                         จาก
@@ -592,15 +592,15 @@
                 </div>
                 <button
                     type="button"
+                    :disabled="currentPage === totalPages"
+                    class="inline-flex min-h-[38px] min-w-[38px] items-center justify-center gap-x-2 rounded-lg px-2.5 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none disabled:pointer-events-none disabled:opacity-50"
                     @click="
                         () => {
                             if (currentPage < totalPages) {
                                 currentPage++
                             }
                         }
-                    "
-                    :disabled="currentPage === totalPages"
-                    class="inline-flex min-h-[38px] min-w-[38px] items-center justify-center gap-x-2 rounded-lg px-2.5 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none disabled:pointer-events-none disabled:opacity-50">
+                    ">
                     <span aria-hidden="true" class="sr-only">Next</span>
                     <svg
                         class="size-3.5 flex-shrink-0"
