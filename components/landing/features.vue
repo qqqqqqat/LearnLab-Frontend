@@ -29,6 +29,7 @@
                 class="flex flex-col items-center justify-center gap-x-16 gap-y-8 px-8 md:flex-row 2xl:gap-x-32 2xl:px-0">
                 <div
                     v-for="role in roles"
+                    :key="role.name"
                     class="border-1 flex h-64 w-64 flex-col items-center gap-x-8 rounded-lg border p-4 transition-shadow duration-200 ease-in-out hover:shadow-xl sm:h-fit sm:w-full sm:flex-row md:h-64 md:w-64 md:flex-col">
                     <span
                         class="material-icons-outlined select-none"

@@ -46,7 +46,7 @@
             Object.assign(payload.s_content, { files: postFile })
         if (postContent.value)
             Object.assign(payload.s_content, { text: postContent.value })
-        await $fetch<{ message: string }>('/api/post/', {
+        await $fetchWithHeader<{ message: string }>('/api/post/', {
             method: 'PUT',
             body: payload,
         })
@@ -76,10 +76,13 @@
         for (let x = 0; x < submitFiles.value.length; x++) {
             formData.append('f_data[]', submitFiles.value[x].file)
         }
-        await $fetch<{ f_id: number[]; message: string }>('/api/file/post/', {
-            method: 'POST',
-            body: formData,
-        })
+        await $fetchWithHeader<{ f_id: number[]; message: string }>(
+            '/api/file/post/',
+            {
+                method: 'POST',
+                body: formData,
+            }
+        )
             .then(async (res) => {
                 await makeSubmission(res.f_id)
             })
@@ -144,7 +147,7 @@
                             ref="inputFile"
                             type="file"
                             hidden
-                            @change="onFileChangedMat" />
+                            @change="onFileChangedMat" >
                         <!-- End Floating Input -->
                         <div>
                             <button

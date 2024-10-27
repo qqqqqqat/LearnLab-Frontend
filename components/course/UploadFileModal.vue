@@ -39,10 +39,13 @@
         formData.append('f_path', props.f_path)
         formData.append('f_type', 'FILE')
         formData.append('f_data', uploadMaterial.value)
-        await $fetch<{ message: string; status: number }>('/api/file/', {
-            method: 'POST',
-            body: formData,
-        })
+        await $fetchWithHeader<{ message: string; status: number }>(
+            '/api/file/',
+            {
+                method: 'POST',
+                body: formData,
+            }
+        )
             .then((res) => {
                 c_closeModal()
                 emit('refreshFile')
@@ -117,7 +120,7 @@
                             type="file"
                             name="small-file-input-banner"
                             class="block w-full rounded-lg border border-gray-200 text-sm shadow-sm file:me-4 file:border-0 file:bg-gray-50 file:px-4 file:py-2 focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                            @change="onFileChangedBanner($event)" />
+                            @change="onFileChangedBanner($event)" >
                     </form>
                 </div>
                 <div class="flex items-center justify-end gap-x-2 px-4 py-3">

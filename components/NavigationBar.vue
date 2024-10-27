@@ -4,6 +4,8 @@
     const route = useRoute()
     const userState = useUserState()
     const avatarState = useAvatarState()
+    const access_token = useCookie('access_token')
+    const refresh_token = useCookie('refresh_token')
     const userMenu = ref(false)
     const stripTrailingSlash = (str: string) => {
         return str.endsWith('/') ? str.slice(0, -1) : str
@@ -11,10 +13,10 @@
 
     async function fetchUser() {
         if (userState.value && avatarState.value) return // Do not fetch if state is already set
-        await $fetch<User>('/api/auth/')
+        await $fetchWithHeader<User>('/api/auth/')
             .then(async (res) => {
                 userState.value = res
-                await $fetch<Avatar>('/api/auth/?image=')
+                await $fetchWithHeader<Avatar>('/api/auth/?image=')
                     .then((res) => {
                         avatarState.value = res
                     })
@@ -33,8 +35,10 @@
 
     async function signOut() {
         userMenu.value = false
+        access_token.value = null
+        refresh_token.value = null
         const signoutToast = toast.loading('กำลังออกจากระบบ')
-        await $fetch<User>('/api/session/', { method: 'DELETE' })
+        await $fetchWithHeader<User>('/api/session/', { method: 'DELETE' })
             .then(async (_res) => {
                 userState.value = null
                 toast.update(signoutToast, {
@@ -159,7 +163,7 @@
                             <div
                                 class="w-22 flex items-center justify-center gap-2 overflow-hidden">
                                 <span
-                                    class="material-icons-outlined"
+                                    class="material-icons-outlined w-[18px] h-[18px] overflow-hidden select-none"
                                     style="font-size: 18px">
                                     login
                                 </span>
@@ -181,7 +185,7 @@
                             <div v-else class="h-8 w-8 rounded-md">
                                 <img
                                     class="aspect-square h-8 w-8 rounded-md object-cover"
-                                    :src="`data:${avatarState?.u_avatar_mime_type};base64,${avatarState?.u_avatar}`" />
+                                    :src="`data:${avatarState?.u_avatar_mime_type};base64,${avatarState?.u_avatar}`" >
                             </div>
                             <div class="flex items-center">
                                 <span>

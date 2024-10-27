@@ -1,12 +1,13 @@
 <script setup lang="ts">
     import { toast } from '@steveyuowo/vue-hot-toast'
     import { MdPreview } from 'md-editor-v3'
-    const userRole = useUserCourseState()
+    import { useQueryStringAsNumber } from '#imports'
+    // const userRole = useUserCourseState()
     const assignments = ref<GETOneSubmissionAPIResponse | null>(null)
     const assignPending = ref(true)
-    const postContent = ref<string | null>('')
+    // const postContent = ref<string | null>('')
     const assignmentScore = ref<number | null>(null)
-    const assignmentFeedback = ref<string>('')
+    const assignmentFeedback = ref<string | null>('')
     const submitTime = ref<{
         isLate: boolean
         day: number
@@ -19,7 +20,7 @@
     })
 
     async function getOneAssignment(id: number, a_id: number, u_id: number) {
-        await $fetch<GETOneSubmissionAPIResponse>(
+        await $fetchWithHeader<GETOneSubmissionAPIResponse>(
             '/api/courses/assignment/submit/',
             {
                 query: {
@@ -47,7 +48,7 @@
 
     async function setStudentFeedback(id: number, a_id: number, u_id: number) {
         assignPending.value = true
-        await $fetch<{ status: number; message: string }>(
+        await $fetchWithHeader<{ status: number; message: string }>(
             '/api/courses/assignment/submit/',
             {
                 method: 'PATCH',
@@ -77,7 +78,11 @@
 
     const route = useRoute()
     if (route.query.id && route.query.a_id && route.query.u_id) {
-        getOneAssignment(route.query.id, route.query.a_id, route.query.u_id)
+        getOneAssignment(
+            useQueryStringAsNumber(route.query.id),
+            useQueryStringAsNumber(route.query.a_id),
+            useQueryStringAsNumber(route.query.u_id)
+        )
     } else {
         navigateTo('/courses', { replace: true })
     }
@@ -111,7 +116,7 @@
                         class="inline-flex items-center gap-x-2 rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-blue-600 transition-all duration-200 ease-in-out hover:bg-blue-100 hover:text-blue-800 disabled:pointer-events-none disabled:opacity-50"
                         @click="
                             navigateTo(
-                                `/courses/assignment/view?id=${route.query.id}&a_id=${route.query.a_id}`
+                                `/courses/assignment/view?id=${useQueryStringAsNumber(route.query.id)}&a_id=${useQueryStringAsNumber(route.query.a_id)}`
                             )
                         ">
                         <span
@@ -141,7 +146,7 @@
                             }}
                         </span>
                     </div>
-                    <hr class="my-2" />
+                    <hr class="my-2" >
                     <div class="flex flex-col font-normal">
                         <span class="text-sm text-slate-400">
                             ส่งมาเวลา
@@ -208,7 +213,7 @@
             <span class="material-icons-outlined select-none">feedback</span>
             Feedback
         </span>
-        <hr class="mb-2" />
+        <hr class="mb-2" >
         <div class="mb-3 flex flex-col gap-2">
             <div class="flex flex-row items-center justify-between gap-x-2">
                 <div class="flex flex-row items-center gap-x-2">
@@ -216,7 +221,7 @@
                         v-model="assignmentScore"
                         type="number"
                         class="block w-24 rounded-lg border-gray-200 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                        placeholder="คะแนน" />
+                        placeholder="คะแนน" >
                     <span>/ {{ assignments?.data.a_score }} คะแนน</span>
                 </div>
                 <div>
@@ -226,9 +231,9 @@
                         class="transition-color inline-flex w-full items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-6 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50 md:w-fit"
                         @click="
                             setStudentFeedback(
-                                route.query.id,
-                                route.query.a_id,
-                                route.query.u_id
+                                useQueryStringAsNumber(route.query.id),
+                                useQueryStringAsNumber(route.query.a_id),
+                                useQueryStringAsNumber(route.query.u_id)
                             )
                         ">
                         บันทึก
@@ -246,7 +251,7 @@
                 <span class="material-icons-outlined select-none">article</span>
                 ข้อความจากนักเรียน
             </span>
-            <hr class="mb-2" />
+            <hr class="mb-2" >
             <MdPreview
                 language="en-US"
                 :model-value="assignments?.data?.s_content?.text" />
@@ -258,7 +263,7 @@
                 </span>
                 ไฟล์จากนักเรียน
             </span>
-            <hr class="mb-2" />
+            <hr class="mb-2" >
         </div>
         <div
             v-if="assignments?.data?.s_content?.files.length"
@@ -268,6 +273,7 @@
                 class="flex flex-row flex-wrap gap-2">
                 <div
                     v-for="file in assignments?.data?.s_content?.files"
+                    :key="file.f_id"
                     class="border-1 mt-1 flex w-full flex-row rounded-md border p-2 md:w-72">
                     <div
                         class="flex w-full flex-row items-center justify-between gap-2 md:w-72">

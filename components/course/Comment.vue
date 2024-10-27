@@ -1,24 +1,36 @@
 <script setup lang="ts">
     import { toast } from '@steveyuowo/vue-hot-toast'
+    import { useElementVisibility } from '@vueuse/core'
     const userState = useUserState()
 
     const props = defineProps({
         p_id: { type: Number, required: true },
-        c_id: { type: String, required: true },
+        c_id: { type: Number, required: true },
     })
 
     const commentStore = ref()
     const comment = ref()
     const commentReplyTo = ref()
     const commentReplyToSub = ref()
-    const visibility = ref(false)
+    const visibility = ref(true)
     const isSending = ref(false)
     const isCommentLoading = ref(false)
+    const elemTarget = ref(null)
+    const isVisibleInViewPort = useElementVisibility(elemTarget)
+
+    watch(isVisibleInViewPort, (value) => {
+        if (value && !commentStore.value) {
+            loadComments()
+        }
+    })
 
     async function loadComments() {
         isCommentLoading.value = true
-        const loadCommentToast = toast.loading('กำลังแสดงคอมเมนต์')
-        await $fetch<{ status: number; message: string }>('/api/message/', {
+        await $fetchWithHeader<{
+            status: number
+            message: string
+            comments: Comment[]
+        }>('/api/message/', {
             query: {
                 p_receiver: props.p_id,
                 c_id: props.c_id,
@@ -26,18 +38,10 @@
         })
             .then((res) => {
                 isCommentLoading.value = false
-                commentStore.value = res
-                toast.update(loadCommentToast, {
-                    type: 'success',
-                    message: res?.message,
-                })
+                commentStore.value = res.comments
             })
-            .catch((err) => {
+            .catch((_err) => {
                 isCommentLoading.value = false
-                toast.update(loadCommentToast, {
-                    type: 'error',
-                    message: err?.data?.message,
-                })
             })
     }
 
@@ -51,10 +55,13 @@
         }
         if (commentReplyTo.value)
             Object.assign(payload, { m_thread: commentReplyTo.value })
-        await $fetch<{ status: number; message: string }>('/api/message/', {
-            method: 'PUT',
-            body: payload,
-        })
+        await $fetchWithHeader<{ status: number; message: string }>(
+            '/api/message/',
+            {
+                method: 'PUT',
+                body: payload,
+            }
+        )
             .then((res) => {
                 loadComments()
                 comment.value = null
@@ -79,10 +86,13 @@
         const payload = {
             m_id: m_id,
         }
-        await $fetch<{ status: number; message: string }>('/api/message/', {
-            method: 'DELETE',
-            body: payload,
-        })
+        await $fetchWithHeader<{ status: number; message: string }>(
+            '/api/message/',
+            {
+                method: 'DELETE',
+                body: payload,
+            }
+        )
             .then((res) => {
                 loadComments()
                 isSending.value = false
@@ -101,40 +111,31 @@
     }
 </script>
 <template>
-    <span
-        v-if="!commentStore"
-        class="cursor-pointer underline"
-        @click="
-            () => {
-                loadComments()
-                visibility = true
-            }
-        ">
-        Load Comments
+    <span v-if="isCommentLoading" class="underline select-none">
+        Loading Comments...
     </span>
     <span
-        v-else-if="!visibility && commentStore"
-        class="cursor-pointer underline"
-        @click="
-            () => {
-                visibility = true
-            }
-        ">
-        Load Comments
+        v-else-if="!isCommentLoading && !visibility"
+        class="cursor-pointer underline select-none"
+        @click="visibility = true">
+        Show Comments
     </span>
-    <span v-else class="cursor-pointer underline" @click="visibility = false">
+    <span
+        v-else-if="!isCommentLoading && visibility && commentStore"
+        class="cursor-pointer underline select-none"
+        @click="visibility = false">
         Hide Comments
     </span>
-    <div class="flex flex-row gap-2">
+    <div ref="elemTarget" class="flex flex-row gap-2">
         <div class="relative flex-grow">
             <input
-                id="hs-floating-comment-crs"
+                :id="`hs-floating-comment-crs-${p_id}-${c_id}`"
                 v-model="comment"
                 type="text"
                 placeholder="หัวข้อโพสต์"
-                class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
+                class="peer block max-w-full w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" >
             <label
-                for="hs-floating-comment-crs"
+                :for="`hs-floating-comment-crs-${p_id}-${c_id}`"
                 class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
                 {{
                     commentReplyTo
@@ -151,10 +152,11 @@
             <span class="material-icons-outlined no-underline">send</span>
         </button>
     </div>
-    <div v-if="!isCommentLoading">
+    <div v-if="!isCommentLoading && commentStore" class="flex flex-col gap-2">
         <div
             v-for="cmt in commentStore"
             v-show="visibility"
+            :key="cmt.m_id"
             class="flex flex-col gap-2">
             <div
                 class="transition-color border-1 ml-4 flex flex-col gap-1 rounded-md border px-4 py-2 duration-200 ease-in-out"
@@ -205,6 +207,7 @@
             </div>
             <div
                 v-for="replies in cmt.replies"
+                :key="replies.m_id"
                 class="transition-color border-1 ml-12 flex flex-col gap-1 rounded-md border px-4 py-2 duration-200 ease-in-out"
                 :class="
                     commentReplyToSub === replies.m_id
@@ -254,15 +257,5 @@
             </div>
         </div>
     </div>
-    <div
-        v-else
-        class="border-1 flex w-full flex-row gap-2 rounded-md border p-4">
-        <div
-            class="inline-block size-6 animate-spin rounded-full border-[3px] border-current border-t-transparent text-blue-600 dark:text-blue-500"
-            role="status"
-            aria-label="loading">
-            <span class="sr-only">Loading...</span>
-        </div>
-        กำลังโหลดข้อมูล
-    </div>
+    <div v-else />
 </template>

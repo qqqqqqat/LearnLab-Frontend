@@ -2,8 +2,9 @@
     import { toast } from '@steveyuowo/vue-hot-toast'
     import { MdPreview } from 'md-editor-v3'
     import 'md-editor-v3/lib/preview.css'
+    import { useQueryStringAsNumber } from '#imports'
 
-    const userRole = useUserCourseState()
+    // const userRole = useUserCourseState()
     const assignments = ref()
     const assignPending = ref(true)
     const postContent = ref<string>('')
@@ -15,12 +16,15 @@
 
     async function getOneAssignment(id: number, a_id: number) {
         assignPending.value = true
-        await $fetch<StudentAssignmentGETResponse>('/api/courses/assignment/', {
-            query: {
-                c_id: id,
-                a_id: a_id,
-            },
-        })
+        await $fetchWithHeader<StudentAssignmentGETResponse>(
+            '/api/courses/assignment/',
+            {
+                query: {
+                    c_id: id,
+                    a_id: a_id,
+                },
+            }
+        )
             .then((res) => {
                 assignments.value = res
                 postContent.value = res?.s_content?.text || ''
@@ -45,11 +49,11 @@
         assignPending.value = true
         const deleteSubmissionToast = toast.loading('กำลังลบการส่งงาน')
 
-        await $fetch<{ status: number; message: string }>(
+        await $fetchWithHeader<{ status: number; message: string }>(
             '/api/courses/assignment/submit/',
             {
                 method: 'DELETE',
-                body: { a_id: route.query.a_id },
+                body: { a_id: useQueryStringAsNumber(route.query.a_id) },
             }
         )
             .then((Pres) => {
@@ -58,7 +62,10 @@
                     message: Pres?.message,
                 })
                 assignPending.value = false
-                getOneAssignment(route.query.id, route.query.a_id)
+                getOneAssignment(
+                    useQueryStringAsNumber(route.query.id),
+                    useQueryStringAsNumber(route.query.a_id)
+                )
             })
             .catch((Perr) => {
                 toast.update(deleteSubmissionToast, {
@@ -73,25 +80,31 @@
         assignPending.value = true
         const createSubmissionToast = toast.loading('กำลังบันทึกการส่งงาน')
         const payload = {
-            a_id: route.query.a_id,
-            c_id: route.query.id,
+            a_id: useQueryStringAsNumber(route.query.a_id),
+            c_id: useQueryStringAsNumber(route.query.id),
             s_content: { files: [], text: '' },
         }
         if (postFile.length > 0)
             Object.assign(payload.s_content, { files: postFile })
         if (postContent.value)
             Object.assign(payload.s_content, { text: postContent.value })
-        await $fetch<{ message: string }>('/api/courses/assignment/submit/', {
-            method: 'PUT',
-            body: payload,
-        })
+        await $fetchWithHeader<{ message: string }>(
+            '/api/courses/assignment/submit/',
+            {
+                method: 'PUT',
+                body: payload,
+            }
+        )
             .then((Pres) => {
                 toast.update(createSubmissionToast, {
                     type: 'success',
                     message: Pres?.message,
                 })
                 assignPending.value = false
-                getOneAssignment(route.query.id, route.query.a_id)
+                getOneAssignment(
+                    useQueryStringAsNumber(route.query.id),
+                    useQueryStringAsNumber(route.query.a_id)
+                )
             })
             .catch((Perr) => {
                 toast.update(createSubmissionToast, {
@@ -108,15 +121,24 @@
         }
         const uploadSubmitFileToast = toast.loading('กำลังอัพโหลดไฟล์แนบ')
         const formData = new FormData()
-        formData.append('c_id', route.query.id)
-        formData.append('a_id', route.query.a_id)
+        formData.append(
+            'c_id',
+            useQueryStringAsNumber(route.query.id).toString()
+        )
+        formData.append(
+            'a_id',
+            useQueryStringAsNumber(route.query.a_id).toString()
+        )
         for (let x = 0; x < submitFiles.value.length; x++) {
             formData.append('f_data[]', submitFiles.value[x].file)
         }
-        await $fetch<{ f_id: number[]; message: string }>('/api/file/submit/', {
-            method: 'POST',
-            body: formData,
-        })
+        await $fetchWithHeader<{ f_id: number[]; message: string }>(
+            '/api/file/submit/',
+            {
+                method: 'POST',
+                body: formData,
+            }
+        )
             .then(async (res) => {
                 await makeSubmission(res.f_id)
             })
@@ -139,7 +161,10 @@
 
     const route = useRoute()
     if (route.query.id && route.query.a_id) {
-        getOneAssignment(route.query.id, route.query.a_id)
+        getOneAssignment(
+            useQueryStringAsNumber(route.query.id),
+            useQueryStringAsNumber(route.query.a_id)
+        )
     } else {
         navigateTo('/courses', { replace: true })
     }
@@ -155,7 +180,7 @@
                             class="inline-flex items-center gap-x-2 rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-blue-600 transition-all duration-200 ease-in-out hover:bg-blue-100 hover:text-blue-800 disabled:pointer-events-none disabled:opacity-50"
                             @click="
                                 navigateTo(
-                                    `/courses/assignment?id=${route.query.id}`
+                                    `/courses/assignment?id=${useQueryStringAsNumber(route.query.id)}`
                                 )
                             ">
                             <span
@@ -233,13 +258,14 @@
                     </span>
                     ไฟล์แนบ
                 </span>
-                <hr class="mb-2" />
+                <hr class="mb-2" >
             </div>
             <div
                 v-if="assignments?.a_files?.length"
                 class="flex flex-row flex-wrap gap-2">
                 <div
                     v-for="file in assignments?.a_files"
+                    :key="file.f_id"
                     class="border-1 mt-1 flex w-full flex-row rounded-md border p-2 md:w-72">
                     <div
                         class="flex w-full flex-row items-center justify-between gap-2 md:w-72">
@@ -294,7 +320,7 @@
                     </span>
                     ข้อความ
                 </span>
-                <hr class="mb-2" />
+                <hr class="mb-2" >
                 <MdPreview
                     v-if="assignments?.s_datetime"
                     :model-value="postContent" />
@@ -305,7 +331,7 @@
                     ref="inputFile"
                     type="file"
                     hidden
-                    @change="onFileChangedMat" />
+                    @change="onFileChangedMat" >
                 <!-- End Floating Input -->
                 <div>
                     <button
@@ -365,13 +391,14 @@
                             </span>
                             ไฟล์ที่ส่งไป
                         </span>
-                        <hr class="mb-2" />
+                        <hr class="mb-2" >
                     </div>
                     <div
                         v-if="assignments?.s_content?.files?.length"
                         class="flex flex-row flex-wrap gap-2">
                         <div
                             v-for="file in assignments?.s_content?.files"
+                            :key="file.f_id"
                             class="border-1 mt-1 flex w-full flex-row rounded-md border p-2 md:w-72">
                             <div
                                 class="flex w-full flex-row items-center justify-between gap-2 md:w-72">

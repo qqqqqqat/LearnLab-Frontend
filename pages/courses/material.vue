@@ -22,7 +22,7 @@
     async function fetchFile(id: number) {
         file_pending.value = true
         file_post.value = []
-        await $fetch<APIGETFilesResponse>('/api/file/', {
+        await $fetchWithHeader<APIGETFilesResponse>('/api/file/', {
             query: {
                 c_id: id,
                 f_path: file_path.value,
@@ -41,14 +41,17 @@
     async function deleteFile(f_id: number, f_type: string) {
         deleteConfirmModal.value.c_closeModal()
         const deleteFileToast = toast.loading('กำลังลบ')
-        await $fetch<{ message: string; status: number }>('/api/file/', {
-            method: 'DELETE',
-            body: {
-                f_id: f_id,
-                c_id: useQueryStringAsNumber(route.query.id),
-                f_type: f_type,
-            },
-        })
+        await $fetchWithHeader<{ message: string; status: number }>(
+            '/api/file/',
+            {
+                method: 'DELETE',
+                body: {
+                    f_id: f_id,
+                    c_id: useQueryStringAsNumber(route.query.id),
+                    f_type: f_type,
+                },
+            }
+        )
             .then((res) => {
                 file_pending.value = true
                 fetchFile(useQueryStringAsNumber(route.query.id))
@@ -117,7 +120,7 @@
                 class="block w-full rounded-lg border-gray-200 px-4 py-3 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                 :value="file_path"
                 placeholder="Readonly input"
-                readonly />
+                readonly >
             <button
                 v-if="file_path !== '/'"
                 class="inline-flex flex-shrink-0 items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-3 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
@@ -179,6 +182,7 @@
         <div
             v-for="file in file_post"
             v-if="(file_post?.length || 0) > 0"
+            :key="file.f_id"
             class="border-1 flex w-full flex-col rounded-md border p-2"
             :class="
                 file.f_type === 'FOLDER'
@@ -267,7 +271,7 @@
         <div
             v-else-if="!file_pending && (file_post?.length || 0) === 0"
             class="border-1 flex w-full flex-col items-center gap-2 rounded-md border p-4 md:flex-row">
-            <img class="w-48 p-8" src="~/assets/images/nofile.svg" />
+            <img class="w-48 p-8" src="~/assets/images/nofile.svg" >
             <span class="text-3xl font-bold">
                 {{
                     file_path === '/'

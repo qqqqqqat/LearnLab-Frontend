@@ -10,10 +10,8 @@
     }
 </script>
 <template>
-    <main>
-        <LandingJumbotron @scroll-to-content="scrollTo" />
-        <LandingFeatures ref="featureRef" />
-        <LandingPromozone />
-        <LandingJoinnow v-if="!userState" />
-    </main>
+    <LandingJumbotron @scroll-to-content="scrollTo" />
+    <LandingFeatures ref="featureRef" />
+    <LandingPromozone />
+    <LandingJoinnow v-if="!userState" />
 </template>

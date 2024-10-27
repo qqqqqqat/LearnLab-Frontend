@@ -22,7 +22,7 @@
 
     async function updateQuery(searchQuery: string) {
         pending.value = true
-        await $fetch<CourseListing>('/api/courses/me/', {
+        await $fetchWithHeader<CourseListing>('/api/courses/me/', {
             query: {
                 search: searchQuery,
                 page: currentPage.value,
@@ -35,7 +35,7 @@
                 courses.value = res
                 totalPages.value = res.total_page
             })
-            .catch(async (err) => {
+            .catch(async (_err) => {
                 await navigateTo('/courses', { replace: true })
             })
     }
@@ -66,7 +66,7 @@
         }
     })
 
-    async function goToCourse(c_id: number, is_locked: boolean) {
+    async function goToCourse(c_id: number) {
         await navigateTo({
             path: '/courses/view',
             query: {
@@ -105,7 +105,7 @@
                                         v-model="search"
                                         type="text"
                                         name="hs-trailing-button-add-on-with-icon"
-                                        class="border-1 block w-full rounded-s-lg border border-gray-200 px-4 py-3 text-sm shadow-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" />
+                                        class="border-1 block w-full rounded-s-lg border border-gray-200 px-4 py-3 text-sm shadow-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" >
                                     <button
                                         type="button"
                                         class="inline-flex h-[2.875rem] w-[2.875rem] flex-shrink-0 items-center justify-center gap-x-2 rounded-e-md border border-transparent bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
@@ -253,6 +253,7 @@
                         <div
                             v-for="crs in courses?.data"
                             v-else
+                            :key="crs.c_id"
                             class="flex items-center justify-center rounded-xl">
                             <div
                                 class="flex w-80 flex-col rounded-xl border bg-white shadow-sm">
@@ -264,7 +265,7 @@
                                             ? `/api/courses/banner/?c_id=${crs.c_id}`
                                             : '/images/CourseBannerDefault.svg'
                                     "
-                                    alt="Image Description" />
+                                    alt="Image Description" >
                                 <div class="p-4 md:p-5">
                                     <h3
                                         class="line-clamp-1 text-lg font-bold text-gray-800">
@@ -369,7 +370,7 @@
                         v-model="currentPage"
                         type="number"
                         :oninput="`this.value = (this.value >= ${totalPages}) ? ${totalPages} : Math.abs(this.value)`"
-                        class="flex min-h-[38px] w-16 min-w-[38px] items-center justify-center rounded-lg border border-gray-200 px-3 py-2 text-center text-sm text-gray-800 focus:bg-gray-50 focus:outline-none disabled:pointer-events-none disabled:opacity-50" />
+                        class="flex min-h-[38px] w-16 min-w-[38px] items-center justify-center rounded-lg border border-gray-200 px-3 py-2 text-center text-sm text-gray-800 focus:bg-gray-50 focus:outline-none disabled:pointer-events-none disabled:opacity-50" >
                     <span
                         class="flex min-h-[38px] items-center justify-center px-1.5 py-2 text-sm text-gray-500">
                         จาก

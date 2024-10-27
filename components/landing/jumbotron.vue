@@ -8,7 +8,7 @@
         <img
             class="fixed -z-20 h-full w-full object-cover object-[65%_50%]"
             src="~assets/images/landing/LiftOff.webp"
-            alt="Rocker Lift off image" />
+            alt="Rocker Lift off image" >
         <div
             class="mx-auto flex h-fit w-full max-w-screen-2xl select-none flex-col gap-y-4 overflow-auto px-8 pt-12 sm:justify-center">
             <span

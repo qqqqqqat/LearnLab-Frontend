@@ -15,7 +15,7 @@
         id: LocationQueryValue | LocationQueryValue[]
     ) {
         assignPending.value = true
-        await $fetch('/api/courses/assignment/', {
+        await $fetchWithHeader('/api/courses/assignment/', {
             query: {
                 c_id: id,
             },
@@ -33,12 +33,15 @@
     async function deleteAssignment(a_id: number) {
         const deleteAssignmentToast = toast.loading('กำลังลบงานมอบหมาย')
 
-        await $fetch<AssignmentApiResponse>('/api/courses/assignment/', {
-            method: 'DELETE',
-            body: {
-                a_id: a_id,
-            },
-        })
+        await $fetchWithHeader<AssignmentApiResponse>(
+            '/api/courses/assignment/',
+            {
+                method: 'DELETE',
+                body: {
+                    a_id: a_id,
+                },
+            }
+        )
             .then((res) => {
                 c_closeModal()
                 fetchAssignment(route.query.id)
@@ -63,15 +66,18 @@
         }
         const deleteAssignmentToast = toast.loading('กำลังลบงานมอบหมาย')
 
-        await $fetch<AssignmentApiResponse>('/api/courses/assignment/', {
-            method: 'PATCH',
-            body: {
-                a_id: a_id,
-                a_name: eName.value,
-                a_due_date: eDueDate.value,
-                a_score: eScore.value,
-            },
-        })
+        await $fetchWithHeader<AssignmentApiResponse>(
+            '/api/courses/assignment/',
+            {
+                method: 'PATCH',
+                body: {
+                    a_id: a_id,
+                    a_name: eName.value,
+                    a_due_date: eDueDate.value,
+                    a_score: eScore.value,
+                },
+            }
+        )
             .then((res) => {
                 e_closeModal()
                 fetchAssignment(route.query.id)
@@ -280,7 +286,7 @@
                             v-model="eName"
                             type="text"
                             placeholder="หัวข้อโพสต์"
-                            class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
+                            class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" >
                         <label
                             for="hs-floating-crs-name"
                             class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -294,7 +300,7 @@
                             v-model="eScore"
                             type="number"
                             placeholder="หัวข้อโพสต์"
-                            class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
+                            class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" >
                         <label
                             for="hs-floating-crs-name"
                             class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -308,7 +314,7 @@
                             v-model="eDueDate"
                             type="datetime-local"
                             placeholder="หัวข้อโพสต์"
-                            class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
+                            class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" >
                         <label
                             for="hs-floating-crs-name"
                             class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -353,6 +359,7 @@
         <div
             v-for="assign in assignments"
             v-if="(assignments?.length || 0) > 0"
+            :key="assign.a_id"
             class="border-1 flex w-full flex-row justify-between gap-2 rounded-md border p-4">
             <div>
                 <div class="flex w-full flex-wrap items-center gap-4">
@@ -409,7 +416,7 @@
         <div
             v-else-if="!assignPending && (assignments?.data?.length || 0) === 0"
             class="border-1 flex w-full flex-col items-center gap-2 rounded-md border p-4 md:flex-row">
-            <img class="w-48 p-4" src="/images/exam.svg" />
+            <img class="w-48 p-4" src="/images/exam.svg" >
             <span class="text-3xl font-bold">ยังไม่มีงานมอบหมายในคอร์สนี้</span>
         </div>
         <div

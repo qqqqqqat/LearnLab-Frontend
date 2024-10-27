@@ -14,7 +14,7 @@
 
     async function fetchQuiz(id: number, q_id: number) {
         isFetching.value = true
-        await $fetch<QuizAPIResponse>('/api/courses/quiz/', {
+        await $fetchWithHeader<QuizAPIResponse>('/api/courses/quiz/', {
             query: {
                 c_id: id,
                 q_id: q_id,
@@ -58,10 +58,13 @@
             s_content: quizAnswers.value,
         }
 
-        await $fetch<{ message: string }>('/api/courses/quiz/submit/', {
-            method: 'PUT',
-            body: payload,
-        })
+        await $fetchWithHeader<{ message: string }>(
+            '/api/courses/quiz/submit/',
+            {
+                method: 'PUT',
+                body: payload,
+            }
+        )
             .then(async (Pres) => {
                 toast.update(submitQuizToast, {
                     type: 'success',
@@ -110,6 +113,7 @@
                 class="border-1 flex w-full flex-row items-center gap-4 rounded-md border p-2 md:w-16 md:flex-col">
                 <div
                     v-for="(q, indx) in quizAnswers"
+                    :key="indx"
                     class="transition-color border-1 flex h-12 w-12 items-center justify-center rounded-md border p-4 duration-200 ease-in-out"
                     :class="q ? 'bg-blue-600 text-white' : 'bg-transparent'">
                     {{ indx + 1 }}
@@ -134,7 +138,7 @@
                                 type="radio"
                                 value="1"
                                 name="hs-radio-vertical-group"
-                                class="mt-0.5 shrink-0 cursor-pointer rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" />
+                                class="mt-0.5 shrink-0 cursor-pointer rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" >
                             <div class="relative flex-grow">
                                 <span>{{ quiz?.choice[0] }}</span>
                             </div>
@@ -148,7 +152,7 @@
                                 type="radio"
                                 value="2"
                                 name="hs-radio-vertical-group"
-                                class="mt-0.5 shrink-0 cursor-pointer rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" />
+                                class="mt-0.5 shrink-0 cursor-pointer rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" >
                             <span>{{ quiz?.choice[1] }}</span>
                         </div>
                         <!-- End Choice 2 -->
@@ -160,7 +164,7 @@
                                 type="radio"
                                 value="3"
                                 name="hs-radio-vertical-group"
-                                class="mt-0.5 shrink-0 cursor-pointer rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" />
+                                class="mt-0.5 shrink-0 cursor-pointer rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" >
                             <span>{{ quiz?.choice[2] }}</span>
                         </div>
                         <!-- End Choice 3 -->
@@ -172,7 +176,7 @@
                                 type="radio"
                                 value="4"
                                 name="hs-radio-vertical-group"
-                                class="mt-0.5 shrink-0 cursor-pointer rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" />
+                                class="mt-0.5 shrink-0 cursor-pointer rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" >
                             <span>{{ quiz?.choice[3] }}</span>
                         </div>
                         <!-- End Choice 4 -->
@@ -185,7 +189,7 @@
                                 v-model="fillAnswer"
                                 type="text"
                                 placeholder="โจทย์"
-                                class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
+                                class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" >
                             <label
                                 for="answer-fill-in"
                                 class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">

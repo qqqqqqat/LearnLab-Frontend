@@ -8,17 +8,17 @@
     })
     const route = useRoute()
     const userRole = useUserCourseState()
+    const userCourseState = useUserCourseState()
 
     const courseId = ref(-1)
 
     const crs_info = ref()
     const crs_pending = ref(true)
     const crs_member = ref()
-    const sessionInfo = ref()
     watch(
         () => route.query.id,
-        async () => {
-            courseId.value = useQueryStringAsNumber(route.query.id)
+        async (id) => {
+            courseId.value = useQueryStringAsNumber(id)
             if (courseId.value && courseId.value > 0) {
                 fetchCourse(courseId.value)
             } else {
@@ -28,26 +28,26 @@
         }
     )
 
-    async function fetchSessionID() {
-        await $fetch('/api/session/', {
-            credentials: 'include',
-        }).then((res) => {
-            sessionInfo.value = res
-        })
-    }
+    // async function fetchSessionID() {
+    //     await $fetchWithHeader('/api/session/', {
+    //         credentials: 'include',
+    //     }).then((res) => {
+    //         sessionInfo.value = res
+    //     })
+    // }
 
-    async function destroySession() {
-        await $fetch('/api/session/', {
-            method: 'DELETE',
-            credentials: 'include',
-        }).then((res) => {
-            sessionInfo.value = res
-        })
-    }
+    // async function destroySession() {
+    //     await $fetchWithHeader('/api/session/', {
+    //         method: 'DELETE',
+    //         credentials: 'include',
+    //     }).then((res) => {
+    //         sessionInfo.value = res
+    //     })
+    // }
 
     async function fetchCourse(id: number) {
         crs_pending.value = true
-        await $fetch<CoursePageAPIPUTResponse>('/api/courses/', {
+        await $fetchWithHeader<CoursePageAPIPUTResponse>('/api/courses/', {
             method: 'PUT',
             body: { c_id: id },
         })
@@ -64,8 +64,13 @@
 
     async function fetchMember(id: number) {
         crs_pending.value = true
-        await $fetch('/api/courses/enroll/', {
-            query: { c_id: id, u_role: 'INSTRUCTOR' },
+        await $fetchWithHeader('/api/courses/enroll/', {
+            query: {
+                c_id: id,
+                u_role: userCourseState.value
+                    ? userCourseState.value[id]
+                    : 'STUDENT',
+            },
         })
             .then((res) => {
                 crs_member.value = res
@@ -78,7 +83,7 @@
     }
 
     async function fetchUserRoleState() {
-        await $fetch<UserRoles>('/api/courses/me/?my_course_role', {})
+        await $fetchWithHeader<UserRoles>('/api/courses/me/?my_course_role', {})
             .then((res) => {
                 userRole.value = res
             })
@@ -89,9 +94,13 @@
         bannerImage.value.src = '/images/CourseBannerDefault.svg'
     }
 
-    if (route.query.id) {
-        fetchCourse(Number(route.query.id))
-    }
+    onMounted(() => {
+        if (route.query.id) {
+            fetchCourse(Number(route.query.id))
+            courseId.value = Number(route.query.id)
+        }
+    })
+
     fetchUserRoleState()
 </script>
 <template>
@@ -136,7 +145,7 @@
                             : '/images/CourseBannerDefault.svg'
                     "
                     alt="Image Description"
-                    @error="handleBrokenImage" />
+                    @error="handleBrokenImage" >
                 <div
                     class="absolute h-full w-full rounded-xl bg-gradient-to-b from-slate-50/0 from-50% to-zinc-900 sm:from-70%" />
                 <div
@@ -188,101 +197,111 @@
                         style="width: 90%" />
                 </div>
             </div>
-            <div class="flex flex-col gap-4 md:flex-row">
+            <div class="flex md:flex-row flex-col gap-4">
                 <nav
-                    class="border-1 flex h-fit w-full flex-col rounded-lg border shadow-sm md:w-64">
-                    <NuxtLink
-                        :to="`/courses/view?id=${courseId}`"
-                        :class="
-                            route.path === '/courses/view'
-                                ? 'bg-blue-600 text-white hover:bg-blue-700'
-                                : 'text-black hover:bg-blue-300/50'
-                        "
-                        class="nav-menu">
-                        <span
-                            class="material-icons-outlined size-6 overflow-hidden select-none">
-                            home
-                        </span>
-                        หน้าหลัก
-                    </NuxtLink>
-                    <NuxtLink
-                        :to="`/courses/material?id=${courseId}`"
-                        :class="
-                            route.path === '/courses/material'
-                                ? 'bg-blue-600 text-white hover:bg-blue-700'
-                                : 'text-black hover:bg-blue-300/50'
-                        "
-                        class="nav-menu">
-                        <span
-                            class="material-icons-outlined size-6 overflow-hidden select-none">
-                            menu_book
-                        </span>
-                        เนื้อหาการสอน
-                    </NuxtLink>
-                    <NuxtLink
-                        :to="`/courses/assignment?id=${courseId}`"
-                        :class="
-                            route.path === '/courses/assignment'
-                                ? 'bg-blue-600 text-white hover:bg-blue-700'
-                                : 'text-black hover:bg-blue-300/50'
-                        "
-                        class="nav-menu">
-                        <span
-                            class="material-icons-outlined size-6 overflow-hidden select-none">
-                            edit_note
-                        </span>
-                        งานมอบหมาย
-                    </NuxtLink>
-                    <NuxtLink
-                        :to="`/courses/quiz?id=${courseId}`"
-                        :class="
-                            route.path === '/courses/quiz'
-                                ? 'bg-blue-600 text-white hover:bg-blue-700'
-                                : 'text-black hover:bg-blue-300/50'
-                        "
-                        class="nav-menu">
-                        <span
-                            class="material-icons-outlined size-6 overflow-hidden select-none">
-                            quiz
-                        </span>
-                        แบบทดสอบ
-                    </NuxtLink>
-                    <hr />
-                    <div class="flex items-center gap-2 p-2 text-lg font-bold">
-                        <span
-                            class="material-icons-outlined size-6 overflow-hidden select-none">
-                            people
-                        </span>
-                        ผู้สอน
+                    class="border-1 flex h-fit w-full flex-col rounded-lg border shadow-sm md:w-64 flex-shrink-0">
+                    <div class="flex flex-col">
+                        <NuxtLink
+                            :to="`/courses/view?id=${courseId}`"
+                            :class="
+                                route.path === '/courses/view'
+                                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                    : 'text-black hover:bg-blue-300/50'
+                            "
+                            class="nav-menu">
+                            <span
+                                class="material-icons-outlined size-6 overflow-hidden select-none">
+                                home
+                            </span>
+                            หน้าหลัก
+                        </NuxtLink>
+                        <NuxtLink
+                            :to="`/courses/material?id=${courseId}`"
+                            :class="
+                                route.path === '/courses/material'
+                                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                    : 'text-black hover:bg-blue-300/50'
+                            "
+                            class="nav-menu">
+                            <span
+                                class="material-icons-outlined size-6 overflow-hidden select-none">
+                                menu_book
+                            </span>
+                            เนื้อหาการสอน
+                        </NuxtLink>
+                        <NuxtLink
+                            :to="`/courses/assignment?id=${courseId}`"
+                            :class="
+                                route.path === '/courses/assignment'
+                                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                    : 'text-black hover:bg-blue-300/50'
+                            "
+                            class="nav-menu">
+                            <span
+                                class="material-icons-outlined size-6 overflow-hidden select-none">
+                                edit_note
+                            </span>
+                            งานมอบหมาย
+                        </NuxtLink>
+                        <NuxtLink
+                            :to="`/courses/quiz?id=${courseId}`"
+                            :class="
+                                route.path === '/courses/quiz'
+                                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                    : 'text-black hover:bg-blue-300/50'
+                            "
+                            class="nav-menu">
+                            <span
+                                class="material-icons-outlined size-6 overflow-hidden select-none">
+                                quiz
+                            </span>
+                            แบบทดสอบ
+                        </NuxtLink>
                     </div>
-                    <div
-                        v-for="inst in crs_member"
-                        class="flex flex-row items-center gap-2 p-2">
-                        <div v-if="inst.u_avatar" class="h-8 w-8 rounded-md">
-                            <img
-                                class="bottom-1 aspect-square rounded-md border object-cover"
-                                :src="`/api/avatar/?u_id=${inst.u_id}`" />
+                    <hr >
+                    <div class="flex flex-col flex-wrap">
+                        <div
+                            class="flex items-center gap-2 p-2 text-lg font-bold">
+                            <span
+                                class="material-icons-outlined size-6 overflow-hidden select-none">
+                                people
+                            </span>
+                            ผู้สอน
                         </div>
                         <div
-                            v-if="!inst?.u_avatar"
-                            class="flex h-8 w-8 select-none flex-col items-center justify-center rounded-md bg-slate-200 text-xl">
-                            {{
-                                `${inst?.u_firstname.slice(0, 1)}${inst?.u_lastname.slice(0, 1)}`
-                            }}
-                        </div>
-                        <div class="flex flex-col">
-                            <span>
-                                {{ inst?.u_firstname }} {{ inst?.u_lastname }}
-                            </span>
-                            <span class="cursor-pointer text-xs text-slate-400">
-                                <NuxtLink :to="`mailto:${inst?.u_email}`">
-                                    {{ inst?.u_email }}
-                                </NuxtLink>
-                            </span>
+                            v-for="inst in crs_member"
+                            :key="inst.u_id"
+                            class="flex flex-row items-center gap-2 p-2">
+                            <div
+                                v-if="inst.u_avatar"
+                                class="h-8 w-8 rounded-md">
+                                <img
+                                    class="bottom-1 aspect-square rounded-md border object-cover"
+                                    :src="`/api/avatar/?u_id=${inst.u_id}`" >
+                            </div>
+                            <div
+                                v-if="!inst?.u_avatar"
+                                class="flex h-8 w-8 select-none flex-col items-center justify-center rounded-md bg-slate-200 text-xl">
+                                {{
+                                    `${inst?.u_firstname.slice(0, 1)}${inst?.u_lastname.slice(0, 1)}`
+                                }}
+                            </div>
+                            <div class="flex flex-col">
+                                <span>
+                                    {{ inst?.u_firstname }}
+                                    {{ inst?.u_lastname }}
+                                </span>
+                                <span
+                                    class="cursor-pointer text-xs text-slate-400">
+                                    <NuxtLink :to="`mailto:${inst?.u_email}`">
+                                        {{ inst?.u_email }}
+                                    </NuxtLink>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 </nav>
-                <main class="flex w-full flex-col gap-y-4">
+                <main class="flex flex-col gap-y-4 w-full">
                     <slot />
                 </main>
             </div>

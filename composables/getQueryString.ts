@@ -8,6 +8,7 @@ export function useQueryStringAsNumber(
     if (id === null || id === undefined) {
         toast.error('Invalid ID')
         navigateTo('/mycourse', { replace: true })
+        console.error('Invalid ID: ', id)
         return -1
     }
 
@@ -25,5 +26,7 @@ export function useQueryStringAsNumber(
 
     toast.error('Invalid ID')
     navigateTo('/mycourse', { replace: true })
+    console.error('Invalid ID: ', id)
+
     return -1
 }

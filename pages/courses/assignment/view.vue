@@ -8,7 +8,7 @@
     const assignments = ref<SubmissionGETApiResponse | null>()
     const route = useRoute()
     async function fetchSubmission(id: number, a_id: number) {
-        await $fetch<SubmissionGETApiResponse>(
+        await $fetchWithHeader<SubmissionGETApiResponse>(
             '/api/courses/assignment/submit/',
             {
                 query: { c_id: id, a_id: a_id },
@@ -83,12 +83,13 @@
         <div
             v-for="assign in assignments?.data"
             v-if="(assignments?.data?.length || 0) > 0"
+            :key="assign.a_id"
             class="border-1 flex w-full flex-col gap-2 rounded-md border p-4 md:flex-row md:justify-between">
             <div class="flex items-center gap-2">
                 <div v-if="assign.u_avatar" class="h-12 w-12 rounded-md">
                     <img
                         class="bottom-1 aspect-square rounded-md border object-cover"
-                        :src="`/api/avatar/?u_id=${assign.u_id}`" />
+                        :src="`/api/avatar/?u_id=${assign.u_id}`" >
                 </div>
                 <div
                     v-if="!assign?.u_avatar"
@@ -181,7 +182,7 @@
         <div
             v-else-if="!crs_pending && (assignments?.data?.length || 0) === 0"
             class="border-1 flex w-full flex-col items-center gap-2 rounded-md border p-4 md:flex-row">
-            <img class="w-64" src="~/assets/images/content.svg" />
+            <img class="w-64" src="~/assets/images/content.svg" >
             <span class="text-3xl font-bold">ยังไม่มีการส่งงาน</span>
         </div>
         <div

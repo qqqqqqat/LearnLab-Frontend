@@ -28,7 +28,7 @@
     })
 
     const enrolled = ref<EnrolledCourse>([])
-    const course = ref<{} | null>({})
+    // const course = ref<{} | null>({})
 
     watch(userState, () => {
         getEnrolledCourse()
@@ -39,16 +39,16 @@
     }
 
     async function getEnrolledCourse() {
-        await $fetch<EnrolledCourse>('/api/courses/me/?mycourse').then(
-            (res) => {
-                enrolled.value = res
-            }
-        )
+        await $fetchWithHeader<EnrolledCourse>(
+            '/api/courses/me/?mycourse'
+        ).then((res) => {
+            enrolled.value = res
+        })
     }
 
     async function updateQuery(searchQuery: string) {
         pending.value = true
-        await $fetch<CourseListing>('/api/courses/', {
+        await $fetchWithHeader<CourseListing>('/api/courses/', {
             query: {
                 search: searchQuery,
                 page: currentPage.value,
@@ -65,7 +65,6 @@
     watch(
         () => userState.value?.u_role,
         (role) => {
-            console.log(role)
             if (role === 'INSTRUCTOR') {
                 navigateTo('/mycourse', { replace: true })
             }
@@ -88,7 +87,7 @@
     })
 
     const modalElemOne = ref()
-    const enrollModal = ref()
+    // const enrollModal = ref()
 
     function closeModal() {
         crspassword.value = ''
@@ -110,10 +109,13 @@
         const crspayload = { c_id: modalCourseID.value }
         if (modalLockedCourse.value)
             Object.assign(crspayload, { c_password: crspassword.value })
-        await $fetch<JoinCoursePOSTAPIResponse>('/api/courses/enroll/', {
-            method: 'POST',
-            body: crspayload,
-        })
+        await $fetchWithHeader<JoinCoursePOSTAPIResponse>(
+            '/api/courses/enroll/',
+            {
+                method: 'POST',
+                body: crspayload,
+            }
+        )
             .then((res) => {
                 getEnrolledCourse()
                 closeModal()
@@ -135,7 +137,7 @@
     async function findCourse() {
         const joinCodeToast = toast.loading('กำลังเข้าร่วมคอร์ส')
         const payload = { c_code: crscode.value }
-        await $fetch('/api/courses/enroll/', {
+        await $fetchWithHeader('/api/courses/enroll/', {
             method: 'PUT',
             body: payload,
         })
@@ -224,7 +226,7 @@
                             v-model="crspassword"
                             type="password"
                             class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                            placeholder="ใส่รหัส" />
+                            placeholder="ใส่รหัส" >
                         <div
                             class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                             <svg
@@ -288,7 +290,7 @@
                                         v-model="search"
                                         type="text"
                                         name="hs-trailing-button-add-on-with-icon"
-                                        class="border-1 block w-full rounded-s-lg border border-gray-200 px-4 py-3 text-sm shadow-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" />
+                                        class="border-1 block w-full rounded-s-lg border border-gray-200 px-4 py-3 text-sm shadow-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" >
                                     <button
                                         type="button"
                                         class="inline-flex h-[2.875rem] w-[2.875rem] flex-shrink-0 items-center justify-center gap-x-2 rounded-e-md border border-transparent bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
@@ -379,7 +381,7 @@
                             </div>
                             <hr
                                 v-if="userState"
-                                class="mb-2 mt-4 block md:hidden xl:block" />
+                                class="mb-2 mt-4 block md:hidden xl:block" >
                             <div
                                 v-if="userState"
                                 class="hidden h-20 w-[2px] rounded-full bg-slate-200 md:block xl:hidden" />
@@ -399,7 +401,7 @@
                                             v-model="crscode"
                                             type="text"
                                             class="block w-40 rounded-lg border-gray-200 px-4 py-3 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                                            placeholder="รหัสคอร์ส" />
+                                            placeholder="รหัสคอร์ส" >
                                         <button
                                             type="button"
                                             :disabled="!(crscode.length === 8)"
@@ -458,6 +460,7 @@
                         <div
                             v-for="crs in courses?.data"
                             v-else
+                            :key="crs.c_id"
                             class="flex items-center justify-center rounded-xl">
                             <div
                                 class="flex w-80 flex-col rounded-xl border bg-white shadow-sm">
@@ -469,7 +472,7 @@
                                             ? `/api/courses/banner/?c_id=${crs.c_id}`
                                             : '/images/CourseBannerDefault.svg'
                                     "
-                                    alt="Image Description" />
+                                    alt="Image Description" >
                                 <div class="p-4 md:p-5">
                                     <h3
                                         class="line-clamp-1 text-lg font-bold text-gray-800">
@@ -580,7 +583,7 @@
                         v-model="currentPage"
                         type="number"
                         :oninput="`this.value = (this.value >= ${totalPages}) ? ${totalPages} : Math.abs(this.value)`"
-                        class="flex min-h-[38px] w-16 min-w-[38px] items-center justify-center rounded-lg border border-gray-200 px-3 py-2 text-center text-sm text-gray-800 focus:bg-gray-50 focus:outline-none disabled:pointer-events-none disabled:opacity-50" />
+                        class="flex min-h-[38px] w-16 min-w-[38px] items-center justify-center rounded-lg border border-gray-200 px-3 py-2 text-center text-sm text-gray-800 focus:bg-gray-50 focus:outline-none disabled:pointer-events-none disabled:opacity-50" >
                     <span
                         class="flex min-h-[38px] items-center justify-center px-1.5 py-2 text-sm text-gray-500">
                         จาก

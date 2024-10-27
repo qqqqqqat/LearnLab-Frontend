@@ -27,18 +27,20 @@
     }
 
     async function fetchUser() {
-        await $fetch<User>('/api/auth/')
+        await $fetchWithHeader<User>('/api/auth/')
             .then(async (res) => {
                 userState.value = res
-                await $fetch<Avatar>('/api/auth/?image=')
+                await $fetchWithHeader<Avatar>('/api/auth/?image=')
                     .then((res) => {
                         avatarState.value = res
                     })
-                    .catch(async (err) => {
+                    .catch(async (_err) => {
                         toast.error('โหลดรูปล้มเหลว')
                     })
             })
-            .catch((err) => {})
+            .catch((_err) => {
+                console.log('error', _err)
+            })
     }
 
     async function updateUser() {
@@ -53,7 +55,7 @@
             formData.append('u_avatar', regis_avatar.value)
         }
 
-        await $fetch<AuthPOSTAPIResponse>('/api/auth/edit/', {
+        await $fetchWithHeader<AuthPOSTAPIResponse>('/api/auth/edit/', {
             method: 'POST',
             body: formData,
         })
@@ -93,7 +95,7 @@
                 <div v-else class="h-64 w-64 rounded-md">
                     <img
                         class="aspect-square h-64 w-64 rounded-md object-cover"
-                        :src="`data:${avatarState?.u_avatar_mime_type};base64,${avatarState?.u_avatar}`" />
+                        :src="`data:${avatarState?.u_avatar_mime_type};base64,${avatarState?.u_avatar}`" >
                 </div>
                 <div
                     class="flex max-w-full flex-col justify-center gap-4 rounded-md bg-gradient-to-r from-slate-100 to-slate-50/0 py-4 pl-8 pr-8 md:h-64 md:pr-16">
@@ -131,7 +133,7 @@
                     v-model="name"
                     type="text"
                     class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                    placeholder="ชื่อ" />
+                    placeholder="ชื่อ" >
                 <div
                     class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                     <svg
@@ -156,7 +158,7 @@
                     v-model="surname"
                     type="text"
                     class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                    placeholder="นามสกุล" />
+                    placeholder="นามสกุล" >
                 <div
                     class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                     <svg
@@ -180,7 +182,7 @@
                     v-model="phone"
                     type="tel"
                     class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                    placeholder="หมายเลขโทรศัพท์" />
+                    placeholder="หมายเลขโทรศัพท์" >
                 <div
                     class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                     <svg
@@ -208,7 +210,7 @@
                     accept="image/*"
                     name="small-file-input"
                     class="block w-72 rounded-lg border border-gray-200 text-sm shadow-sm file:me-4 file:border-0 file:bg-gray-50 file:px-4 file:py-2 focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                    @change="onFileChangedAvatar($event)" />
+                    @change="onFileChangedAvatar($event)" >
             </div>
             <div class="h-[1px] w-72 bg-slate-200" />
             <div class="flex flex-col gap-2">
@@ -218,7 +220,7 @@
                         v-model="regis_passw"
                         type="password"
                         class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                        placeholder="รหัสผ่าน" />
+                        placeholder="รหัสผ่าน" >
                     <div
                         class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                         <svg

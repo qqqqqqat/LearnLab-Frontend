@@ -20,6 +20,7 @@
         "@tiptap/pm": "^2.7.4",
         "@tiptap/starter-kit": "^2.7.4",
         "@tiptap/vue-3": "^2.7.4",
+        "jwt-decode": "^4.0.0",
         "material-icons": "^1.13.12",
         "md-editor-v3": "^4.20.2",
         "preline": "^2.5.0",

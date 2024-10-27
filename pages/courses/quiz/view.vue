@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import { toast } from '@steveyuowo/vue-hot-toast'
+    import { useQueryStringAsNumber } from '#imports'
     definePageMeta({
         layout: 'course',
     })
@@ -8,7 +9,7 @@
     const quizzes = ref()
     const route = useRoute()
     async function fetchSubmission(id: number, q_id: number) {
-        await $fetch('/api/courses/quiz/submit/', {
+        await $fetchWithHeader('/api/courses/quiz/submit/', {
             query: { c_id: id, q_id: q_id },
         })
             .then((res) => {
@@ -22,7 +23,7 @@
     }
 
     // async function openAssignment(q_id: number, u_id: number) {
-    //     await navigateTo(`/courses/assignment/submissionview?q_id=${q_id}&id=${route.query.id}&u_id=${u_id}`)
+    //     await navigateTo(`/courses/assignment/submissionview?q_id=${q_id}&id=${useQueryStringAsNumber(route.query.id)}&u_id=${u_id}`)
     // }
 
     function getTimeDiff(due_date: string, submit_date: string) {
@@ -45,8 +46,14 @@
             second: Math.abs(timeRemainingSec) % 60,
         }
     }
-    if (route.query.id && route.query.q_id) {
-        fetchSubmission(route.query.id, route.query.q_id)
+    if (
+        useQueryStringAsNumber(route.query.id) &&
+        useQueryStringAsNumber(route.query.q_id)
+    ) {
+        fetchSubmission(
+            useQueryStringAsNumber(route.query.id),
+            useQueryStringAsNumber(route.query.q_id)
+        )
     } else {
         navigateTo('/courses', { replace: true })
     }
@@ -56,7 +63,11 @@
         <div class="flex flex-row items-center gap-2">
             <button
                 class="inline-flex items-center gap-x-2 rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-blue-600 transition-all duration-200 ease-in-out hover:bg-blue-100 hover:text-blue-800 disabled:pointer-events-none disabled:opacity-50"
-                @click="navigateTo(`/courses/quiz?id=${route.query.id}`)">
+                @click="
+                    navigateTo(
+                        `/courses/quiz?id=${useQueryStringAsNumber(route.query.id)}`
+                    )
+                ">
                 <span
                     class="material-icons-outlined size-6 overflow-hidden select-none">
                     arrow_back
@@ -76,12 +87,13 @@
         <div
             v-for="quiz in quizzes?.data"
             v-if="(quizzes?.data?.length || 0) > 0"
+            :key="quiz.u_id"
             class="border-1 flex w-full flex-col gap-2 rounded-md border p-4 md:flex-row md:justify-between">
             <div class="flex items-center gap-2">
                 <div v-if="quiz.u_avatar" class="h-12 w-12 rounded-md">
                     <img
                         class="bottom-1 aspect-square rounded-md border object-cover"
-                        :src="`/api/avatar/?u_id=${quiz.u_id}`" />
+                        :src="`/api/avatar/?u_id=${quiz.u_id}`" >
                 </div>
                 <div
                     v-if="!quiz?.u_avatar"
@@ -180,7 +192,7 @@
         <div
             v-else-if="!_pending && (quizzes?.data?.length || 0) === 0"
             class="border-1 flex w-full flex-col items-center gap-2 rounded-md border p-4 md:flex-row">
-            <img class="w-64" src="~/assets/images/content.svg" />
+            <img class="w-64" src="~/assets/images/content.svg" >
             <span class="text-3xl font-bold">ยังไม่มีการส่งแบบทดสอบ</span>
         </div>
         <div

@@ -35,6 +35,8 @@ declare global {
     interface AuthPOSTAPIResponse {
         status: 200 | 400
         message: 'Authentication success' | 'Authentication failed'
+        access_token?: string
+        refresh_token?: string
     }
 
     interface JoinCoursePOSTAPIResponse {
@@ -199,6 +201,29 @@ declare global {
         title: string
         type: 'CHOICE' | 'FILL'
         choice: string[]
+    }
+
+    interface Comment {
+        m_id: number
+        c_id: number
+        m_sender: number
+        u_firstname: string
+        u_lastname: string
+        p_receiver?: number // Optional because it's only present in top-level comments
+        m_content: string
+        created_at: string // Assuming it's a string representation of a date/time
+        replies: ReplyComment[]
+    }
+
+    interface ReplyComment {
+        m_id: number
+        c_id: number
+        u_firstname: string
+        u_lastname: string
+        m_sender: number
+        m_content: string
+        created_at: string // Assuming it's a string representation of a date/time
+        m_thread: number
     }
 }
 

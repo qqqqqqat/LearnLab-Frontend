@@ -1,6 +1,7 @@
 <script setup lang="ts">
     import HSOverlay from '@preline/overlay'
     import { toast } from '@steveyuowo/vue-hot-toast'
+    import { useQueryStringAsNumber } from '#imports'
     definePageMeta({
         layout: 'course',
     })
@@ -8,16 +9,16 @@
     const delQuizId = ref()
     const userRole = useUserCourseState()
     const route = useRoute()
-    const quizs = ref()
+    const quizzes = ref()
     const quizPending = ref(true)
     async function fetchQuiz(id: number) {
-        await $fetch('/api/courses/quiz/', {
+        await $fetchWithHeader('/api/courses/quiz/', {
             query: {
                 c_id: id,
             },
         })
             .then((res) => {
-                quizs.value = res
+                quizzes.value = res
                 quizPending.value = false
             })
             .catch((err) => {
@@ -26,19 +27,19 @@
             })
     }
 
-    async function deleteQuiz(q_id: number) {
+    async function deleteQuiz() {
         const deleteQuizToast = toast.loading('กำลังลบแบบประเมินผล')
 
-        await $fetch('/api/courses/quiz/', {
+        await $fetchWithHeader<{ message: string }>('/api/courses/quiz/', {
             method: 'DELETE',
             body: {
                 q_id: delQuizId.value,
-                c_id: route.query.id,
+                c_id: useQueryStringAsNumber(route.query.id),
             },
         })
             .then((res) => {
                 d_closeModal()
-                fetchQuiz(route.query.id)
+                fetchQuiz(useQueryStringAsNumber(route.query.id))
                 quizPending.value = true
                 toast.update(deleteQuizToast, {
                     type: 'success',
@@ -55,21 +56,30 @@
     }
 
     async function goToQuiz(q_id: number) {
-        if (userRole.value?.[route.query.id] === 'STUDENT') {
+        if (
+            userRole.value?.[useQueryStringAsNumber(route.query.id)] ===
+            'STUDENT'
+        ) {
             await navigateTo({
                 path: '/courses/quiz/begin',
-                query: { id: route.query.id, q_id: q_id },
+                query: {
+                    id: useQueryStringAsNumber(route.query.id),
+                    q_id: q_id,
+                },
             })
         } else {
             await navigateTo({
                 path: '/courses/quiz/view',
-                query: { id: route.query.id, q_id: q_id },
+                query: {
+                    id: useQueryStringAsNumber(route.query.id),
+                    q_id: q_id,
+                },
             })
         }
     }
 
-    if (route.query.id) {
-        fetchQuiz(route.query.id)
+    if (useQueryStringAsNumber(route.query.id)) {
+        fetchQuiz(useQueryStringAsNumber(route.query.id))
     } else {
         navigateTo('/courses', { replace: true })
     }
@@ -174,8 +184,11 @@
             class="flex flex-row items-center justify-between gap-4">
             <div />
             <NuxtLink
-                v-if="userRole?.[route.query.id] === 'INSTRUCTOR'"
-                :to="`/courses/quiz/create?id=${route.query.id}`"
+                v-if="
+                    userRole?.[useQueryStringAsNumber(route.query.id)] ===
+                    'INSTRUCTOR'
+                "
+                :to="`/courses/quiz/create?id=${useQueryStringAsNumber(route.query.id)}`"
                 class="inline-flex flex-shrink-0 items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
                 <span
                     class="material-icons-outlined size-6 overflow-hidden select-none">
@@ -185,8 +198,9 @@
             </NuxtLink>
         </div>
         <div
-            v-for="quiz in quizs"
-            v-if="(quizs?.length || 0) > 0"
+            v-for="quiz in quizzes"
+            v-if="(quizzes?.length || 0) > 0"
+            :key="quiz.q_id"
             class="border-1 flex w-full flex-row justify-between gap-2 rounded-md border p-4">
             <div>
                 <div class="flex w-full flex-wrap items-center gap-4">
@@ -210,7 +224,11 @@
                 <div
                     class="flex flex-row flex-nowrap items-center gap-2 text-xl font-bold">
                     <span
-                        v-if="userRole?.[route.query.id] !== 'STUDENT'"
+                        v-if="
+                            userRole?.[
+                                useQueryStringAsNumber(route.query.id)
+                            ] !== 'STUDENT'
+                        "
                         class="flex items-center justify-center rounded-full bg-blue-500 px-2 py-1 text-xs font-normal text-white">
                         ID: {{ quiz?.q_id }}
                     </span>
@@ -219,17 +237,23 @@
             </div>
             <div class="flex items-center gap-2">
                 <span
-                    v-if="userRole?.[route.query.id] !== 'STUDENT'"
+                    v-if="
+                        userRole?.[useQueryStringAsNumber(route.query.id)] !==
+                        'STUDENT'
+                    "
                     class="material-icons-outlined cursor-pointer select-none hover:text-blue-600"
                     @click="
                         navigateTo(
-                            `/courses/quiz/edit?id=${route.query.id}&q_id=${quiz.q_id}`
+                            `/courses/quiz/edit?id=${useQueryStringAsNumber(route.query.id)}&q_id=${quiz.q_id}`
                         )
                     ">
                     edit
                 </span>
                 <span
-                    v-if="userRole?.[route.query.id] !== 'STUDENT'"
+                    v-if="
+                        userRole?.[useQueryStringAsNumber(route.query.id)] !==
+                        'STUDENT'
+                    "
                     class="material-icons-outlined cursor-pointer select-none hover:text-rose-600"
                     @click="
                         () => {
@@ -256,7 +280,8 @@
                         remove_red_eye
                     </span>
                     {{
-                        userRole?.[route.query.id] === 'STUDENT'
+                        userRole?.[useQueryStringAsNumber(route.query.id)] ===
+                        'STUDENT'
                             ? quiz.q_begin_date
                                 ? new Date().getTime() -
                                       new Date(quiz.q_begin_date).getTime() <
@@ -268,7 +293,10 @@
                     }}
                 </button>
                 <div
-                    v-if="userRole?.[route.query.id] === 'STUDENT'"
+                    v-if="
+                        userRole?.[useQueryStringAsNumber(route.query.id)] ===
+                        'STUDENT'
+                    "
                     class="flex flex-col items-start md:items-end">
                     {{ quiz.s_datetime ? 'ส่งแล้ว' : '' }}
                     {{
@@ -329,9 +357,9 @@
             </div>
         </div>
         <div
-            v-else-if="!quizPending && (quizs?.data?.length || 0) === 0"
+            v-else-if="!quizPending && (quizzes?.data?.length || 0) === 0"
             class="border-1 flex w-full flex-col items-center gap-2 rounded-md border p-4 md:flex-row">
-            <img class="w-48 p-4" src="/images/exam.svg" />
+            <img class="w-48 p-4" src="/images/exam.svg" >
             <span class="text-3xl font-bold">ยังไม่มีแบบทดสอบในคอร์สนี้</span>
         </div>
         <div
