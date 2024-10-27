@@ -36,12 +36,12 @@
         regis_avatar.value = ''
     }
 
-    function openModal() {
-        const instance = HSOverlay.getInstance(modalElem.value, true)
-        if ('element' in instance) {
-            instance.element.open()
-        }
-    }
+    // function openModal() {
+    //     const instance = HSOverlay.getInstance(modalElem.value, true)
+    //     if ('element' in instance) {
+    //         instance.element.open()
+    //     }
+    // }
 
     function validateEmail(s_email: string) {
         return s_email
@@ -204,7 +204,7 @@
                     </div>
                     <div
                         class="flex w-full flex-col items-center justify-center gap-4 pt-8 md:flex-row md:pl-8 md:pt-0">
-                        <img src="~/assets/images/login.svg" class="w-48" >
+                        <img src="~/assets/images/login.svg" class="w-48" />
                         <div
                             class="relative h-fit w-full grow overflow-x-hidden">
                             <TransitionGroup name="fade">
@@ -219,7 +219,7 @@
                                             type="email"
                                             class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                                             placeholder="อีเมล์"
-                                            name="email" >
+                                            name="email" />
                                         <div
                                             class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
@@ -245,7 +245,7 @@
                                             type="password"
                                             class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                                             placeholder="รหัสผ่าน"
-                                            name="password" >
+                                            name="password" />
                                         <div
                                             class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
@@ -402,7 +402,7 @@
                                             v-model.lazy="name"
                                             type="text"
                                             class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                                            placeholder="ชื่อ" >
+                                            placeholder="ชื่อ" />
                                         <div
                                             class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
@@ -428,7 +428,7 @@
                                             v-model.lazy="surname"
                                             type="text"
                                             class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                                            placeholder="นามสกุล" >
+                                            placeholder="นามสกุล" />
                                         <div
                                             class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
@@ -453,7 +453,7 @@
                                             v-model="regis_email"
                                             type="email"
                                             class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                                            placeholder="อีเมล์" >
+                                            placeholder="อีเมล์" />
                                         <div
                                             class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
@@ -478,7 +478,7 @@
                                             v-model="phone"
                                             type="tel"
                                             class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                                            placeholder="หมายเลขโทรศัพท์" >
+                                            placeholder="หมายเลขโทรศัพท์" />
                                         <div
                                             class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
@@ -503,7 +503,7 @@
                                             v-model="regis_passw"
                                             type="password"
                                             class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                                            placeholder="รหัสผ่าน" >
+                                            placeholder="รหัสผ่าน" />
                                         <div
                                             class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
@@ -531,7 +531,7 @@
                                             v-model="regis_passw_conf"
                                             type="password"
                                             class="peer block w-full rounded-lg border-transparent bg-gray-100 px-4 py-3 ps-11 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                                            placeholder="ยืนยันรหัสผ่าน" >
+                                            placeholder="ยืนยันรหัสผ่าน" />
                                         <div
                                             class="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-4 peer-disabled:pointer-events-none peer-disabled:opacity-50">
                                             <svg
@@ -569,7 +569,7 @@
                                             class="block w-full rounded-lg border border-gray-200 text-sm shadow-sm file:me-4 file:border-0 file:bg-gray-50 file:px-4 file:py-2 focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                                             @change="
                                                 onFileChangedAvatar($event)
-                                            " >
+                                            " />
                                     </div>
 
                                     <div

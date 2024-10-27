@@ -2,5 +2,5 @@
     <NavigationBar />
     <AccountModal />
     <slot />
-    <Footer />
+    <PageFooter />
 </template>

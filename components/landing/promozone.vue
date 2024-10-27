@@ -40,7 +40,7 @@
         <div
             class="mx-auto flex max-w-screen-xl items-center gap-16"
             :class="promo.flex_side">
-            <img :src="promo.image" class="h-64" alt="Learning Online" >
+            <img :src="promo.image" class="h-64" alt="Learning Online" />
             <div class="flex flex-col">
                 <span class="mb-4 text-3xl font-bold">
                     {{ promo.tilte }}

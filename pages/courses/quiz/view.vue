@@ -57,7 +57,10 @@
             <button
                 class="inline-flex items-center gap-x-2 rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-blue-600 transition-all duration-200 ease-in-out hover:bg-blue-100 hover:text-blue-800 disabled:pointer-events-none disabled:opacity-50"
                 @click="navigateTo(`/courses/quiz?id=${route.query.id}`)">
-                <span class="material-icons-outlined">arrow_back</span>
+                <span
+                    class="material-icons-outlined size-6 overflow-hidden select-none">
+                    arrow_back
+                </span>
             </button>
             <div class="flex flex-col">
                 <span class="text-2xl font-bold">{{ quizzes?.q_name }}</span>
@@ -78,7 +81,7 @@
                 <div v-if="quiz.u_avatar" class="h-12 w-12 rounded-md">
                     <img
                         class="bottom-1 aspect-square rounded-md border object-cover"
-                        :src="`/api/avatar/?u_id=${quiz.u_id}`" >
+                        :src="`/api/avatar/?u_id=${quiz.u_id}`" />
                 </div>
                 <div
                     v-if="!quiz?.u_avatar"
@@ -167,7 +170,8 @@
                             }}
                         </span>
                     </div>
-                    <div class="material-icons-outlined">
+                    <div
+                        class="material-icons-outlined size-6 overflow-hidden select-none">
                         {{ quiz.s_datetime ? 'check_circle' : 'close' }}
                     </div>
                 </div>
@@ -176,7 +180,7 @@
         <div
             v-else-if="!_pending && (quizzes?.data?.length || 0) === 0"
             class="border-1 flex w-full flex-col items-center gap-2 rounded-md border p-4 md:flex-row">
-            <img class="w-64" src="~/assets/images/content.svg" >
+            <img class="w-64" src="~/assets/images/content.svg" />
             <span class="text-3xl font-bold">ยังไม่มีการส่งแบบทดสอบ</span>
         </div>
         <div

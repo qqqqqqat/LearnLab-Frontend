@@ -114,7 +114,10 @@
                                 `/courses/assignment/view?id=${route.query.id}&a_id=${route.query.a_id}`
                             )
                         ">
-                        <span class="material-icons-outlined">arrow_back</span>
+                        <span
+                            class="material-icons-outlined size-6 overflow-hidden select-none">
+                            arrow_back
+                        </span>
                     </button>
                 </div>
                 <span class="text-2xl font-bold">
@@ -138,7 +141,7 @@
                             }}
                         </span>
                     </div>
-                    <hr class="my-2" >
+                    <hr class="my-2" />
                     <div class="flex flex-col font-normal">
                         <span class="text-sm text-slate-400">
                             ส่งมาเวลา
@@ -205,7 +208,7 @@
             <span class="material-icons-outlined select-none">feedback</span>
             Feedback
         </span>
-        <hr class="mb-2" >
+        <hr class="mb-2" />
         <div class="mb-3 flex flex-col gap-2">
             <div class="flex flex-row items-center justify-between gap-x-2">
                 <div class="flex flex-row items-center gap-x-2">
@@ -213,7 +216,7 @@
                         v-model="assignmentScore"
                         type="number"
                         class="block w-24 rounded-lg border-gray-200 px-3 py-2 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                        placeholder="คะแนน" >
+                        placeholder="คะแนน" />
                     <span>/ {{ assignments?.data.a_score }} คะแนน</span>
                 </div>
                 <div>
@@ -236,14 +239,14 @@
                 v-model="assignmentFeedback"
                 class="block w-full rounded-lg border-gray-200 px-4 py-3 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                 rows="3"
-                placeholder="Feedback"/>
+                placeholder="Feedback" />
         </div>
         <div v-if="assignments?.data?.s_content?.text" class="w-full">
             <span class="flex items-center gap-2 font-bold">
                 <span class="material-icons-outlined select-none">article</span>
                 ข้อความจากนักเรียน
             </span>
-            <hr class="mb-2" >
+            <hr class="mb-2" />
             <MdPreview
                 language="en-US"
                 :model-value="assignments?.data?.s_content?.text" />
@@ -255,7 +258,7 @@
                 </span>
                 ไฟล์จากนักเรียน
             </span>
-            <hr class="mb-2" >
+            <hr class="mb-2" />
         </div>
         <div
             v-if="assignments?.data?.s_content?.files.length"
@@ -272,7 +275,8 @@
                             class="flex flex-row items-center gap-2 overflow-hidden">
                             <div
                                 class="flex h-8 w-8 flex-shrink-0 select-none items-center justify-center rounded-md bg-slate-100">
-                                <span class="material-icons-outlined">
+                                <span
+                                    class="material-icons-outlined size-6 overflow-hidden select-none">
                                     {{
                                         file.f_mime_type?.split('/')[0] ===
                                         'image'

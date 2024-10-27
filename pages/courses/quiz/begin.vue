@@ -95,7 +95,10 @@
                 <button
                     class="inline-flex items-center gap-x-2 rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-blue-600 transition-all duration-200 ease-in-out hover:bg-blue-100 hover:text-blue-800 disabled:pointer-events-none disabled:opacity-50"
                     @click="navigateTo(`/courses/quiz/?id=${route.query.id}`)">
-                    <span class="material-icons-outlined">arrow_back</span>
+                    <span
+                        class="material-icons-outlined size-6 overflow-hidden select-none">
+                        arrow_back
+                    </span>
                 </button>
                 <span class="text-4xl font-bold">
                     แบบทดสอบ {{ quizResponse?.q_name }}
@@ -131,7 +134,7 @@
                                 type="radio"
                                 value="1"
                                 name="hs-radio-vertical-group"
-                                class="mt-0.5 shrink-0 cursor-pointer rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" >
+                                class="mt-0.5 shrink-0 cursor-pointer rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" />
                             <div class="relative flex-grow">
                                 <span>{{ quiz?.choice[0] }}</span>
                             </div>
@@ -145,7 +148,7 @@
                                 type="radio"
                                 value="2"
                                 name="hs-radio-vertical-group"
-                                class="mt-0.5 shrink-0 cursor-pointer rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" >
+                                class="mt-0.5 shrink-0 cursor-pointer rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" />
                             <span>{{ quiz?.choice[1] }}</span>
                         </div>
                         <!-- End Choice 2 -->
@@ -157,7 +160,7 @@
                                 type="radio"
                                 value="3"
                                 name="hs-radio-vertical-group"
-                                class="mt-0.5 shrink-0 cursor-pointer rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" >
+                                class="mt-0.5 shrink-0 cursor-pointer rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" />
                             <span>{{ quiz?.choice[2] }}</span>
                         </div>
                         <!-- End Choice 3 -->
@@ -169,7 +172,7 @@
                                 type="radio"
                                 value="4"
                                 name="hs-radio-vertical-group"
-                                class="mt-0.5 shrink-0 cursor-pointer rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" >
+                                class="mt-0.5 shrink-0 cursor-pointer rounded-full border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" />
                             <span>{{ quiz?.choice[3] }}</span>
                         </div>
                         <!-- End Choice 4 -->
@@ -182,7 +185,7 @@
                                 v-model="fillAnswer"
                                 type="text"
                                 placeholder="โจทย์"
-                                class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" >
+                                class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
                             <label
                                 for="answer-fill-in"
                                 class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -208,7 +211,8 @@
                                     }
                                 }
                             ">
-                            <span class="material-icons-outlined">
+                            <span
+                                class="material-icons-outlined size-6 overflow-hidden select-none">
                                 arrow_left
                             </span>
                             ย้อนกลับ
@@ -236,7 +240,8 @@
                                 }
                             ">
                             ไปต่อ
-                            <span class="material-icons-outlined">
+                            <span
+                                class="material-icons-outlined size-6 overflow-hidden select-none">
                                 arrow_right
                             </span>
                         </button>
@@ -256,7 +261,10 @@
                                     submitQuiz()
                                 }
                             ">
-                            <span class="material-icons-outlined">send</span>
+                            <span
+                                class="material-icons-outlined size-6 overflow-hidden select-none">
+                                send
+                            </span>
                             ส่ง
                         </button>
                     </div>

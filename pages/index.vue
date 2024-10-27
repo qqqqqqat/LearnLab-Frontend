@@ -1,13 +1,13 @@
 <script setup lang="ts">
-const featureRef = ref()
-const userState = useUserState()
+    const featureRef = ref()
+    const userState = useUserState()
 
-function scrollTo() {
-    window.scrollTo({
-        top: featureRef.value.$el.offsetTop - 65,
-        behavior: 'smooth',
-    })
-}
+    function scrollTo() {
+        window.scrollTo({
+            top: featureRef.value.$el.offsetTop - 65,
+            behavior: 'smooth',
+        })
+    }
 </script>
 <template>
     <main>

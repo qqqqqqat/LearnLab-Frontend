@@ -172,12 +172,15 @@
         <div
             v-show="!quizPending"
             class="flex flex-row items-center justify-between gap-4">
-            <div/>
+            <div />
             <NuxtLink
                 v-if="userRole?.[route.query.id] === 'INSTRUCTOR'"
                 :to="`/courses/quiz/create?id=${route.query.id}`"
                 class="inline-flex flex-shrink-0 items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50">
-                <span class="material-icons-outlined">add</span>
+                <span
+                    class="material-icons-outlined size-6 overflow-hidden select-none">
+                    add
+                </span>
                 สร้างแบบทดสอบ
             </NuxtLink>
         </div>
@@ -328,7 +331,7 @@
         <div
             v-else-if="!quizPending && (quizs?.data?.length || 0) === 0"
             class="border-1 flex w-full flex-col items-center gap-2 rounded-md border p-4 md:flex-row">
-            <img class="w-48 p-4" src="/images/exam.svg" >
+            <img class="w-48 p-4" src="/images/exam.svg" />
             <span class="text-3xl font-bold">ยังไม่มีแบบทดสอบในคอร์สนี้</span>
         </div>
         <div

@@ -35,7 +35,7 @@
         userMenu.value = false
         const signoutToast = toast.loading('กำลังออกจากระบบ')
         await $fetch<User>('/api/session/', { method: 'DELETE' })
-            .then(async (res) => {
+            .then(async (_res) => {
                 userState.value = null
                 toast.update(signoutToast, {
                     type: 'success',
@@ -43,7 +43,7 @@
                 })
                 await navigateTo('/', { replace: true })
             })
-            .catch((err) => {
+            .catch((_err) => {
                 toast.update(signoutToast, {
                     type: 'error',
                     message: 'ออกจากระบบล้มเหลว',
@@ -181,14 +181,15 @@
                             <div v-else class="h-8 w-8 rounded-md">
                                 <img
                                     class="aspect-square h-8 w-8 rounded-md object-cover"
-                                    :src="`data:${avatarState?.u_avatar_mime_type};base64,${avatarState?.u_avatar}`" >
+                                    :src="`data:${avatarState?.u_avatar_mime_type};base64,${avatarState?.u_avatar}`" />
                             </div>
                             <div class="flex items-center">
                                 <span>
                                     {{ userState?.u_firstname }}
                                     {{ userState?.u_lastname }}
                                 </span>
-                                <span class="material-icons-outlined">
+                                <span
+                                    class="material-icons-outlined size-6 overflow-hidden select-none">
                                     arrow_drop_down
                                 </span>
                             </div>
@@ -211,7 +212,8 @@
                                                 userMenu = false
                                             }
                                         ">
-                                        <span class="material-icons-outlined">
+                                        <span
+                                            class="material-icons-outlined size-6 overflow-hidden select-none">
                                             settings
                                         </span>
                                         ตั้งค่าผู้ใช้
@@ -219,7 +221,8 @@
                                     <div
                                         class="flex cursor-pointer items-center gap-x-2 rounded-b-lg bg-white p-4 text-red-600 hover:bg-gray-200"
                                         @click="signOut">
-                                        <span class="material-icons-outlined">
+                                        <span
+                                            class="material-icons-outlined size-6 overflow-hidden select-none">
                                             logout
                                         </span>
                                         ออกจากระบบ

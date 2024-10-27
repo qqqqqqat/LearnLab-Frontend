@@ -139,13 +139,16 @@
         <div
             v-show="!crs_pending"
             class="flex flex-row items-center justify-between gap-4">
-            <div/>
+            <div />
             <div>
                 <button
                     type="button"
                     class="mr-2 inline-flex flex-shrink-0 items-center justify-center gap-x-2 rounded-lg border border-transparent bg-red-600 px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-red-700 disabled:pointer-events-none disabled:opacity-50"
                     @click="unenroll.c_openModal()">
-                    <span class="material-icons-outlined">remove</span>
+                    <span
+                        class="material-icons-outlined size-6 overflow-hidden select-none">
+                        remove
+                    </span>
                     ออกจากคอร์ส
                 </button>
                 <button
@@ -153,7 +156,10 @@
                     type="button"
                     class="inline-flex flex-shrink-0 items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
                     @click="postModal.c_openModal">
-                    <span class="material-icons-outlined">add</span>
+                    <span
+                        class="material-icons-outlined size-6 overflow-hidden select-none">
+                        add
+                    </span>
                     เพิ่มโพสต์ในคอร์ส
                 </button>
             </div>
@@ -168,7 +174,7 @@
                     <div v-if="post.u_avatar" class="h-12 w-12 rounded-md">
                         <img
                             class="bottom-1 aspect-square rounded-md border object-cover"
-                            :src="`/api/avatar/?u_id=${post.u_id}`" >
+                            :src="`/api/avatar/?u_id=${post.u_id}`" />
                     </div>
                     <div
                         v-if="!post?.u_avatar"
@@ -207,7 +213,7 @@
                             class="inline-flex items-center gap-x-2 rounded-md bg-emerald-100 px-2 py-1 text-sm font-medium text-emerald-800">
                             งานมอบหมาย
                         </span>
-                        <div class="flex flex-row flex-wrap"/>
+                        <div class="flex flex-row flex-wrap" />
                     </div>
                     <div
                         v-else-if="post.p_type === 'QUIZ'"
@@ -216,7 +222,7 @@
                             class="inline-flex items-center gap-x-2 rounded-md bg-orange-100 px-2 py-1 text-sm font-medium text-orange-800">
                             แบบทดสอบ
                         </span>
-                        <div class="flex flex-row flex-wrap"/>
+                        <div class="flex flex-row flex-wrap" />
                     </div>
                 </div>
                 <div v-if="userState?.u_id === post?.u_id" class="flex gap-2">
@@ -231,7 +237,10 @@
                                 editPostModal.c_openModal()
                             }
                         ">
-                        <span class="material-icons-outlined">edit</span>
+                        <span
+                            class="material-icons-outlined size-6 overflow-hidden select-none">
+                            edit
+                        </span>
                     </button>
                     <button
                         type="button"
@@ -242,7 +251,10 @@
                                 delPostConfirm.c_openModal()
                             }
                         ">
-                        <span class="material-icons-outlined">delete</span>
+                        <span
+                            class="material-icons-outlined size-6 overflow-hidden select-none">
+                            delete
+                        </span>
                     </button>
                 </div>
             </div>
@@ -252,10 +264,13 @@
             </div>
             <div v-if="post.p_item_list.files.length" class="flex flex-col">
                 <span class="flex items-center gap-2 font-bold">
-                    <span class="material-icons-outlined">attach_file</span>
+                    <span
+                        class="material-icons-outlined size-6 overflow-hidden select-none">
+                        attach_file
+                    </span>
                     ไฟล์แนบ
                 </span>
-                <hr class="mb-2" >
+                <hr class="mb-2" />
                 <div class="flex flex-row flex-wrap gap-2">
                     <div
                         v-for="file in post?.p_item_list?.files"
@@ -266,7 +281,8 @@
                                 class="flex flex-row items-center gap-2 overflow-hidden">
                                 <div
                                     class="flex h-8 w-8 flex-shrink-0 select-none items-center justify-center rounded-md bg-slate-100">
-                                    <span class="material-icons-outlined">
+                                    <span
+                                        class="material-icons-outlined size-6 overflow-hidden select-none">
                                         {{
                                             file.f_mime_type?.split('/')[0] ===
                                             'image'
@@ -306,10 +322,13 @@
             </div>
             <div v-if="post.p_item_list.quizzes.length" class="flex flex-col">
                 <span class="flex items-center gap-2 font-bold">
-                    <span class="material-icons-outlined">quiz</span>
+                    <span
+                        class="material-icons-outlined size-6 overflow-hidden select-none">
+                        quiz
+                    </span>
                     แบบทดสอบ
                 </span>
-                <hr class="mb-2" >
+                <hr class="mb-2" />
                 <div class="flex flex-row flex-wrap gap-2">
                     <div
                         v-for="quiz in post?.p_item_list?.quizzes"
@@ -320,7 +339,8 @@
                                 class="flex flex-row items-center gap-2 overflow-hidden">
                                 <div
                                     class="flex h-8 w-8 flex-shrink-0 select-none items-center justify-center rounded-md bg-slate-100">
-                                    <span class="material-icons-outlined">
+                                    <span
+                                        class="material-icons-outlined size-6 overflow-hidden select-none">
                                         quiz
                                     </span>
                                 </div>
@@ -363,10 +383,13 @@
                 v-if="post.p_item_list.assignments.length"
                 class="flex flex-col">
                 <span class="flex items-center gap-2 font-bold">
-                    <span class="material-icons-outlined">assignment</span>
+                    <span
+                        class="material-icons-outlined size-6 overflow-hidden select-none">
+                        assignment
+                    </span>
                     งานมอบหมาย
                 </span>
-                <hr class="mb-2" >
+                <hr class="mb-2" />
                 <div class="flex flex-row flex-wrap gap-2">
                     <div
                         v-for="assign in post?.p_item_list?.assignments"
@@ -377,7 +400,8 @@
                                 class="flex flex-row items-center gap-2 overflow-hidden">
                                 <div
                                     class="flex h-8 w-8 flex-shrink-0 select-none items-center justify-center rounded-md bg-slate-100">
-                                    <span class="material-icons-outlined">
+                                    <span
+                                        class="material-icons-outlined size-6 overflow-hidden select-none">
                                         quiz
                                     </span>
                                 </div>
@@ -429,7 +453,7 @@
                     </div>
                 </div>
             </div>
-            <hr >
+            <hr />
             <div class="flex flex-col gap-4">
                 <div class="flex flex-col gap-2">
                     <span class="text-xl font-bold">Comments</span>
@@ -440,7 +464,7 @@
         <div
             v-else-if="!crs_pending && (crs_post?.data.length || 0) === 0"
             class="border-1 flex w-full flex-col items-center gap-2 rounded-md border p-4 md:flex-row">
-            <img class="w-64" src="~/assets/images/content.svg" >
+            <img class="w-64" src="~/assets/images/content.svg" />
             <span class="text-3xl font-bold">ยังไม่มีโพสต์ในคอร์สนี้</span>
         </div>
         <div

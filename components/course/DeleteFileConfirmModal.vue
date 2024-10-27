@@ -1,7 +1,7 @@
 <script setup lang="ts">
     import HSOverlay from '@preline/overlay'
     const deleteModal = ref()
-    const props = defineProps({
+    defineProps({
         f_name: {
             type: String,
             required: true,

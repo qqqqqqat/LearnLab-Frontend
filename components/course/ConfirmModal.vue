@@ -2,7 +2,7 @@
     import HSOverlay from '@preline/overlay'
     const deleteModal = ref()
     defineExpose({ c_closeModal, c_openModal })
-    const props = defineProps({
+    defineProps({
         action: {
             required: true,
             type: String,

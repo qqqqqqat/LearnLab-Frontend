@@ -62,7 +62,10 @@
             <button
                 class="inline-flex items-center gap-x-2 rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-blue-600 transition-all duration-200 ease-in-out hover:bg-blue-100 hover:text-blue-800 disabled:pointer-events-none disabled:opacity-50"
                 @click="navigateTo(`/courses/assignment?id=${route.query.id}`)">
-                <span class="material-icons-outlined">arrow_back</span>
+                <span
+                    class="material-icons-outlined size-6 overflow-hidden select-none">
+                    arrow_back
+                </span>
             </button>
             <div class="flex flex-col">
                 <span class="text-2xl font-bold">
@@ -85,7 +88,7 @@
                 <div v-if="assign.u_avatar" class="h-12 w-12 rounded-md">
                     <img
                         class="bottom-1 aspect-square rounded-md border object-cover"
-                        :src="`/api/avatar/?u_id=${assign.u_id}`" >
+                        :src="`/api/avatar/?u_id=${assign.u_id}`" />
                 </div>
                 <div
                     v-if="!assign?.u_avatar"
@@ -157,7 +160,8 @@
                             }}
                         </span>
                     </div>
-                    <div class="material-icons-outlined">
+                    <div
+                        class="material-icons-outlined size-6 overflow-hidden select-none">
                         {{ assign.s_datetime ? 'check_circle' : 'close' }}
                     </div>
                 </div>
@@ -167,14 +171,17 @@
                     class="inline-flex flex-shrink-0 items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
                     @click="openAssignment(assign.a_id, assign.u_id)">
                     ดูงาน
-                    <span class="material-icons-outlined">remove_red_eye</span>
+                    <span
+                        class="material-icons-outlined size-6 overflow-hidden select-none">
+                        remove_red_eye
+                    </span>
                 </button>
             </div>
         </div>
         <div
             v-else-if="!crs_pending && (assignments?.data?.length || 0) === 0"
             class="border-1 flex w-full flex-col items-center gap-2 rounded-md border p-4 md:flex-row">
-            <img class="w-64" src="~/assets/images/content.svg" >
+            <img class="w-64" src="~/assets/images/content.svg" />
             <span class="text-3xl font-bold">ยังไม่มีการส่งงาน</span>
         </div>
         <div

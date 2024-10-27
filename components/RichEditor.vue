@@ -1,11 +1,12 @@
 <script setup lang="ts">
-    import { MdEditor, en_US } from 'md-editor-v3'
+    import { MdEditor } from 'md-editor-v3'
     import 'md-editor-v3/lib/style.css'
     const text = ref()
     const props = defineProps({
         content: {
             required: false,
             type: String,
+            default: '',
         },
     })
     watch(
@@ -17,7 +18,7 @@
 
     const emit = defineEmits(['sendText'])
 
-    function showHTML(html: string) {
+    function showHTML() {
         // emit('sendText', text.value);
         setTimeout(() => {
             emit('sendText', text.value)

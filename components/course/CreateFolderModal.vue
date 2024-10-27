@@ -4,7 +4,7 @@
 
     const props = defineProps({
         c_id: {
-            type: String,
+            type: Number,
             required: true,
         },
         f_path: {
@@ -35,7 +35,7 @@
         isFolderCreating.value = true
         const createFileToast = toast.loading('กำลังสร้างโฟลเดอร์')
         const formData = new FormData()
-        formData.append('c_id', props.c_id)
+        formData.append('c_id', props.c_id.toString())
         formData.append('f_path', props.f_path)
         formData.append('f_name', folderName.value)
         formData.append('f_type', 'FOLDER')
@@ -108,7 +108,7 @@
                             v-model="folderName"
                             type="text"
                             class="disabled:pointer-events-non peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6"
-                            placeholder="LearnLab Course-course" >
+                            placeholder="LearnLab Course-course" />
                         <label
                             for="hs-floating-input-text"
                             class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">

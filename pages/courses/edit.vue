@@ -1,5 +1,7 @@
 <script setup lang="ts">
     import { toast } from '@steveyuowo/vue-hot-toast'
+    import { useQueryStringAsNumber } from '~/composables/getQueryString'
+
     definePageMeta({
         layout: 'course',
     })
@@ -28,7 +30,10 @@
     async function updateCourse() {
         const createCourseToast = toast.loading('กำลังสร้างคอร์ส')
         const formData = new FormData()
-        formData.append('c_id', route.query.id)
+        formData.append(
+            'c_id',
+            useQueryStringAsNumber(route.query.id).toString()
+        )
         formData.append('c_name', courseName.value)
         formData.append('c_description', courseDescription.value)
         formData.append('c_privacy', coursePrivacy.value ? 'PRIVATE' : 'PUBLIC')
@@ -41,7 +46,7 @@
         } else if (wasPasswordProtected.value && !passwordProtected.value) {
             formData.append('c_remove_password', '')
         }
-        await $fetch<CourseCreationResponse>('/api/courses/edit/', {
+        await $fetch<{ message: string }>('/api/courses/edit/', {
             method: 'POST',
             body: formData,
         })
@@ -50,7 +55,7 @@
                     type: 'success',
                     message: res?.message,
                 })
-                fetchCourse(route.query.id)
+                fetchCourse(useQueryStringAsNumber(route.query.id))
             })
             .catch((err) => {
                 toast.update(createCourseToast, {
@@ -100,12 +105,12 @@
     ) {
         const updateRoleToast = toast.loading('กำลังอัพเดทตำแหน่ง')
 
-        await $fetch('/api/courses/enroll/', {
+        await $fetch<{ message: string }>('/api/courses/enroll/', {
             method: 'PATCH',
             body: { u_id: u_id, c_id: c_id, u_role: u_role },
         })
             .then((res) => {
-                fetchMember(route.query.id)
+                fetchMember(useQueryStringAsNumber(route.query.id))
                 toast.update(updateRoleToast, {
                     type: 'success',
                     message: res?.message,
@@ -124,12 +129,12 @@
     async function deleteMember(u_id: number, c_id: number) {
         const updateRoleToast = toast.loading('กำลังอัพเดทตำแหน่ง')
 
-        await $fetch('/api/courses/enroll/', {
+        await $fetch<{ message: string }>('/api/courses/enroll/', {
             method: 'DELETE',
             body: { u_id: u_id, c_id: c_id },
         })
             .then((res) => {
-                fetchMember(route.query.id)
+                fetchMember(useQueryStringAsNumber(route.query.id))
                 crs_pending.value = false
                 toast.update(updateRoleToast, {
                     type: 'success',
@@ -173,7 +178,7 @@
             }
         )
             .then((res) => {
-                fetchMember(route.query.id)
+                fetchMember(useQueryStringAsNumber(route.query.id))
                 inviteUserEmail.value = ''
                 isImporting.value = false
                 toast.success(res.message)
@@ -184,9 +189,9 @@
             })
     }
 
-    if (route.query.id) {
-        fetchCourse(route.query.id)
-        fetchMember(route.query.id)
+    if (useQueryStringAsNumber(route.query.id)) {
+        fetchCourse(useQueryStringAsNumber(route.query.id))
+        fetchMember(useQueryStringAsNumber(route.query.id))
     } else {
         navigateTo('/courses', { replace: true })
     }
@@ -199,7 +204,7 @@
     <CourseConfirmModal
         ref="confirmModal"
         :action="actionName"
-        @do-action="deleteCourse(route.query.id)" />
+        @do-action="deleteCourse(useQueryStringAsNumber(route.query.id))" />
     <div class="flex w-full flex-col gap-4">
         <div><span class="text-4xl font-bold">แก้ไขคอร์ส</span></div>
         <div class="flex flex-col gap-4 px-4">
@@ -209,7 +214,7 @@
                     v-model="courseName"
                     type="text"
                     class="disabled:pointer-events-non peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6"
-                    placeholder="LearnLab Course-course" >
+                    placeholder="LearnLab Course-course" />
                 <label
                     for="hs-floating-input-text-course-1"
                     class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -224,7 +229,7 @@
                     v-model="courseDescription"
                     rows="8"
                     class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6"
-                    placeholder="Course Description"/>
+                    placeholder="Course Description" />
                 <label
                     for="hs-floating-textarea-desc"
                     class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -244,7 +249,7 @@
                     type="file"
                     name="small-file-input-banner"
                     class="block w-full rounded-lg border border-gray-200 text-sm shadow-sm file:me-4 file:border-0 file:bg-gray-50 file:px-4 file:py-2 focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                    @change="onFileChangedBanner($event)" >
+                    @change="onFileChangedBanner($event)" />
             </form>
             <div class="flex flex-row items-center gap-4">
                 <div class="flex w-20">
@@ -253,7 +258,7 @@
                         v-model="passwordProtected"
                         type="checkbox"
                         class="mt-0.5 shrink-0 rounded border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                        checked >
+                        checked />
                     <label
                         for="hs-checked-checkbox"
                         class="ms-3 text-sm text-gray-500">
@@ -266,7 +271,7 @@
                         v-model="coursePassword"
                         type="password"
                         class="disabled:pointer-events-non peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6"
-                        placeholder="password" >
+                        placeholder="password" />
                     <label
                         for="hs-floating-input-text"
                         class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -285,7 +290,7 @@
                     id="hs-basic-with-description"
                     v-model="coursePrivacy"
                     type="checkbox"
-                    class="relative h-7 w-[3.25rem] cursor-pointer rounded-full border-transparent bg-gray-100 p-px text-transparent transition-colors duration-200 ease-in-out before:inline-block before:size-6 before:translate-x-0 before:transform before:rounded-full before:bg-white before:shadow before:ring-0 before:transition before:duration-200 before:ease-in-out checked:border-blue-600 checked:bg-none checked:text-blue-600 checked:before:translate-x-full checked:before:bg-blue-200 focus:ring-blue-600 focus:checked:border-blue-600 disabled:pointer-events-none disabled:opacity-50" >
+                    class="relative h-7 w-[3.25rem] cursor-pointer rounded-full border-transparent bg-gray-100 p-px text-transparent transition-colors duration-200 ease-in-out before:inline-block before:size-6 before:translate-x-0 before:transform before:rounded-full before:bg-white before:shadow before:ring-0 before:transition before:duration-200 before:ease-in-out checked:border-blue-600 checked:bg-none checked:text-blue-600 checked:before:translate-x-full checked:before:bg-blue-200 focus:ring-blue-600 focus:checked:border-blue-600 disabled:pointer-events-none disabled:opacity-50" />
                 <label
                     for="hs-basic-with-description"
                     class="ms-3 text-sm text-gray-500">
@@ -313,7 +318,7 @@
                 แก้ไข
             </button>
         </div>
-        <hr >
+        <hr />
         <div>
             <div class="mt-4 flex flex-col justify-between gap-4 md:flex-row">
                 <span class="text-4xl font-bold">สมาชิก</span>
@@ -325,7 +330,7 @@
                             type="email"
                             :readonly="isImporting"
                             class="disabled:pointer-events-non peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6"
-                            placeholder="LearnLab Course-course" >
+                            placeholder="LearnLab Course-course" />
                         <label
                             for="hs-floating-input-text-course"
                             class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -337,7 +342,12 @@
                         :disabled="isImporting && !inviteUserEmail"
                         type="button"
                         class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-4 py-3 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
-                        @click="addMember(route.query.id, inviteUserEmail)">
+                        @click="
+                            addMember(
+                                useQueryStringAsNumber(route.query.id),
+                                inviteUserEmail
+                            )
+                        ">
                         นำเข้า
                     </button>
                 </div>
@@ -381,7 +391,7 @@
                                                 <img
                                                     class="bottom-1 aspect-square rounded-md border object-cover"
                                                     loading="lazy"
-                                                    :src="`/api/avatar/?u_id=${member.u_id}`" >
+                                                    :src="`/api/avatar/?u_id=${member.u_id}`" />
                                             </div>
                                             <div
                                                 v-if="!member?.u_avatar"
@@ -442,7 +452,9 @@
                                                     @click="
                                                         updateMemberRole(
                                                             member.u_id,
-                                                            route.query.id,
+                                                            useQueryStringAsNumber(
+                                                                route.query.id
+                                                            ),
                                                             'TA'
                                                         )
                                                     ">
@@ -455,7 +467,9 @@
                                                     @click="
                                                         updateMemberRole(
                                                             member.u_id,
-                                                            route.query.id,
+                                                            useQueryStringAsNumber(
+                                                                route.query.id
+                                                            ),
                                                             'STUDENT'
                                                         )
                                                     ">
@@ -467,7 +481,9 @@
                                                     @click="
                                                         deleteMember(
                                                             member.u_id,
-                                                            route.query.id
+                                                            useQueryStringAsNumber(
+                                                                route.query.id
+                                                            )
                                                         )
                                                     ">
                                                     ลบ
@@ -486,15 +502,15 @@
 </template>
 <style scoped>
     .fade-enter-active,
-    .fade-leave-active {
-        transition: opacity 0.25s ease;
-    }
+.fade-leave-active {
+    transition: opacity 0.25s ease;
+}
 
-    .fade-enter-from,
-    .fade-leave-to {
-        position: absolute;
-        top: 0;
-        left: 0;
-        opacity: 0;
-    }
+.fade-enter-from,
+.fade-leave-to {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+}
 </style>

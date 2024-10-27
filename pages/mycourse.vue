@@ -2,7 +2,7 @@
     const userState = useUserState()
 
     const search = ref<string>('')
-    const currentPage = ref<number>(0)
+    const currentPage = ref<number>(1)
     const totalPages = ref<number>(0)
     const isLocked = ref({ title: 'ทั้งหมด', value: 'false' })
     const courses = ref<CourseListing | null>()
@@ -105,7 +105,7 @@
                                         v-model="search"
                                         type="text"
                                         name="hs-trailing-button-add-on-with-icon"
-                                        class="border-1 block w-full rounded-s-lg border border-gray-200 px-4 py-3 text-sm shadow-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" >
+                                        class="border-1 block w-full rounded-s-lg border border-gray-200 px-4 py-3 text-sm shadow-sm focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50" />
                                     <button
                                         type="button"
                                         class="inline-flex h-[2.875rem] w-[2.875rem] flex-shrink-0 items-center justify-center gap-x-2 rounded-e-md border border-transparent bg-blue-600 text-sm font-semibold text-white hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
@@ -208,7 +208,7 @@
                                         สร้างคอร์ส
                                     </button>
                                 </div>
-                                <div/>
+                                <div />
                             </div>
                         </div>
                     </div>
@@ -225,17 +225,17 @@
                             <div
                                 class="flex w-80 flex-col rounded-xl border bg-white shadow-sm">
                                 <div
-                                    class="aspect-[17/9] max-h-96 w-full max-w-96 animate-pulse rounded-t-xl bg-gray-200 object-cover"/>
+                                    class="aspect-[17/9] max-h-96 w-full max-w-96 animate-pulse rounded-t-xl bg-gray-200 object-cover" />
                                 <div class="p-4 md:p-5">
                                     <h3 class="text-lg font-bold text-gray-800">
                                         <span
-                                            class="block size-6 w-full rounded-full bg-gray-200"/>
+                                            class="block size-6 w-full rounded-full bg-gray-200" />
                                     </h3>
                                     <p class="mt-2 text-gray-500">
                                         <span
-                                            class="mb-2 block size-3 w-full rounded-full bg-gray-200"/>
+                                            class="mb-2 block size-3 w-full rounded-full bg-gray-200" />
                                         <span
-                                            class="mb-2 block size-3 w-full rounded-full bg-gray-200"/>
+                                            class="mb-2 block size-3 w-full rounded-full bg-gray-200" />
                                     </p>
                                     <div
                                         class="flex flex-row items-end justify-between">
@@ -245,7 +245,7 @@
                                             disabled>
                                             ดูคอร์ส
                                         </button>
-                                        <div/>
+                                        <div />
                                     </div>
                                 </div>
                             </div>
@@ -264,7 +264,7 @@
                                             ? `/api/courses/banner/?c_id=${crs.c_id}`
                                             : '/images/CourseBannerDefault.svg'
                                     "
-                                    alt="Image Description" >
+                                    alt="Image Description" />
                                 <div class="p-4 md:p-5">
                                     <h3
                                         class="line-clamp-1 text-lg font-bold text-gray-800">
@@ -291,7 +291,7 @@
                                             v-if="crs.c_hashed_password"
                                             class="hs-tooltip">
                                             <span
-                                                class="material-icons-outlined select-none text-gray-500">
+                                                class="material-icons-outlined select-none text-gray-500 size-6 overflow-hidden">
                                                 lock
                                             </span>
                                         </div>
@@ -369,7 +369,7 @@
                         v-model="currentPage"
                         type="number"
                         :oninput="`this.value = (this.value >= ${totalPages}) ? ${totalPages} : Math.abs(this.value)`"
-                        class="flex min-h-[38px] w-16 min-w-[38px] items-center justify-center rounded-lg border border-gray-200 px-3 py-2 text-center text-sm text-gray-800 focus:bg-gray-50 focus:outline-none disabled:pointer-events-none disabled:opacity-50" >
+                        class="flex min-h-[38px] w-16 min-w-[38px] items-center justify-center rounded-lg border border-gray-200 px-3 py-2 text-center text-sm text-gray-800 focus:bg-gray-50 focus:outline-none disabled:pointer-events-none disabled:opacity-50" />
                     <span
                         class="flex min-h-[38px] items-center justify-center px-1.5 py-2 text-sm text-gray-500">
                         จาก

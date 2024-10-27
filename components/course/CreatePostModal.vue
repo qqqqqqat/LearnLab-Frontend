@@ -144,17 +144,14 @@
             })
         }
     }
-    function onlyNumbersAndComma(event: {
-        target: any
-        key: any
-        preventDefault: () => void
-    }) {
-        const input = event.target
+    function onlyNumbersAndComma(event: KeyboardEvent) {
+        const input = event.target as HTMLInputElement // Type assertion
         const key = event.key
 
-        // Check for allowed characters (numbers, comma, backspace)
-        const regex = /[0-9,]/
-        if (!regex.test(key)) {
+        // Check for allowed characters (numbers, comma, backspace, delete, arrow keys, etc.)
+        const allowedKeys =
+            /[0-9,]|Backspace|Delete|ArrowLeft|ArrowRight|ArrowUp|ArrowDown|Home|End|Tab/
+        if (!allowedKeys.test(key)) {
             event.preventDefault()
             return
         }
@@ -163,6 +160,15 @@
         if (key === ',' && input.value === '') {
             event.preventDefault()
             return
+        }
+
+        // Prevent multiple commas in a row and other invalid comma placements
+        if (key === ',') {
+            const lastChar = input.value.slice(-1)
+            if (lastChar === ',') {
+                event.preventDefault()
+                return
+            }
         }
     }
 </script>
@@ -208,7 +214,7 @@
                                 v-model="postTitle"
                                 type="text"
                                 placeholder="หัวข้อโพสต์"
-                                class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" >
+                                class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6" />
                             <label
                                 for="hs-floating-crs-name"
                                 class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -233,7 +239,7 @@
                             type="text"
                             placeholder="ID ของ Assignment ขั้นด้วย Comma (,)"
                             class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6"
-                            @keypress="onlyNumbersAndComma" >
+                            @keypress="onlyNumbersAndComma" />
                         <label
                             for="hs-floating-crs-ass-att"
                             class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -249,7 +255,7 @@
                             type="text"
                             placeholder="ID ของ Quiz ขั้นด้วย Comma (,)"
                             class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6"
-                            @keypress="onlyNumbersAndComma" >
+                            @keypress="onlyNumbersAndComma" />
                         <label
                             for="hs-floating-crs-quiz-att"
                             class="pointer-events-none absolute start-0 top-0 h-full truncate border border-transparent p-4 text-sm transition duration-100 ease-in-out peer-focus:-translate-y-1.5 peer-focus:text-xs peer-focus:text-gray-500 peer-disabled:pointer-events-none peer-disabled:opacity-50 peer-[:not(:placeholder-shown)]:-translate-y-1.5 peer-[:not(:placeholder-shown)]:text-xs peer-[:not(:placeholder-shown)]:text-gray-500">
@@ -263,14 +269,15 @@
                             ref="inputFile"
                             type="file"
                             hidden
-                            @change="onFileChangedMat" >
+                            @change="onFileChangedMat" />
                         <!-- End Floating Input -->
                         <div>
                             <button
                                 type="button"
                                 class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
                                 @click="inputFile.click()">
-                                <span class="material-icons-outlined">
+                                <span
+                                    class="material-icons-outlined size-6 overflow-hidden select-none">
                                     upload_file
                                 </span>
                                 เพิ่มไฟล์แนบ
@@ -338,35 +345,35 @@
 </template>
 <style scoped>
     ::-webkit-scrollbar {
-        width: 20px;
-    }
+    width: 20px;
+}
 
-    ::-webkit-scrollbar-track {
-        background-color: transparent;
-    }
+::-webkit-scrollbar-track {
+    background-color: transparent;
+}
 
-    ::-webkit-scrollbar-thumb {
-        background-color: #d6dee1;
-        border-radius: 20px;
-        border: 6px solid transparent;
-        background-clip: content-box;
-    }
+::-webkit-scrollbar-thumb {
+    background-color: #d6dee1;
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
+}
 
-    ::-webkit-scrollbar-thumb:hover {
-        background-color: #a8bbbf;
-    }
+::-webkit-scrollbar-thumb:hover {
+    background-color: #a8bbbf;
+}
 
-    .fade-enter-active,
-    .fade-leave-active {
-        height: inherit;
-        transition: opacity 0.25s ease;
-    }
+.fade-enter-active,
+.fade-leave-active {
+    height: inherit;
+    transition: opacity 0.25s ease;
+}
 
-    .fade-enter-from,
-    .fade-leave-to {
-        position: absolute;
-        top: 0;
-        left: 0;
-        opacity: 0;
-    }
+.fade-enter-from,
+.fade-leave-to {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+}
 </style>

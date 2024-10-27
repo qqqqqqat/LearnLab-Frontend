@@ -144,14 +144,15 @@
                             ref="inputFile"
                             type="file"
                             hidden
-                            @change="onFileChangedMat" >
+                            @change="onFileChangedMat" />
                         <!-- End Floating Input -->
                         <div>
                             <button
                                 type="button"
                                 class="transition-color inline-flex items-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-2 text-sm font-semibold text-white duration-200 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
                                 @click="inputFile.click()">
-                                <span class="material-icons-outlined">
+                                <span
+                                    class="material-icons-outlined size-6 overflow-hidden select-none">
                                     upload_file
                                 </span>
                                 เพิ่มไฟล์แนบ

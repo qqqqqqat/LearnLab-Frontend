@@ -4,7 +4,7 @@
 
     const props = defineProps({
         c_id: {
-            type: String,
+            type: Number,
             required: true,
         },
         f_path: {
@@ -117,7 +117,7 @@
                             type="file"
                             name="small-file-input-banner"
                             class="block w-full rounded-lg border border-gray-200 text-sm shadow-sm file:me-4 file:border-0 file:bg-gray-50 file:px-4 file:py-2 focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
-                            @change="onFileChangedBanner($event)" >
+                            @change="onFileChangedBanner($event)" />
                     </form>
                 </div>
                 <div class="flex items-center justify-end gap-x-2 px-4 py-3">

@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import { toast } from '@steveyuowo/vue-hot-toast'
+    import { useQueryStringAsNumber } from '~/composables/getQueryString'
     const userRole = useUserCourseState()
 
     definePageMeta({
@@ -44,13 +45,13 @@
             method: 'DELETE',
             body: {
                 f_id: f_id,
-                c_id: route.query.id,
+                c_id: useQueryStringAsNumber(route.query.id),
                 f_type: f_type,
             },
         })
             .then((res) => {
                 file_pending.value = true
-                fetchFile(route.query.id)
+                fetchFile(useQueryStringAsNumber(route.query.id))
                 toast.update(deleteFileToast, {
                     type: 'success',
                     message: res?.message,
@@ -80,11 +81,11 @@
     function traverseFile(directory: string) {
         file_path.value = directory
         file_pending.value = true
-        fetchFile(route.query.id)
+        fetchFile(useQueryStringAsNumber(route.query.id))
     }
 
     if (route.query.id) {
-        fetchFile(route.query.id)
+        fetchFile(useQueryStringAsNumber(route.query.id))
     } else {
         navigateTo('/courses', { replace: true })
     }
@@ -93,13 +94,13 @@
     <LazyCourseCreateFolderModal
         ref="createFolderModal"
         :f_path="file_path"
-        :c_id="route.query.id"
-        @refresh-file="fetchFile(route.query.id)" />
+        :c_id="useQueryStringAsNumber(route.query.id)"
+        @refresh-file="fetchFile(useQueryStringAsNumber(route.query.id))" />
     <LazyCourseUploadFileModal
         ref="uploadFileModal"
         :f_path="file_path"
-        :c_id="route.query.id"
-        @refresh-file="fetchFile(route.query.id)" />
+        :c_id="useQueryStringAsNumber(route.query.id)"
+        @refresh-file="fetchFile(useQueryStringAsNumber(route.query.id))" />
     <LazyCourseDeleteFileConfirmModal
         ref="deleteConfirmModal"
         :f_name="delFileName"
@@ -116,7 +117,7 @@
                 class="block w-full rounded-lg border-gray-200 px-4 py-3 text-sm focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                 :value="file_path"
                 placeholder="Readonly input"
-                readonly >
+                readonly />
             <button
                 v-if="file_path !== '/'"
                 class="inline-flex flex-shrink-0 items-center justify-center gap-x-2 rounded-lg border border-transparent bg-blue-600 px-3 py-3 text-sm font-semibold text-white transition-colors duration-150 ease-in-out hover:bg-blue-700 disabled:pointer-events-none disabled:opacity-50"
@@ -128,7 +129,8 @@
             </button>
             <div
                 v-show="
-                    userRole?.[route.query.id] !== 'STUDENT' && !file_pending
+                    userRole?.[useQueryStringAsNumber(route.query.id)] !==
+                        'STUDENT' && !file_pending
                 "
                 class="hs-dropdown relative inline-flex">
                 <button
@@ -156,7 +158,8 @@
                     <a
                         class="flex cursor-pointer items-center gap-x-3.5 rounded-lg px-3 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
                         @click="uploadFileModal.c_openModal()">
-                        <span class="material-icons-outlined">
+                        <span
+                            class="material-icons-outlined size-6 overflow-hidden select-none">
                             insert_drive_file
                         </span>
                         ไฟล์
@@ -164,7 +167,10 @@
                     <a
                         class="flex cursor-pointer items-center gap-x-3.5 rounded-lg px-3 py-2 text-sm text-gray-800 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none"
                         @click="createFolderModal.c_openModal()">
-                        <span class="material-icons-outlined">folder</span>
+                        <span
+                            class="material-icons-outlined size-6 overflow-hidden select-none">
+                            folder
+                        </span>
                         โฟลเดอร์
                     </a>
                 </div>
@@ -194,7 +200,8 @@
                     ">
                     <div
                         class="flex h-8 w-8 flex-shrink-0 select-none items-center justify-center rounded-md bg-slate-100">
-                        <span class="material-icons-outlined">
+                        <span
+                            class="material-icons-outlined size-6 overflow-hidden select-none">
                             {{
                                 file.f_type === 'FOLDER'
                                     ? 'folder'
@@ -238,7 +245,9 @@
                     <span
                         v-if="
                             file.f_privacy === 'PUBLIC' &&
-                            userRole?.[route.query.id] !== 'STUDENT'
+                            userRole?.[
+                                useQueryStringAsNumber(route.query.id)
+                            ] !== 'STUDENT'
                         "
                         class="material-icons-outlined cursor-pointer select-none text-red-500"
                         @click="
@@ -258,7 +267,7 @@
         <div
             v-else-if="!file_pending && (file_post?.length || 0) === 0"
             class="border-1 flex w-full flex-col items-center gap-2 rounded-md border p-4 md:flex-row">
-            <img class="w-48 p-8" src="~/assets/images/nofile.svg" >
+            <img class="w-48 p-8" src="~/assets/images/nofile.svg" />
             <span class="text-3xl font-bold">
                 {{
                     file_path === '/'
