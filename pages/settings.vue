@@ -30,7 +30,11 @@
         await $fetchWithHeader<User>('/api/auth/')
             .then(async (res) => {
                 userState.value = res
-                await $fetchWithHeader<Avatar>('/api/auth/?image=')
+                await $fetchWithHeader<Avatar>('/api/auth/', {
+                    params: {
+                        image: '',
+                    },
+                })
                     .then((res) => {
                         avatarState.value = res
                     })

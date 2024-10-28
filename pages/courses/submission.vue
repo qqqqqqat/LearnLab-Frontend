@@ -10,6 +10,7 @@
     const postContent = ref<string>('')
     const submitFiles = ref<{ name: string; file: File }[]>([])
     const inputFile = ref()
+    const runtimeConfig = useRuntimeConfig()
     definePageMeta({
         layout: 'course',
     })
@@ -40,7 +41,7 @@
         postContent.value = text
     }
     async function downloadFile(f_id: number) {
-        await navigateTo(`/api/file/?f_id=${f_id}`, {
+        await navigateTo(`${runtimeConfig.public.apiBaseUrl}/api/file/?f_id=${f_id}`, {
             open: { target: '_blank' },
         })
     }
@@ -462,3 +463,25 @@
         </div>
     </div>
 </template>
+<style scoped>
+:deep(.md-editor-preview) {
+    word-break: auto-phrase !important;
+    white-space: normal !important;
+    font-family: 'Bai Jamjuree', 'sans-serif' !important;
+}
+
+.md-prev-div iframe { 
+    width: fit-content !important; 
+    aspect-ratio: 16 / 9 !important; 
+    overflow: hidden !important;
+}
+
+:deep(.md-editor-mermaid) {
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+}
+
+:deep(.md-editor-preview-wrapper) {
+    padding: 0;
+}
+</style>

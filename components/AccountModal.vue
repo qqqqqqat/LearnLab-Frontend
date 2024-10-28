@@ -6,6 +6,7 @@
     const avatarState = useAvatarState()
     const accessTokenCookie = useCookie('access_token')
     const refreshTokenCookie = useCookie('refresh_token')
+    const runtimeConfig = useRuntimeConfig()
 
     const activeTab = ref(0)
     const email = ref<string>('')
@@ -62,7 +63,8 @@
 
     async function loginUser() {
         const loginToast = toast.loading('กำลังเข้าสู่ระบบ')
-        await $fetchWithHeader<AuthPOSTAPIResponse>('/api/auth/', {
+        await $fetch<AuthPOSTAPIResponse>('/api/auth/', {
+            baseURL: runtimeConfig.public.apiBaseUrl,
             method: 'PUT',
             body: {
                 u_email: email.value,
@@ -85,12 +87,17 @@
                     message: res?.message,
                 })
                 await $fetch<User>('/api/auth/', {
+                    baseURL: runtimeConfig.public.apiBaseUrl,
                     headers: {
                         Authorization: `Bearer ${accessTokenCookie.value}`,
                     },
                 }).then(async (res) => {
                     userState.value = res
-                    await $fetch<Avatar>('/api/auth/?image=', {
+                    await $fetch<Avatar>('/api/auth/', {
+                        baseURL: runtimeConfig.public.apiBaseUrl,
+                        params: {
+                            image: ''
+                        },
                         headers: {
                             Authorization: `Bearer ${accessTokenCookie.value}`,
                         },

@@ -8,6 +8,7 @@
     const _pending = ref(true)
     const quizzes = ref()
     const route = useRoute()
+    const runtimeConfig = useRuntimeConfig()
     async function fetchSubmission(id: number, q_id: number) {
         await $fetchWithHeader('/api/courses/quiz/submit/', {
             query: { c_id: id, q_id: q_id },
@@ -93,7 +94,7 @@
                 <div v-if="quiz.u_avatar" class="h-12 w-12 rounded-md">
                     <img
                         class="bottom-1 aspect-square rounded-md border object-cover"
-                        :src="`/api/avatar/?u_id=${quiz.u_id}`" >
+                        :src="`${runtimeConfig.public.apiBaseUrl}/api/avatar/?u_id=${quiz.u_id}`" >
                 </div>
                 <div
                     v-if="!quiz?.u_avatar"

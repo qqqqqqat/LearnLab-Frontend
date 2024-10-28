@@ -6,6 +6,8 @@
         layout: 'course',
     })
     const userState = useUserState()
+    const runtimeConfig = useRuntimeConfig()
+    const userCourseState = useUserCourseState()
 
     const crs_pending = ref(true)
     const route = useRoute()
@@ -64,6 +66,7 @@
                 })
             })
     }
+
 
     async function fetchCourse(id: number) {
         await $fetchWithHeader<CoursePageAPIPUTResponse>('/api/courses/', {
@@ -192,12 +195,37 @@
             })
     }
 
-    if (useQueryStringAsNumber(route.query.id)) {
-        fetchCourse(useQueryStringAsNumber(route.query.id))
-        fetchMember(useQueryStringAsNumber(route.query.id))
-    } else {
-        navigateTo('/courses', { replace: true })
+    async function fetchUserRoleState() {
+        await $fetchWithHeader<UserRoles>('/api/courses/me/', {
+            params: {
+                my_course_role: '',
+            }
+        })
+            .then((res) => {
+                userCourseState.value = res   
+                if (route.query.id) {
+                    if (getUserRoleInCurrentCourse(useQueryStringAsNumber(route.query.id)) !== 'INSTRUCTOR') {
+                        toast.error('คุณไม่มีสิทธิ์ในการเข้าถึงหน้านี้')
+                        navigateTo(`/courses/view?id=${useQueryStringAsNumber(route.query.id)}`, { replace: true })
+                    }
+                    fetchCourse(useQueryStringAsNumber(route.query.id))
+                    fetchMember(useQueryStringAsNumber(route.query.id))
+                } else {
+                    navigateTo('/courses', { replace: true })
+                }
+            })
+            .catch((_err) => {})
     }
+
+    const getUserRoleInCurrentCourse = (courseId: number) => {
+        if (courseId === -1) return false
+        if (!userCourseState.value) return false
+        if (!userCourseState.value[courseId]) return false
+        return userCourseState.value[courseId]
+    }
+
+    fetchUserRoleState()
+
     const confirmModal = ref()
     const actionName = ref('')
     const inviteUserEmail = ref('')
@@ -394,7 +422,7 @@
                                                 <img
                                                     class="bottom-1 aspect-square rounded-md border object-cover"
                                                     loading="lazy"
-                                                    :src="`/api/avatar/?u_id=${member.u_id}`" >
+                                                    :src="`${runtimeConfig.public.apiBaseUrl}/api/avatar/?u_id=${member.u_id}`" >
                                             </div>
                                             <div
                                                 v-if="!member?.u_avatar"

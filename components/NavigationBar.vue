@@ -16,7 +16,13 @@
         await $fetchWithHeader<User>('/api/auth/')
             .then(async (res) => {
                 userState.value = res
-                await $fetchWithHeader<Avatar>('/api/auth/?image=')
+                await $fetchWithHeader<Avatar>('/api/auth/',
+                    {
+                        params: {
+                            image: ''
+                        },
+                    }
+                )
                     .then((res) => {
                         avatarState.value = res
                     })
@@ -34,25 +40,25 @@
     }
 
     async function signOut() {
+        const signoutToast = toast.loading('กำลังออกจากระบบ')
         userMenu.value = false
         access_token.value = null
         refresh_token.value = null
-        const signoutToast = toast.loading('กำลังออกจากระบบ')
-        await $fetchWithHeader<User>('/api/session/', { method: 'DELETE' })
-            .then(async (_res) => {
-                userState.value = null
-                toast.update(signoutToast, {
-                    type: 'success',
-                    message: 'ออกจากระบบสำเร็จ',
-                })
-                await navigateTo('/', { replace: true })
-            })
-            .catch((_err) => {
-                toast.update(signoutToast, {
-                    type: 'error',
-                    message: 'ออกจากระบบล้มเหลว',
-                })
-            })
+        userState.value = null
+        toast.update(signoutToast, {
+            type: 'success',
+            message: 'ออกจากระบบสำเร็จ',
+        })
+        await navigateTo('/', { replace: true })
+        // await $fetchWithHeader<User>('/api/session/', { method: 'DELETE' })
+        //     .then(async (_res) => {
+        //     })
+        //     .catch((_err) => {
+        //         toast.update(signoutToast, {
+        //             type: 'error',
+        //             message: 'ออกจากระบบล้มเหลว',
+        //         })
+        //     })
     }
 
     fetchUser()
@@ -177,7 +183,7 @@
                             @click="userMenu = !userMenu">
                             <div
                                 v-if="!avatarState?.u_avatar"
-                                class="flex h-8 w-8 select-none flex-col items-center justify-center rounded-md bg-slate-200 text-lg">
+                                class="flex h-8 w-8 overflow-hidden select-none flex-col items-center justify-center rounded-md bg-slate-200 text-lg">
                                 {{
                                     `${userState?.u_firstname?.slice(0, 1)}${userState?.u_lastname?.slice(0, 1)}`
                                 }}

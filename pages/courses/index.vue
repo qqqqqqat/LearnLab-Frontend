@@ -8,6 +8,8 @@
     const modalCourseID = ref<number>(0)
     const modalCourseName = ref<string>('')
 
+    const runtimeConfig = useRuntimeConfig()
+
     const search = ref<string>('')
     const crscode = ref<string>('')
     const crspassword = ref<string>('')
@@ -469,7 +471,7 @@
                                     loading="lazy"
                                     :src="
                                         crs.c_banner
-                                            ? `/api/courses/banner/?c_id=${crs.c_id}`
+                                            ? `${runtimeConfig.public.apiBaseUrl}/api/courses/banner/?c_id=${crs.c_id}`
                                             : '/images/CourseBannerDefault.svg'
                                     "
                                     alt="Image Description" >

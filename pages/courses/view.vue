@@ -10,6 +10,7 @@
     })
 
     const route = useRoute()
+    const runtimeConfig = useRuntimeConfig()
 
     const crs_post = ref<PostGETAPIResponse>()
     const crs_pending = ref(true)
@@ -105,7 +106,7 @@
     }
 
     async function downloadFile(f_id: number) {
-        await navigateTo(`/api/file/?f_id=${f_id}`, {
+        await navigateTo(`${runtimeConfig.public.apiBaseUrl}/api/file/?f_id=${f_id}`, {
             open: { target: '_blank' },
         })
     }
@@ -184,7 +185,7 @@
                         <div v-if="post.u_avatar" class="h-12 w-12 rounded-md">
                             <img
                                 class="bottom-1 aspect-square rounded-md border object-cover"
-                                :src="`/api/avatar/?u_id=${post.u_id}`" >
+                                :src="`${runtimeConfig.public.apiBaseUrl}/api/avatar/?u_id=${post.u_id}`" >
                         </div>
                         <div
                             v-if="!post?.u_avatar"
@@ -511,7 +512,7 @@
     </div>
 </template>
 <style scoped>
-    :deep(.md-editor-preview) {
+:deep(.md-editor-preview) {
     word-break: auto-phrase !important;
     white-space: normal !important;
     font-family: 'Bai Jamjuree', 'sans-serif' !important;

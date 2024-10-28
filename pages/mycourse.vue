@@ -5,8 +5,10 @@
     const currentPage = ref<number>(1)
     const totalPages = ref<number>(0)
     const isLocked = ref({ title: 'ทั้งหมด', value: 'false' })
-    const courses = ref<CourseListing | null>()
+    const courses = ref<CourseListing>()
     const pending = ref()
+
+    const runtimeConfig = useRuntimeConfig()
 
     const createCourseModal = ref()
 
@@ -262,7 +264,7 @@
                                     loading="lazy"
                                     :src="
                                         crs.c_banner
-                                            ? `/api/courses/banner/?c_id=${crs.c_id}`
+                                            ? `${runtimeConfig.public.apiBaseUrl}/api/courses/banner/?c_id=${crs.c_id}`
                                             : '/images/CourseBannerDefault.svg'
                                     "
                                     alt="Image Description" >
@@ -283,7 +285,6 @@
                                             @click="
                                                 goToCourse(
                                                     crs.c_id,
-                                                    crs.c_hashed_password
                                                 )
                                             ">
                                             ดูคอร์ส

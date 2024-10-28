@@ -2,7 +2,7 @@
     import { toast } from '@steveyuowo/vue-hot-toast'
     import { useQueryStringAsNumber } from '~/composables/getQueryString'
     const userRole = useUserCourseState()
-
+    const runtimeConfig = useRuntimeConfig()
     definePageMeta({
         layout: 'course',
     })
@@ -69,7 +69,7 @@
     }
 
     async function downloadFile(f_id: number) {
-        await navigateTo(`/api/file/?f_id=${f_id}`, {
+        await navigateTo(`${runtimeConfig.public.apiBaseUrl}/api/file/?f_id=${f_id}`, {
             open: { target: '_blank' },
         })
     }

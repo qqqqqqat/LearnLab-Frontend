@@ -45,16 +45,20 @@ export default defineNuxtConfig({
             ],
         },
     },
-
-    nitro: {
-        routeRules: {
-            '/api/**': {
-                proxy: process.env.BACKEND_URL
-                    ? `http://${process.env.BACKEND_URL}/api/**`
-                    : 'http://localhost:8000/api/**',
-            }, // For dev
-        },
+    runtimeConfig: {
+        public: {
+            apiBaseUrl: 'http://localhost:8000',
+          }
     },
+    // nitro: {
+    //     routeRules: {
+    //         '/api/**': {
+    //             proxy: process.env.BACKEND_URL
+    //                 ? `http://${process.env.BACKEND_URL}/api/**`
+    //                 : 'http://localhost:8000/api/**',
+    //         }, // For dev
+    //     },
+    // },
 
     compatibilityDate: '2024-09-28',
 })

@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import { toast } from '@steveyuowo/vue-hot-toast'
+    import { useQueryStringAsNumber } from '#imports';
     definePageMeta({
         layout: 'course',
     })
@@ -7,6 +8,7 @@
     const crs_pending = ref(true)
     const assignments = ref<SubmissionGETApiResponse | null>()
     const route = useRoute()
+    const runtimeConfig = useRuntimeConfig()
     async function fetchSubmission(id: number, a_id: number) {
         await $fetchWithHeader<SubmissionGETApiResponse>(
             '/api/courses/assignment/submit/',
@@ -51,7 +53,7 @@
         }
     }
     if (route.query.id && route.query.a_id) {
-        fetchSubmission(route.query.id, route.query.a_id)
+        fetchSubmission(useQueryStringAsNumber(route.query.id), useQueryStringAsNumber(route.query.a_id))
     } else {
         navigateTo('/courses', { replace: true })
     }
@@ -89,7 +91,7 @@
                 <div v-if="assign.u_avatar" class="h-12 w-12 rounded-md">
                     <img
                         class="bottom-1 aspect-square rounded-md border object-cover"
-                        :src="`/api/avatar/?u_id=${assign.u_id}`" >
+                        :src="`${runtimeConfig.public.apiBaseUrl}/api/avatar/?u_id=${assign.u_id}`" >
                 </div>
                 <div
                     v-if="!assign?.u_avatar"
