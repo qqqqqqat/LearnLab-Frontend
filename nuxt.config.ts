@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
     devtools: { enabled: true },
-    modules: ['@nuxtjs/tailwindcss', '@nuxt/eslint'],
+    modules: ['@nuxtjs/tailwindcss', '@nuxt/eslint', '@nuxtjs/fontaine'],
     plugins: ['~/plugins/preline.client.ts'],
     ssr: false,
 
@@ -49,6 +49,9 @@ export default defineNuxtConfig({
         public: {
             apiBaseUrl: 'http://localhost:8000',
           }
+    },
+      fontMetrics: {
+        fonts: [{ family: 'Bai Jamjuree' }, { family: 'Noto Sans Thai' }],
     },
     // nitro: {
     //     routeRules: {

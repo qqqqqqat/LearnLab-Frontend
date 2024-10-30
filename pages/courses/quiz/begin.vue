@@ -88,7 +88,7 @@
     function saveAndContinue(indx: number, type: string) {
         quizAnswers.value[indx] =
             type == 'CHOICE' ? choiceAnswer.value : fillAnswer.value
-        console.log(quizAnswers.value)
+        // console.log(quizAnswers.value)
     }
 </script>
 <template>

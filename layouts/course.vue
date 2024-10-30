@@ -126,7 +126,6 @@ onMounted(() => {
 })
 
 fetchUserRoleState()
-console.log(getUserRoleInCurrentCourse(courseId.value))
 </script>
 <template>
     <NavigationBar />
