@@ -1,5 +1,6 @@
 <script setup lang="ts">
     import { toast } from '@steveyuowo/vue-hot-toast'
+    import { useQueryStringAsNumber } from '#imports';
     definePageMeta({
         layout: 'course',
     })
@@ -81,7 +82,7 @@
     }
 
     if (route.query.id && route.query.q_id) {
-        fetchQuiz(route.query.id, route.query.q_id)
+        fetchQuiz(useQueryStringAsNumber(route.query.id), useQueryStringAsNumber(route.query.q_id))
     } else {
         navigateTo('/courses', { replace: true })
     }
