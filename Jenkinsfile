@@ -7,6 +7,7 @@ pipeline {
                 docker{
                     image 'node:22.11.0-alpine3.20'
                     reuseNode true
+                    args '-u root'
                 }
             }
             steps {
@@ -14,7 +15,6 @@ pipeline {
                     npm --version
                     npm install
                     npm run build
-                    
                 '''
             }
         }
