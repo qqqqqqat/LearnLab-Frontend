@@ -30,7 +30,7 @@
     }
 
     async function updateCourse() {
-        const createCourseToast = toast.loading('กำลังสร้างคอร์ส')
+        const updateCourseToast = toast.loading('กำลังแก้ไขคอร์ส')
         const formData = new FormData()
         formData.append(
             'c_id',
@@ -53,14 +53,14 @@
             body: formData,
         })
             .then((res) => {
-                toast.update(createCourseToast, {
+                toast.update(updateCourseToast, {
                     type: 'success',
                     message: res?.message,
                 })
                 fetchCourse(useQueryStringAsNumber(route.query.id))
             })
             .catch((err) => {
-                toast.update(createCourseToast, {
+                toast.update(updateCourseToast, {
                     type: 'error',
                     message: err?.data?.message,
                 })
@@ -244,6 +244,7 @@
                     id="hs-floating-input-text-course-1"
                     v-model="courseName"
                     type="text"
+                    :disabled="crs_pending"
                     class="disabled:pointer-events-non peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6"
                     placeholder="LearnLab Course-course" >
                 <label
@@ -258,6 +259,7 @@
                 <textarea
                     id="hs-floating-textarea-desc"
                     v-model="courseDescription"
+                    :disabled="crs_pending"
                     rows="8"
                     class="peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6"
                     placeholder="Course Description" />
@@ -278,6 +280,7 @@
                     id="small-file-input-banner"
                     accept="image/*"
                     type="file"
+                    :disabled="crs_pending"
                     name="small-file-input-banner"
                     class="block w-full rounded-lg border border-gray-200 text-sm shadow-sm file:me-4 file:border-0 file:bg-gray-50 file:px-4 file:py-2 focus:z-10 focus:border-blue-500 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                     @change="onFileChangedBanner($event)" >
@@ -288,6 +291,7 @@
                         id="hs-checked-checkbox"
                         v-model="passwordProtected"
                         type="checkbox"
+                        :disabled="crs_pending"
                         class="mt-0.5 shrink-0 rounded border-gray-200 text-blue-600 focus:ring-blue-500 disabled:pointer-events-none disabled:opacity-50"
                         checked >
                     <label
@@ -301,6 +305,7 @@
                         id="hs-floating-input-text"
                         v-model="coursePassword"
                         type="password"
+                        :disabled="crs_pending"
                         class="disabled:pointer-events-non peer block w-full rounded-lg border-gray-200 p-4 text-sm placeholder:text-transparent autofill:pb-2 autofill:pt-6 focus:border-blue-500 focus:pb-2 focus:pt-6 focus:ring-blue-500 disabled:opacity-50 [&:not(:placeholder-shown)]:pb-2 [&:not(:placeholder-shown)]:pt-6"
                         placeholder="password" >
                     <label
@@ -321,6 +326,7 @@
                     id="hs-basic-with-description"
                     v-model="coursePrivacy"
                     type="checkbox"
+                    :disabled="crs_pending"
                     class="relative h-7 w-[3.25rem] cursor-pointer rounded-full border-transparent bg-gray-100 p-px text-transparent transition-colors duration-200 ease-in-out before:inline-block before:size-6 before:translate-x-0 before:transform before:rounded-full before:bg-white before:shadow before:ring-0 before:transition before:duration-200 before:ease-in-out checked:border-blue-600 checked:bg-none checked:text-blue-600 checked:before:translate-x-full checked:before:bg-blue-200 focus:ring-blue-600 focus:checked:border-blue-600 disabled:pointer-events-none disabled:opacity-50" >
                 <label
                     for="hs-basic-with-description"

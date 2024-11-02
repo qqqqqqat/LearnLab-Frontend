@@ -16,19 +16,7 @@
         await $fetchWithHeader<User>('/api/auth/')
             .then(async (res) => {
                 userState.value = res
-                await $fetchWithHeader<Avatar>('/api/auth/',
-                    {
-                        params: {
-                            image: ''
-                        },
-                    }
-                )
-                    .then((res) => {
-                        avatarState.value = res
-                    })
-                    .catch((_err) => {
-                        toast.error('โหลดรูปล้มเหลว')
-                    })
+                await fetchAvatar()
             })
             .catch(async (_err) => {
                 if (
@@ -36,6 +24,18 @@
                     stripTrailingSlash(route.path) !== '/courses'
                 )
                     await navigateTo('/', { replace: true })
+            })
+    }
+
+    async function fetchAvatar() {
+        await $fetchBlobWithHeader('/api/auth/', {
+            params: {
+                image: '',
+                "get-raw": '',
+            }
+        })
+            .then((res) => {
+                avatarState.value = { u_avatar_blob_url: res.blobUrl }
             })
     }
 
@@ -182,7 +182,7 @@
                             class="flex cursor-pointer flex-row items-center gap-x-2 rounded-lg font-bold transition-colors duration-200 ease-in-out md:px-3"
                             @click="userMenu = !userMenu">
                             <div
-                                v-if="!avatarState?.u_avatar"
+                                v-if="!avatarState?.u_avatar_blob_url"
                                 class="flex h-8 w-8 overflow-hidden select-none flex-col items-center justify-center rounded-md bg-slate-200 text-lg">
                                 {{
                                     `${userState?.u_firstname?.slice(0, 1)}${userState?.u_lastname?.slice(0, 1)}`
@@ -191,7 +191,7 @@
                             <div v-else class="h-8 w-8 rounded-md">
                                 <img
                                     class="aspect-square h-8 w-8 rounded-md object-cover"
-                                    :src="`data:${avatarState?.u_avatar_mime_type};base64,${avatarState?.u_avatar}`" >
+                                    :src="avatarState.u_avatar_blob_url" >
                             </div>
                             <div class="flex items-center">
                                 <span>
