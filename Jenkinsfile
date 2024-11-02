@@ -7,6 +7,7 @@ pipeline {
                 docker {
                     image 'node:22.11.0-alpine3.20'
                     reuseNode true
+                    args '-u root'
                 }
             }
             steps {
@@ -27,6 +28,7 @@ pipeline {
 
                     echo "Starting npm run build"
                     npm run build
+                    echo "npm run build fin"
                 '''
             }
         }
