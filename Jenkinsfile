@@ -7,11 +7,16 @@ pipeline {
                 docker {
                     image 'node:22.11.0-alpine3.20'
                     reuseNode true
-                    args '-u root -p 3000:3000' // แมพพอร์ต 3000 จาก container ไปยังพอร์ต 3000 บน host
+                    args '-u root -p 3000:3000 -e HOST_IP=${HOST_IP}'
                 }
             }
+            environment {
+                HOST_IP = "${InetAddress.getLocalHost().getHostAddress()}"
+            }
             steps {
-                // ตรวจสอบว่า node_modules มีอยู่แล้วหรือไม่ ถ้าไม่มีก็ให้ติดตั้ง npm packages ใหม่
+                // แสดง IP ของ Node
+                
+                
                 sh '''
                     echo "Checking npm and starting build..."
                     
@@ -37,6 +42,7 @@ pipeline {
                     echo "Starting npm run dev"
                     npm run dev
                 '''
+                sh 'echo "Node IP Address: $(hostname -I):3000"'
             }
         }
     }
