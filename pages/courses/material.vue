@@ -1,8 +1,8 @@
 <script setup lang="ts">
     import { toast } from '@steveyuowo/vue-hot-toast'
     import { useQueryStringAsNumber } from '~/composables/getQueryString'
+    import { downloadFile } from '~/utils/downloadFile';
     const userRole = useUserCourseState()
-    const runtimeConfig = useRuntimeConfig()
     definePageMeta({
         layout: 'course',
     })
@@ -68,11 +68,7 @@
             })
     }
 
-    async function downloadFile(f_id: number) {
-        await navigateTo(`${runtimeConfig.public.apiBaseUrl}/api/file/?f_id=${f_id}`, {
-            open: { target: '_blank' },
-        })
-    }
+
 
     function goUpDirectory(path: string): string {
         const pathParts = path.split('/')

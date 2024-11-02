@@ -3,6 +3,8 @@
     import { MdPreview } from 'md-editor-v3'
     import { useQueryStringAsNumber } from '#imports'
     import 'md-editor-v3/lib/preview.css'
+    import { downloadFile } from '~/utils/downloadFile';
+
     const userRole = useUserCourseState()
     const userState = useUserState()
     definePageMeta({
@@ -103,12 +105,6 @@
                     message: err?.data?.message,
                 })
             })
-    }
-
-    async function downloadFile(f_id: number) {
-        await navigateTo(`${runtimeConfig.public.apiBaseUrl}/api/file/?f_id=${f_id}`, {
-            open: { target: '_blank' },
-        })
     }
 
     async function openQuiz(q_id: number) {

@@ -2,11 +2,11 @@
     import { toast } from '@steveyuowo/vue-hot-toast'
     import { MdPreview } from 'md-editor-v3'
     import { useQueryStringAsNumber } from '#imports'
-    // const userRole = useUserCourseState()
+    import { downloadFile } from '~/utils/downloadFile';
+
     const assignments = ref<GETOneSubmissionAPIResponse | null>(null)
     const assignPending = ref(true)
     const runtimeConfig = useRuntimeConfig()
-    // const postContent = ref<string | null>('')
     const assignmentScore = ref<number | null>(null)
     const assignmentFeedback = ref<string | null>('')
     const submitTime = ref<{
@@ -69,12 +69,6 @@
                 assignPending.value = false
                 toast.error(err?.data?.message)
             })
-    }
-
-    async function downloadFile(f_id: number) {
-        await navigateTo(`${runtimeConfig.public.apiBaseUrl}/api/file/?f_id=${f_id}`, {
-            open: { target: '_blank' },
-        })
     }
 
     const route = useRoute()

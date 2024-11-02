@@ -3,6 +3,8 @@
     import { MdPreview } from 'md-editor-v3'
     import 'md-editor-v3/lib/preview.css'
     import { useQueryStringAsNumber } from '#imports'
+    import { downloadFile } from '~/utils/downloadFile';
+
 
     // const userRole = useUserCourseState()
     const assignments = ref()
@@ -39,11 +41,6 @@
 
     function getRteText(text: string) {
         postContent.value = text
-    }
-    async function downloadFile(f_id: number) {
-        await navigateTo(`${runtimeConfig.public.apiBaseUrl}/api/file/?f_id=${f_id}`, {
-            open: { target: '_blank' },
-        })
     }
 
     async function removeSubmission() {
