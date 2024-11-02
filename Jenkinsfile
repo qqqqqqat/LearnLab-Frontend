@@ -26,14 +26,6 @@ pipeline {
                         echo "node_modules already exists, skipping npm install"
                     fi
 
-                    # หยุดการทำงาน dev server หากกำลังทำงานอยู่
-                    pid=$(lsof -i :3000 -t || true)
-                    if [ -n "$pid" ]; then
-                        echo "Stopping running dev server (PID: $pid)"
-                        kill -9 "$pid"
-                    fi
-
-                    # เริ่ม dev server ใหม่
                     echo "Starting npm run dev"
                     npm run dev
                 '''
