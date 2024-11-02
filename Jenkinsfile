@@ -7,7 +7,6 @@ pipeline {
                 docker {
                     image 'node:22.11.0-alpine3.20'
                     reuseNode true
-                    args '-u root -p 3000:3000' // แมพพอร์ต 3000 จาก container ไปยังพอร์ต 3000 บน host
                 }
             }
             steps {
@@ -27,7 +26,7 @@ pipeline {
                     fi
 
                     echo "Starting npm run dev"
-                    npm run dev
+                    npm run build
                 '''
             }
         }
