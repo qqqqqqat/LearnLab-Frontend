@@ -20,7 +20,7 @@ export async function $fetchBlobWithHeader<T extends Blob>(
         return { blobUrl, blob };
 
     } catch (error) {
-        toast.error('Failed to fetch blob: ' + error)
+        // toast.error('Failed to fetch blob: ' + error)
         throw error; 
     }
 }
