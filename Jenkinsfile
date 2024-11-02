@@ -25,7 +25,7 @@ pipeline {
                         echo "node_modules already exists, skipping npm install"
                     fi
 
-                    echo "Starting npm run dev"
+                    echo "Starting npm run build"
                     npm run build
                 '''
             }
