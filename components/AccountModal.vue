@@ -119,9 +119,9 @@ async function fetchAvatar() {
         }
     })
         .then((res) => {
-            avatarState.value = { u_avatar_blob: res.blob }
-        }).catch((err) => {
-            console.error("Unable to fetch avatar", err)
+            avatarState.value = { u_avatar_blob_url: res.blobUrl }
+        }).catch((_err) => {
+            avatarState.value = { u_avatar_blob_url: ''}
         })
 }
 

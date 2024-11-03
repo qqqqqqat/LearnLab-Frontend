@@ -206,7 +206,7 @@
                 if (route.query.id) {
                     if (getUserRoleInCurrentCourse(useQueryStringAsNumber(route.query.id)) !== 'INSTRUCTOR') {
                         toast.error('คุณไม่มีสิทธิ์ในการเข้าถึงหน้านี้')
-                        navigateTo(`/courses/view?id=${useQueryStringAsNumber(route.query.id)}`, { replace: true })
+                        navigateTo(`/courses/view/?id=${useQueryStringAsNumber(route.query.id)}`, { replace: true })
                     }
                     fetchCourse(useQueryStringAsNumber(route.query.id))
                     fetchMember(useQueryStringAsNumber(route.query.id))

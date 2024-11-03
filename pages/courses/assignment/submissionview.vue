@@ -111,7 +111,7 @@
                         class="inline-flex items-center gap-x-2 rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-blue-600 transition-all duration-200 ease-in-out hover:bg-blue-100 hover:text-blue-800 disabled:pointer-events-none disabled:opacity-50"
                         @click="
                             navigateTo(
-                                `/courses/assignment/view?id=${useQueryStringAsNumber(route.query.id)}&a_id=${useQueryStringAsNumber(route.query.a_id)}`
+                                `/courses/assignment/view/?id=${useQueryStringAsNumber(route.query.id)}&a_id=${useQueryStringAsNumber(route.query.a_id)}`
                             )
                         ">
                         <span

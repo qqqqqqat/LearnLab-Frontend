@@ -109,7 +109,7 @@
 
     async function openQuiz(q_id: number) {
         await navigateTo(
-            `/courses/quiz/begin?id=${useQueryStringAsNumber(route.query.id)}&q_id=${q_id}`
+            `/courses/quiz/begin/?id=${useQueryStringAsNumber(route.query.id)}&q_id=${q_id}`
         )
     }
 
@@ -457,7 +457,7 @@
                                         class="material-icons-outlined cursor-pointer select-none text-gray-500"
                                         @click="
                                             navigateTo(
-                                                `/courses/submission?a_id=${assign.a_id}&id=${useQueryStringAsNumber(route.query.id)}`
+                                                `/courses/submission/?a_id=${assign.a_id}&id=${useQueryStringAsNumber(route.query.id)}`
                                             )
                                         ">
                                         open_in_new
@@ -467,7 +467,7 @@
                                         class="material-icons-outlined cursor-pointer select-none text-gray-500"
                                         @click="
                                             navigateTo(
-                                                `/courses/assignment/view?a_id=${assign.a_id}&id=${useQueryStringAsNumber(route.query.id)}`
+                                                `/courses/assignment/view/?a_id=${assign.a_id}&id=${useQueryStringAsNumber(route.query.id)}`
                                             )
                                         ">
                                         open_in_new

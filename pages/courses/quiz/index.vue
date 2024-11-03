@@ -61,7 +61,7 @@
             'STUDENT'
         ) {
             await navigateTo({
-                path: '/courses/quiz/begin',
+                path: '/courses/quiz/begin/',
                 query: {
                     id: useQueryStringAsNumber(route.query.id),
                     q_id: q_id,
@@ -69,7 +69,7 @@
             })
         } else {
             await navigateTo({
-                path: '/courses/quiz/view',
+                path: '/courses/quiz/view/',
                 query: {
                     id: useQueryStringAsNumber(route.query.id),
                     q_id: q_id,
@@ -244,7 +244,7 @@
                     class="material-icons-outlined cursor-pointer select-none hover:text-blue-600"
                     @click="
                         navigateTo(
-                            `/courses/quiz/edit?id=${useQueryStringAsNumber(route.query.id)}&q_id=${quiz.q_id}`
+                            `/courses/quiz/edit/?id=${useQueryStringAsNumber(route.query.id)}&q_id=${quiz.q_id}`
                         )
                     ">
                     edit

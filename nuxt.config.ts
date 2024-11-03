@@ -3,9 +3,8 @@ export default defineNuxtConfig({
     devtools: { enabled: true },
     modules: ['@nuxtjs/tailwindcss', '@nuxt/eslint', '@nuxtjs/fontaine'],
     plugins: ['~/plugins/preline.client.ts'],
-    ssr: false,
-
     app: {
+        cdnURL: 'https://staging.d1k73m79r2m0n8.amplifyapp.com/',
         head: {
             charset: 'utf-8',
             viewport: 'width=device-width, initial-scale=1',
@@ -62,6 +61,12 @@ export default defineNuxtConfig({
     //         }, // For dev
     //     },
     // },
-
+    experimental: {
+        payloadExtraction: false
+    },
+    routeRules: {
+        '/': { prerender: true },
+        '/**': { ssr: false },
+    },
     compatibilityDate: '2024-09-28',
 })

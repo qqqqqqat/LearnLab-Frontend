@@ -71,7 +71,7 @@
                     type: 'success',
                     message: Pres?.message,
                 })
-                navigateTo(`/courses/quiz?id=${route.query.id}`)
+                navigateTo(`/courses/quiz/?id=${route.query.id}`)
             })
             .catch((Perr) => {
                 toast.update(submitQuizToast, {
