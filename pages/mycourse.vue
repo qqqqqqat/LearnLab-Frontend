@@ -70,7 +70,7 @@
 
     async function goToCourse(c_id: number) {
         await navigateTo({
-            path: '/courses/view',
+            path: '/courses/view/',
             query: {
                 id: c_id,
             },

@@ -11,8 +11,9 @@ declare global {
         u_updated_on: string
     }
     interface Avatar {
-        u_avatar: string
-        u_avatar_mime_type: string
+        u_avatar_blob_url: string
+        // u_avatar: string
+        // u_avatar_mime_type: string
     }
     interface Course {
         c_id: number

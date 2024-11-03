@@ -164,7 +164,7 @@ fetchUserRoleState()
                     class="absolute h-full w-full rounded-xl bg-gradient-to-b from-slate-50/0 from-50% to-zinc-900 sm:from-70%" />
                 <div v-if="getUserRoleInCurrentCourse(courseId) === 'INSTRUCTOR'" class="absolute right-0">
                     <div class="flex flex-row pr-2 pt-2">
-                        <NuxtLink :to="`/courses/edit?id=${courseId}`"
+                        <NuxtLink :to="`/courses/edit/?id=${courseId}`"
                             class="transition-color inline-flex items-center gap-x-2 rounded-lg px-3 py-2 text-sm font-semibold text-white drop-shadow-[0_0_8px_rgba(0,0,0,1)] duration-200 ease-in-out hover:text-blue-300 disabled:pointer-events-none disabled:opacity-50">
                             <span class="material-icons-outlined size-6 overflow-hidden select-none">
                                 edit
@@ -202,7 +202,7 @@ fetchUserRoleState()
             <div class="flex md:flex-row flex-col gap-4">
                 <nav class="border-1 flex h-fit w-full flex-col rounded-lg border shadow-sm md:w-64 flex-shrink-0">
                     <div class="flex flex-col">
-                        <NuxtLink :to="`/courses/view?id=${courseId}`" :class="route.path === '/courses/view'
+                        <NuxtLink :to="`/courses/view/?id=${courseId}`" :class="route.path === '/courses/view'
                                 ? 'bg-blue-600 text-white hover:bg-blue-700'
                                 : 'text-black hover:bg-blue-300/50'
                             " class="nav-menu">
@@ -211,7 +211,7 @@ fetchUserRoleState()
                             </span>
                             หน้าหลัก
                         </NuxtLink>
-                        <NuxtLink :to="`/courses/material?id=${courseId}`" :class="route.path === '/courses/material'
+                        <NuxtLink :to="`/courses/material/?id=${courseId}`" :class="route.path === '/courses/material'
                                 ? 'bg-blue-600 text-white hover:bg-blue-700'
                                 : 'text-black hover:bg-blue-300/50'
                             " class="nav-menu">
@@ -220,7 +220,7 @@ fetchUserRoleState()
                             </span>
                             เนื้อหาการสอน
                         </NuxtLink>
-                        <NuxtLink :to="`/courses/assignment?id=${courseId}`" :class="route.path === '/courses/assignment'
+                        <NuxtLink :to="`/courses/assignment/?id=${courseId}`" :class="route.path === '/courses/assignment'
                                 ? 'bg-blue-600 text-white hover:bg-blue-700'
                                 : 'text-black hover:bg-blue-300/50'
                             " class="nav-menu">
@@ -229,7 +229,7 @@ fetchUserRoleState()
                             </span>
                             งานมอบหมาย
                         </NuxtLink>
-                        <NuxtLink :to="`/courses/quiz?id=${courseId}`" :class="route.path === '/courses/quiz'
+                        <NuxtLink :to="`/courses/quiz/?id=${courseId}`" :class="route.path === '/courses/quiz'
                                 ? 'bg-blue-600 text-white hover:bg-blue-700'
                                 : 'text-black hover:bg-blue-300/50'
                             " class="nav-menu">

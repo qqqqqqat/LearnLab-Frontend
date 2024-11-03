@@ -28,7 +28,7 @@
 
     async function openAssignment(a_id: number, u_id: number) {
         await navigateTo(
-            `/courses/assignment/submissionview?a_id=${a_id}&id=${route.query.id}&u_id=${u_id}`
+            `/courses/assignment/submissionview/?a_id=${a_id}&id=${route.query.id}&u_id=${u_id}`
         )
     }
 
@@ -63,7 +63,7 @@
         <div class="flex flex-row items-center gap-2">
             <button
                 class="inline-flex items-center gap-x-2 rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-blue-600 transition-all duration-200 ease-in-out hover:bg-blue-100 hover:text-blue-800 disabled:pointer-events-none disabled:opacity-50"
-                @click="navigateTo(`/courses/assignment?id=${route.query.id}`)">
+                @click="navigateTo(`/courses/assignment/?id=${route.query.id}`)">
                 <span
                     class="material-icons-outlined size-6 overflow-hidden select-none">
                     arrow_back

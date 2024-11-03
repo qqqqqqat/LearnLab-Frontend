@@ -3,6 +3,8 @@
     import { MdPreview } from 'md-editor-v3'
     import { useQueryStringAsNumber } from '#imports'
     import 'md-editor-v3/lib/preview.css'
+    import { downloadFile } from '~/utils/downloadFile';
+
     const userRole = useUserCourseState()
     const userState = useUserState()
     definePageMeta({
@@ -105,15 +107,9 @@
             })
     }
 
-    async function downloadFile(f_id: number) {
-        await navigateTo(`${runtimeConfig.public.apiBaseUrl}/api/file/?f_id=${f_id}`, {
-            open: { target: '_blank' },
-        })
-    }
-
     async function openQuiz(q_id: number) {
         await navigateTo(
-            `/courses/quiz/begin?id=${useQueryStringAsNumber(route.query.id)}&q_id=${q_id}`
+            `/courses/quiz/begin/?id=${useQueryStringAsNumber(route.query.id)}&q_id=${q_id}`
         )
     }
 
@@ -461,7 +457,7 @@
                                         class="material-icons-outlined cursor-pointer select-none text-gray-500"
                                         @click="
                                             navigateTo(
-                                                `/courses/submission?a_id=${assign.a_id}&id=${useQueryStringAsNumber(route.query.id)}`
+                                                `/courses/submission/?a_id=${assign.a_id}&id=${useQueryStringAsNumber(route.query.id)}`
                                             )
                                         ">
                                         open_in_new
@@ -471,7 +467,7 @@
                                         class="material-icons-outlined cursor-pointer select-none text-gray-500"
                                         @click="
                                             navigateTo(
-                                                `/courses/assignment/view?a_id=${assign.a_id}&id=${useQueryStringAsNumber(route.query.id)}`
+                                                `/courses/assignment/view/?a_id=${assign.a_id}&id=${useQueryStringAsNumber(route.query.id)}`
                                             )
                                         ">
                                         open_in_new

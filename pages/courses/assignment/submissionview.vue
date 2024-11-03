@@ -2,11 +2,11 @@
     import { toast } from '@steveyuowo/vue-hot-toast'
     import { MdPreview } from 'md-editor-v3'
     import { useQueryStringAsNumber } from '#imports'
-    // const userRole = useUserCourseState()
+    import { downloadFile } from '~/utils/downloadFile';
+
     const assignments = ref<GETOneSubmissionAPIResponse | null>(null)
     const assignPending = ref(true)
     const runtimeConfig = useRuntimeConfig()
-    // const postContent = ref<string | null>('')
     const assignmentScore = ref<number | null>(null)
     const assignmentFeedback = ref<string | null>('')
     const submitTime = ref<{
@@ -71,12 +71,6 @@
             })
     }
 
-    async function downloadFile(f_id: number) {
-        await navigateTo(`${runtimeConfig.public.apiBaseUrl}/api/file/?f_id=${f_id}`, {
-            open: { target: '_blank' },
-        })
-    }
-
     const route = useRoute()
     if (route.query.id && route.query.a_id && route.query.u_id) {
         getOneAssignment(
@@ -117,7 +111,7 @@
                         class="inline-flex items-center gap-x-2 rounded-lg border border-transparent px-3 py-2 text-sm font-semibold text-blue-600 transition-all duration-200 ease-in-out hover:bg-blue-100 hover:text-blue-800 disabled:pointer-events-none disabled:opacity-50"
                         @click="
                             navigateTo(
-                                `/courses/assignment/view?id=${useQueryStringAsNumber(route.query.id)}&a_id=${useQueryStringAsNumber(route.query.a_id)}`
+                                `/courses/assignment/view/?id=${useQueryStringAsNumber(route.query.id)}&a_id=${useQueryStringAsNumber(route.query.a_id)}`
                             )
                         ">
                         <span
