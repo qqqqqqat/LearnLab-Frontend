@@ -4,7 +4,6 @@ export default defineNuxtConfig({
     modules: ['@nuxtjs/tailwindcss', '@nuxt/eslint', '@nuxtjs/fontaine'],
     plugins: ['~/plugins/preline.client.ts'],
     app: {
-        cdnURL: 'https://staging.d1k73m79r2m0n8.amplifyapp.com/',
         head: {
             charset: 'utf-8',
             viewport: 'width=device-width, initial-scale=1',
@@ -46,7 +45,7 @@ export default defineNuxtConfig({
     },
     runtimeConfig: {
         public: {
-            apiBaseUrl: 'http://localhost:8000',
+            apiBaseUrl: 'http://learnlab-asg-lb-2050546808.us-east-1.elb.amazonaws.com',
           }
     },
       fontMetrics: {
