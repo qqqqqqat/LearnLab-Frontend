@@ -8,6 +8,7 @@
         "generate": "nuxt generate",
         "preview": "nuxt preview",
         "postinstall": "nuxt prepare",
+        "start": "node .output/server/index.mjs",
         "postbuild": "node checkFile.cjs",
         "pretty": "prettier --write \"./**/*.{js,jsx,mjs,cjs,ts,tsx,json,vue}\" --plugin=prettier-plugin-tailwindcss --plugin=prettier-plugin-vue"
     },
